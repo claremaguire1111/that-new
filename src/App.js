@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+
+// Theme
+const theme = {
+  colors: {
+    black: '#000000',
+    white: '#FFFFFF',
+    lightGray: '#F5F5F5',
+    mediumGray: '#AAAAAA',
+    darkGray: '#333333',
+    accent: '#000000',
+  },
+  fonts: {
+    heading: "'Inter', sans-serif",
+    body: "'Inter', sans-serif",
+  },
+  breakpoints: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
+  }
+};
 
 // Global Styles
 const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-  
-  :root {
-    --black: #000000;
-    --white: #FFFFFF;
-    --light-gray: #F5F5F5;
-    --medium-gray: #AAAAAA;
-    --dark-gray: #333333;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
   
   * {
     margin: 0;
@@ -19,10 +33,14 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--white);
-    color: var(--black);
+    font-family: ${props => props.theme.fonts.body};
+    background-color: ${props => props.theme.colors.white};
+    color: ${props => props.theme.colors.black};
     line-height: 1.5;
     overflow-x: hidden;
     font-size: 16px;
@@ -31,6 +49,7 @@ const GlobalStyle = createGlobalStyle`
   }
   
   h1, h2, h3, h4, h5, h6 {
+    font-family: ${props => props.theme.fonts.heading};
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -50,7 +69,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: inherit;
   }
 
-  /* Ticket Styles */
   .background-logo {
     position: absolute;
     z-index: 0;
@@ -67,6 +85,12 @@ const GlobalStyle = createGlobalStyle`
     0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
   }
 `;
 
@@ -103,7 +127,7 @@ const Header = styled.header`
   z-index: 1000;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  background: ${props => props.scrolled ? 'rgba(255, 255, 255, 0.9)' : 'transparent'};
+  background: ${props => props.scrolled ? 'rgba(255, 255, 255, 0.95)' : 'transparent'};
   box-shadow: ${props => props.scrolled ? '0 2px 20px rgba(0, 0, 0, 0.05)' : 'none'};
 `;
 
@@ -131,7 +155,7 @@ const Logo = styled.div`
   }
   
   span {
-    color: var(--black);
+    color: ${props => props.theme.colors.black};
   }
 `;
 
@@ -155,7 +179,7 @@ const NavItems = styled.div`
     right: ${props => props.isOpen ? '0' : '-100%'};
     width: 300px;
     height: 100vh;
-    background-color: var(--white);
+    background-color: ${props => props.theme.colors.white};
     padding: 100px 40px;
     flex-direction: column;
     gap: 20px;
@@ -179,7 +203,7 @@ const NavLink = styled.a`
     bottom: -4px;
     width: 0;
     height: 1px;
-    background-color: var(--black);
+    background-color: ${props => props.theme.colors.black};
     transition: width 0.3s ease;
   }
   
@@ -193,8 +217,8 @@ const NavLink = styled.a`
 `;
 
 const RegistrationButton = styled.a`
-  background-color: var(--black);
-  color: var(--white);
+  background-color: ${props => props.theme.colors.black};
+  color: ${props => props.theme.colors.white};
   padding: 12px 32px;
   border-radius: 2px;
   font-size: 0.9rem;
@@ -204,7 +228,7 @@ const RegistrationButton = styled.a`
   transition: all 0.3s ease;
   
   &:hover {
-    background-color: var(--dark-gray);
+    background-color: ${props => props.theme.colors.darkGray};
     transform: translateY(-2px);
   }
   
@@ -241,7 +265,7 @@ const HeroTagline = styled.div`
   letter-spacing: 0.15em;
   text-transform: uppercase;
   margin-bottom: 24px;
-  color: var(--black);
+  color: ${props => props.theme.colors.black};
   
   @media (max-width: 768px) {
     font-size: 0.875rem;
@@ -249,12 +273,12 @@ const HeroTagline = styled.div`
 `;
 
 const HeroTitle = styled.h1`
-  font-size: 4.5rem;
-  font-weight: 700;
+  font-size: 5rem;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.1;
   margin-bottom: 32px;
-  color: var(--black);
+  color: ${props => props.theme.colors.black};
   
   @media (max-width: 1024px) {
     font-size: 3.5rem;
@@ -271,10 +295,38 @@ const HeroSubtitle = styled.h2`
   line-height: 1.4;
   margin-bottom: 48px;
   max-width: 600px;
-  color: var(--black);
+  color: ${props => props.theme.colors.black};
   
   @media (max-width: 768px) {
     font-size: 1.25rem;
+  }
+`;
+
+const HeroActions = styled.div`
+  display: flex;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+`;
+
+const SecondaryButton = styled.a`
+  border: 1px solid ${props => props.theme.colors.black};
+  color: ${props => props.theme.colors.black};
+  padding: 12px 32px;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
   }
 `;
 
@@ -283,10 +335,11 @@ const HeroLogo = styled.div`
   top: 50%;
   right: 5%;
   transform: translateY(-50%);
-  width: 250px;
-  height: 250px;
+  width: 350px;
+  height: 350px;
   opacity: 0.1;
   z-index: 1;
+  animation: float 6s ease-in-out infinite;
   
   img {
     width: 100%;
@@ -294,13 +347,93 @@ const HeroLogo = styled.div`
     object-fit: contain;
   }
   
+  @media (max-width: 1200px) {
+    width: 300px;
+    height: 300px;
+    right: 2%;
+  }
+  
   @media (max-width: 1024px) {
+    width: 250px;
+    height: 250px;
+  }
+  
+  @media (max-width: 768px) {
     display: none;
   }
 `;
 
-// Day Section
-const DaySection = styled(Section)`
+// Countdown
+const CountdownSection = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  
+  @media (max-width: 768px) {
+    bottom: 20px;
+  }
+`;
+
+const CountdownContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  
+  @media (max-width: 768px) {
+    gap: 20px;
+  }
+`;
+
+const CountdownItem = styled.div`
+  text-align: center;
+`;
+
+const CountdownNumber = styled.div`
+  font-size: 2.5rem;
+  font-weight: 700;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+`;
+
+const CountdownLabel = styled.div`
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+`;
+
+// Day Tabs Section
+const DayTabsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
+const DayTab = styled.button`
+  padding: 16px 32px;
+  font-size: 1.25rem;
+  font-weight: ${props => props.active ? '600' : '400'};
+  color: ${props => props.active ? props.theme.colors.black : props.theme.colors.mediumGray};
+  border-bottom: 3px solid ${props => props.active ? props.theme.colors.black : 'transparent'};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: ${props => props.theme.colors.black};
+  }
+  
+  @media (max-width: 768px) {
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+`;
+
+// Speakers Section
+const SpeakersSection = styled(Section)`
   padding: 100px 0;
   
   @media (max-width: 768px) {
@@ -308,29 +441,28 @@ const DaySection = styled(Section)`
   }
 `;
 
-const DayHeader = styled.div`
-  margin-bottom: 60px;
-`;
-
-const DayTitle = styled.h2`
-  font-size: 2.5rem;
+const SectionTitle = styled.h2`
+  font-size: 3rem;
   font-weight: 700;
   margin-bottom: 16px;
   text-align: center;
   
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 `;
 
-const DaySubtitle = styled.h3`
-  font-size: 1.75rem;
-  font-weight: 500;
-  margin-bottom: 24px;
+const SectionSubtitle = styled.p`
+  font-size: 1.25rem;
+  margin-bottom: 64px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
   
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 1.125rem;
+    margin-bottom: 40px;
   }
 `;
 
@@ -350,14 +482,31 @@ const SpeakersGrid = styled.div`
 
 const SpeakerCard = styled.div`
   text-align: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-10px);
+  }
 `;
 
 const SpeakerPhoto = styled.div`
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 24px;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
   
   img {
     width: 100%;
@@ -372,13 +521,13 @@ const SpeakerPhoto = styled.div`
   }
   
   @media (max-width: 768px) {
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
   }
 `;
 
 const SpeakerName = styled.h4`
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 600;
   margin-bottom: 8px;
 `;
@@ -386,7 +535,7 @@ const SpeakerName = styled.h4`
 const SpeakerRole = styled.p`
   font-size: 1rem;
   margin-bottom: 4px;
-  color: var(--dark-gray);
+  color: ${props => props.theme.colors.darkGray};
 `;
 
 const SpeakerCompany = styled.p`
@@ -394,35 +543,56 @@ const SpeakerCompany = styled.p`
   font-weight: 500;
 `;
 
+const SpeakerSocial = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const SocialIcon = styled.a`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: ${props => props.theme.colors.lightGray};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: ${props => props.theme.colors.black};
+    color: ${props => props.theme.colors.white};
+  }
+`;
+
+const FeaturedSpeakers = styled.div`
+  margin-bottom: 80px;
+`;
+
+const SeeAllButton = styled.a`
+  display: inline-block;
+  margin: 40px auto 0;
+  padding: 12px 32px;
+  border: 1px solid ${props => props.theme.colors.black};
+  border-radius: 2px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  text-align: center;
+  
+  &:hover {
+    background-color: ${props => props.theme.colors.black};
+    color: ${props => props.theme.colors.white};
+  }
+`;
+
 // Features Section
 const FeaturesSection = styled(Section)`
-  background-color: var(--light-gray);
+  background-color: ${props => props.theme.colors.lightGray};
   padding: 100px 0;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  text-align: center;
-  
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-`;
-
-const SectionSubtitle = styled.p`
-  font-size: 1.25rem;
-  margin-bottom: 64px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  
-  @media (max-width: 768px) {
-    font-size: 1.125rem;
-    margin-bottom: 40px;
-  }
 `;
 
 const FeaturesGrid = styled.div`
@@ -441,8 +611,8 @@ const FeaturesGrid = styled.div`
 
 const FeatureCard = styled.div`
   padding: 32px;
-  background-color: ${props => props.dark ? 'var(--black)' : 'var(--white)'};
-  color: ${props => props.dark ? 'var(--white)' : 'var(--black)'};
+  background-color: ${props => props.dark ? props.theme.colors.black : props.theme.colors.white};
+  color: ${props => props.dark ? props.theme.colors.white : props.theme.colors.black};
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -508,6 +678,7 @@ const VenueMap = styled.div`
   height: 400px;
   border-radius: 4px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   
   img {
     width: 100%;
@@ -519,7 +690,7 @@ const VenueMap = styled.div`
 
 // Sponsors Section
 const SponsorsSection = styled(Section)`
-  background-color: var(--light-gray);
+  background-color: ${props => props.theme.colors.lightGray};
   padding: 100px 0;
 `;
 
@@ -561,10 +732,14 @@ const SponsorLogo = styled.div`
   filter: ${props => props.grayscale ? 'grayscale(100%)' : 'none'};
   opacity: ${props => props.faded ? 0.7 : 1};
   transition: all 0.3s ease;
+  background-color: ${props => props.theme.colors.white};
+  border-radius: 4px;
+  padding: 20px;
   
   &:hover {
     filter: none;
     opacity: 1;
+    transform: scale(1.05);
   }
   
   img {
@@ -580,10 +755,266 @@ const ContactInfo = styled.p`
   font-size: 1.125rem;
 `;
 
+// Tickets Section
+const TicketsSection = styled(Section)`
+  background-color: ${props => props.theme.colors.black};
+  color: ${props => props.theme.colors.white};
+  padding: 120px 0;
+  position: relative;
+`;
+
+const TicketsTabs = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+`;
+
+const TicketsTab = styled.button`
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: ${props => props.active ? 'rgba(255, 255, 255, 0.9)' : 'transparent'};
+  color: ${props => props.active ? props.theme.colors.black : props.theme.colors.white};
+  border: 1px solid ${props => props.active ? 'transparent' : 'rgba(255, 255, 255, 0.3)'};
+  border-radius: ${props => props.position === 'left' ? '4px 0 0 4px' : props.position === 'right' ? '0 4px 4px 0' : '0'};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: ${props => props.active ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.1)'};
+  }
+`;
+
+const TicketsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const TicketCard = styled.div`
+  background: ${props => props.premium ? 'linear-gradient(135deg, #111111, #000000)' : 'rgba(0, 0, 0, 0.6)'};
+  border: 1px solid ${props => props.premium ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)'};
+  box-shadow: ${props => props.premium ? '0 10px 30px rgba(0, 0, 0, 0.3)' : '0 5px 15px rgba(0, 0, 0, 0.1)'};
+  border-radius: 8px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: ${props => props.premium ? '0 15px 40px rgba(0, 0, 0, 0.4)' : '0 10px 25px rgba(0, 0, 0, 0.2)'};
+    border-color: ${props => props.premium ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.2)'};
+  }
+`;
+
+const TicketTypeBadge = styled.span`
+  position: absolute;
+  top: 0;
+  right: 24px;
+  background: ${props => props.premium ? 'linear-gradient(135deg, #FFFFFF, #DDDDDD)' : 'rgba(255, 255, 255, 0.1)'};
+  color: ${props => props.premium ? props.theme.colors.black : props.theme.colors.white};
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+`;
+
+const TicketType = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: ${props => props.theme.colors.white};
+`;
+
+const TicketTypePremium = styled(TicketType)`
+  color: #FFFFFF;
+`;
+
+const TicketPrice = styled.div`
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 16px 0 8px;
+  color: ${props => props.theme.colors.white};
+`;
+
+const TicketPricePerDay = styled.div`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+`;
+
+const TicketAvailability = styled.div`
+  font-size: 0.85rem;
+  color: ${props => props.limited ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)'};
+  font-weight: ${props => props.limited ? '600' : '400'};
+  margin-bottom: 24px;
+  font-style: italic;
+`;
+
+const TicketDivider = styled.div`
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  margin: 8px 0 24px;
+`;
+
+const TicketFeatures = styled.ul`
+  list-style: none;
+  margin: 0 0 32px;
+  padding: 0;
+  flex: 1;
+`;
+
+const TicketFeature = styled.li`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  
+  &:before {
+    content: "✓";
+    margin-right: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+  }
+`;
+
+const TicketButton = styled.a`
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  color: ${props => props.theme.colors.white};
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 12px 24px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+`;
+
+const TicketButtonPremium = styled(TicketButton)`
+  background: linear-gradient(135deg, #FFFFFF, #DDDDDD);
+  color: ${props => props.theme.colors.black};
+  border: none;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+  
+  &:hover {
+    background: linear-gradient(135deg, #EEEEEE, #CCCCCC);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    animation: none;
+  }
+`;
+
+// CTA Section
+const CTASection = styled(Section)`
+  text-align: center;
+  padding: 100px 0;
+`;
+
+const CTATitle = styled.h2`
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  
+  @media (max-width: 768px) {
+    font-size: 2.25rem;
+  }
+`;
+
+const CTADescription = styled.p`
+  font-size: 1.25rem;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+`;
+
+const CTAButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+// Newsletter Section
+const NewsletterSection = styled.div`
+  background-color: ${props => props.theme.colors.lightGray};
+  padding: 80px 0;
+`;
+
+const NewsletterForm = styled.form`
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const NewsletterInput = styled.input`
+  flex: 1;
+  padding: 16px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px 0 0 4px;
+  font-size: 1rem;
+  
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.black};
+  }
+  
+  @media (max-width: 768px) {
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+`;
+
+const NewsletterButton = styled.button`
+  background-color: ${props => props.theme.colors.black};
+  color: ${props => props.theme.colors.white};
+  padding: 16px 32px;
+  border-radius: 0 4px 4px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: ${props => props.theme.colors.darkGray};
+  }
+  
+  @media (max-width: 768px) {
+    border-radius: 4px;
+  }
+`;
+
 // Footer
 const Footer = styled.footer`
-  background-color: var(--black);
-  color: var(--white);
+  background-color: ${props => props.theme.colors.black};
+  color: ${props => props.theme.colors.white};
   padding: 80px 0 40px;
 `;
 
@@ -698,10 +1129,286 @@ const LegalLinks = styled.div`
   }
 `;
 
+// Speakers Data
+const speakersData = {
+  day1: [
+    {
+      name: "Dr David Silver",
+      role: "Principal Research Scientist",
+      company: "DeepMind",
+      image: "/images/speakers/DrDavidSilver.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Raia Hadsell",
+      role: "VP of Research",
+      company: "DeepMind",
+      image: "/images/speakers/DrRaiaHadsell.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Prof. Jakob Foerster",
+      role: "Senior Tech Lead",
+      company: "Meta & Oxford",
+      image: "/images/speakers/Prof_Jakob Foerster.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Jonathan Richard Schwarz",
+      role: "Head of AI Research",
+      company: "Thomson Reuters",
+      image: "/images/speakers/DrJonathanRichardSchwarz.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Lion Schulz",
+      role: "Head of Machine Learning",
+      company: "Bertelsmann",
+      image: "/images/speakers/DrLionSchulz.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Max Beverton-Palmer",
+      role: "Head of Public Policy",
+      company: "NVIDIA",
+      image: "/images/speakers/MaxBeverton_Palmer.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Karl Havard",
+      role: "CCO",
+      company: "NSCALE",
+      image: "/images/speakers/KarlHavard.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Mark Bjornsgaard",
+      role: "Founder & CIO",
+      company: "DeepGreen",
+      image: "/images/speakers/MarkBjornsgaard.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Joshua Tan",
+      role: "Head of Policy",
+      company: "Public AI",
+      image: "/images/speakers/DrJoshuaTan.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr James Whittington",
+      role: "Vice-President & Research Scientist",
+      company: "Thinking About Thinking",
+      company2: "Stanford & Oxford",
+      image: "/images/speakers/DrJamesWhittington.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Ruairidh McLennan Battleday",
+      role: "President & Research Scientist",
+      company: "Thinking About Thinking",
+      company2: "Harvard & MIT",
+      image: "/images/speakers/DrRuairidhMcLennanBattleday.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Felix Sosa",
+      role: "Research Scientist",
+      company: "Harvard & MIT",
+      image: "/images/speakers/DrFelixSosa.jpg",
+      linkedin: "#",
+      twitter: "#"
+    }
+  ],
+  day2: [
+    {
+      name: "Prof. Chris Summerfield",
+      role: "Research Director & Professor",
+      company: "AISI & Oxford",
+      image: "/images/speakers/ProfChrisSummerfield.webp",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Samuel Bell",
+      role: "AI Research Scientist",
+      company: "Meta",
+      image: "/images/speakers/DrSamuelBell.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Prof. Skyler Wang",
+      role: "Assistant Professor & Research Scientist",
+      company: "McGill & Meta",
+      image: "/images/speakers/ProfSkylerWang.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Marius Hobbhahn",
+      role: "Director & Co-Founder",
+      company: "Apollo Research",
+      image: "/images/speakers/DrMariusHobbhahn.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "David Sully",
+      role: "CEO & Co-Founder",
+      company: "ADVAI",
+      image: "/images/speakers/DavidSully.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Ashley Ramrachia",
+      role: "Founder and CEO",
+      company: "Academy",
+      image: "/images/speakers/AshleyRamrachia.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Jakob Mökander",
+      role: "Director",
+      company: "Tony Blair Institute",
+      image: "/images/speakers/DrJakobMökander.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Julian Von Nehammer",
+      role: "Director",
+      company: "Lilt",
+      image: "/images/speakers/JulianVonNehammer.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Esra Demir",
+      role: "Group Digital Partner Director",
+      company: "HSBC",
+      image: "/images/speakers/EsraDemir.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Kevin Loi-Heng",
+      role: "Co-Founder & CEO",
+      company: "Avalon Insights",
+      image: "/images/speakers/DrKevinLoiHeng.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Nicolay Hagen",
+      role: "Lecturer",
+      company: "NTNU",
+      image: "/images/speakers/NicolayHagen.jpg",
+      linkedin: "#",
+      twitter: "#"
+    }
+  ],
+  day3: [
+    {
+      name: "Dr Irina Jurenka",
+      role: "Research Lead",
+      company: "DeepMind",
+      image: "/images/speakers/DrIrinaJurenka.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Pete Hill",
+      role: "Co-Founder",
+      company: "Cudo",
+      image: "/images/speakers/PeteHIll.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Trias Gkikopoulos",
+      role: "Innovation Lead - Robotics & AI",
+      company: "Innovate UK",
+      image: "/images/speakers/DrTriasGkikopoulos.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Erwann Le Lannou",
+      role: "Ventures",
+      company: "XTX Markets",
+      image: "/images/speakers/ErwannLeLannou.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Timo Hannay",
+      role: "Entrepreneur",
+      company: "Project X",
+      image: "/images/speakers/TimoHannay.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Dr Lucinda Scharff",
+      role: "Staff Clinical Specialist",
+      company: "Google Health",
+      image: "/images/speakers/DrLucindaScharff.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Li-Lian Ang",
+      role: "Product Manager",
+      company: "BlueDot Impact",
+      image: "/images/speakers/LiLianAng.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Rehana Al-Soltane",
+      role: "Learning Manager",
+      company: "Raspberry Pi Foundation",
+      image: "/images/speakers/RehanaAlSoltane.jpg",
+      linkedin: "#",
+      twitter: "#"
+    },
+    {
+      name: "Prof. Dan Nicolau Jr",
+      role: "Professor",
+      company: "KCL",
+      image: "/images/speakers/ProfDanNicolauJr.jpg",
+      linkedin: "#",
+      twitter: "#"
+    }
+  ]
+};
+
 // Main App Component
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeDay, setActiveDay] = useState('day1');
+  const [showSingleDay, setShowSingleDay] = useState(true);
+  const [countdown, setCountdown] = useState({
+    days: 183,
+    hours: 10,
+    minutes: 45,
+    seconds: 30
+  });
   
   useEffect(() => {
     const handleScroll = () => {
@@ -723,8 +1430,12 @@ function App() {
     setMenuOpen(!menuOpen);
   };
   
+  const toggleTicketView = (isSingleDay) => {
+    setShowSingleDay(isSingleDay);
+  };
+  
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <GlobalStyle />
       
       <Header scrolled={scrolled}>
@@ -745,6 +1456,7 @@ function App() {
               <NavLink href="#schedule">Schedule</NavLink>
               <NavLink href="#venue">Venue</NavLink>
               <NavLink href="#sponsors">Partners</NavLink>
+              <NavLink href="#tickets">Tickets</NavLink>
               <RegistrationButton href="#register">Register Now</RegistrationButton>
             </NavItems>
           </Nav>
@@ -760,336 +1472,159 @@ function App() {
               <HeroSubtitle>
                 How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
               </HeroSubtitle>
-              <RegistrationButton href="#register">Registration Coming Soon</RegistrationButton>
+              <HeroActions>
+                <RegistrationButton href="#tickets">Register Now</RegistrationButton>
+                <SecondaryButton href="#speakers">View Speakers</SecondaryButton>
+              </HeroActions>
             </HeroContent>
             <HeroLogo>
               <img src="/images/Asset1.png" alt="THAT Logo" />
             </HeroLogo>
           </Container>
+          
+          <CountdownSection>
+            <Container>
+              <CountdownContainer>
+                <CountdownItem>
+                  <CountdownNumber>{countdown.days}</CountdownNumber>
+                  <CountdownLabel>Days</CountdownLabel>
+                </CountdownItem>
+                <CountdownItem>
+                  <CountdownNumber>{countdown.hours}</CountdownNumber>
+                  <CountdownLabel>Hours</CountdownLabel>
+                </CountdownItem>
+                <CountdownItem>
+                  <CountdownNumber>{countdown.minutes}</CountdownNumber>
+                  <CountdownLabel>Minutes</CountdownLabel>
+                </CountdownItem>
+                <CountdownItem>
+                  <CountdownNumber>{countdown.seconds}</CountdownNumber>
+                  <CountdownLabel>Seconds</CountdownLabel>
+                </CountdownItem>
+              </CountdownContainer>
+            </Container>
+          </CountdownSection>
         </HeroSection>
         
-        <DaySection id="speakers">
+        <SpeakersSection id="speakers">
           <Container>
-            <DayHeader>
-              <DayTitle>Day 1: Oct 28th</DayTitle>
-              <DaySubtitle>New Algorithmic Breakthroughs and AI Infrastructure</DaySubtitle>
-            </DayHeader>
+            <SectionTitle>World-Class Speakers</SectionTitle>
+            <SectionSubtitle>
+              Leading experts in AI research, policy, and entrepreneurship from around the world
+            </SectionSubtitle>
             
-            <SpeakersGrid>
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrDavidSilver.jpg" alt="Dr David Silver" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr David Silver</SpeakerName>
-                <SpeakerRole>Principal Research Scientist</SpeakerRole>
-                <SpeakerCompany>DeepMind</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrRaiaHadsell.jpg" alt="Dr Raia Hadsell" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Raia Hadsell</SpeakerName>
-                <SpeakerRole>VP of Research</SpeakerRole>
-                <SpeakerCompany>DeepMind</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/Prof_Jakob Foerster.jpg" alt="Prof. Jakob Foerster" />
-                </SpeakerPhoto>
-                <SpeakerName>Prof. Jakob Foerster</SpeakerName>
-                <SpeakerRole>Senior Tech Lead</SpeakerRole>
-                <SpeakerCompany>Meta & Oxford</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrJonathanRichardSchwarz.jpg" alt="Dr Jonathan Richard Schwarz" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Jonathan Richard Schwarz</SpeakerName>
-                <SpeakerRole>Head of AI Research</SpeakerRole>
-                <SpeakerCompany>Thomson Reuters</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrLionSchulz.jpg" alt="Dr Lion Schulz" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Lion Schulz</SpeakerName>
-                <SpeakerRole>Head of Machine Learning</SpeakerRole>
-                <SpeakerCompany>Bertelsmann</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/MaxBeverton_Palmer.jpg" alt="Max Beverton-Palmer" />
-                </SpeakerPhoto>
-                <SpeakerName>Max Beverton-Palmer</SpeakerName>
-                <SpeakerRole>Head of Public Policy</SpeakerRole>
-                <SpeakerCompany>NVIDIA</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/KarlHavard.jpg" alt="Karl Havard" />
-                </SpeakerPhoto>
-                <SpeakerName>Karl Havard</SpeakerName>
-                <SpeakerRole>CCO</SpeakerRole>
-                <SpeakerCompany>NSCALE</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/MarkBjornsgaard.jpg" alt="Mark Bjornsgaard" />
-                </SpeakerPhoto>
-                <SpeakerName>Mark Bjornsgaard</SpeakerName>
-                <SpeakerRole>Founder & CIO</SpeakerRole>
-                <SpeakerCompany>DeepGreen</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrJoshuaTan.jpg" alt="Dr Joshua Tan" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Joshua Tan</SpeakerName>
-                <SpeakerRole>Head of Policy</SpeakerRole>
-                <SpeakerCompany>Public AI</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrJamesWhittington.jpg" alt="Dr James Whittington" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr James Whittington</SpeakerName>
-                <SpeakerRole>Vice-President & Research Scientist</SpeakerRole>
-                <SpeakerCompany>Thinking About Thinking</SpeakerCompany>
-                <SpeakerCompany>Stanford & Oxford</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrRuairidhMcLennanBattleday.jpg" alt="Dr Ruairidh McLennan Battleday" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Ruairidh McLennan Battleday</SpeakerName>
-                <SpeakerRole>President & Research Scientist</SpeakerRole>
-                <SpeakerCompany>Thinking About Thinking</SpeakerCompany>
-                <SpeakerCompany>Harvard & MIT</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrFelixSosa.jpg" alt="Dr Felix Sosa" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Felix Sosa</SpeakerName>
-                <SpeakerRole>Research Scientist</SpeakerRole>
-                <SpeakerCompany>Harvard & MIT</SpeakerCompany>
-              </SpeakerCard>
-            </SpeakersGrid>
-          </Container>
-        </DaySection>
-        
-        <DaySection style={{ backgroundColor: 'var(--light-gray)' }}>
-          <Container>
-            <DayHeader>
-              <DayTitle>Day 2: Oct 29th</DayTitle>
-              <DaySubtitle>AI Safety, and AI in Enterprise & Society</DaySubtitle>
-            </DayHeader>
+            <DayTabsContainer>
+              <DayTab 
+                active={activeDay === 'day1'} 
+                onClick={() => setActiveDay('day1')}
+              >
+                Day 1: Algorithmic Innovation
+              </DayTab>
+              <DayTab 
+                active={activeDay === 'day2'} 
+                onClick={() => setActiveDay('day2')}
+              >
+                Day 2: AI Safety & Enterprise
+              </DayTab>
+              <DayTab 
+                active={activeDay === 'day3'} 
+                onClick={() => setActiveDay('day3')}
+              >
+                Day 3: AI Entrepreneurship
+              </DayTab>
+            </DayTabsContainer>
             
-            <SpeakersGrid>
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/ProfChrisSummerfield.webp" alt="Prof. Chris Summerfield" />
-                </SpeakerPhoto>
-                <SpeakerName>Prof. Chris Summerfield</SpeakerName>
-                <SpeakerRole>Research Director & Professor</SpeakerRole>
-                <SpeakerCompany>AISI & Oxford</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrSamuelBell.jpg" alt="Dr Samuel Bell" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Samuel Bell</SpeakerName>
-                <SpeakerRole>AI Research Scientist</SpeakerRole>
-                <SpeakerCompany>Meta</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/ProfSkylerWang.jpg" alt="Prof. Skyler Wang" />
-                </SpeakerPhoto>
-                <SpeakerName>Prof. Skyler Wang</SpeakerName>
-                <SpeakerRole>Assistant Professor & Research Scientist</SpeakerRole>
-                <SpeakerCompany>McGill & Meta</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrMariusHobbhahn.jpg" alt="Dr Marius Hobbhahn" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Marius Hobbhahn</SpeakerName>
-                <SpeakerRole>Director & Co-Founder</SpeakerRole>
-                <SpeakerCompany>Apollo Research</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DavidSully.jpg" alt="David Sully" />
-                </SpeakerPhoto>
-                <SpeakerName>David Sully</SpeakerName>
-                <SpeakerRole>CEO & Co-Founder</SpeakerRole>
-                <SpeakerCompany>ADVAI</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/AshleyRamrachia.jpg" alt="Ashley Ramrachia" />
-                </SpeakerPhoto>
-                <SpeakerName>Ashley Ramrachia</SpeakerName>
-                <SpeakerRole>Founder and CEO</SpeakerRole>
-                <SpeakerCompany>Academy</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrJakobMökander.jpg" alt="Dr Jakob Mökander" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Jakob Mökander</SpeakerName>
-                <SpeakerRole>Director</SpeakerRole>
-                <SpeakerCompany>Tony Blair Institute</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/JulianVonNehammer.jpg" alt="Julian Von Nehammer" />
-                </SpeakerPhoto>
-                <SpeakerName>Julian Von Nehammer</SpeakerName>
-                <SpeakerRole>Director</SpeakerRole>
-                <SpeakerCompany>Lilt</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/EsraDemir.jpg" alt="Esra Demir" />
-                </SpeakerPhoto>
-                <SpeakerName>Esra Demir</SpeakerName>
-                <SpeakerRole>Group Digital Partner Director</SpeakerRole>
-                <SpeakerCompany>HSBC</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrKevinLoiHeng.jpg" alt="Dr Kevin Loi-Heng" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Kevin Loi-Heng</SpeakerName>
-                <SpeakerRole>Co-Founder & CEO</SpeakerRole>
-                <SpeakerCompany>Avalon Insights</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/NicolayHagen.jpg" alt="Nicolay Hagen" />
-                </SpeakerPhoto>
-                <SpeakerName>Nicolay Hagen</SpeakerName>
-                <SpeakerRole>Lecturer</SpeakerRole>
-                <SpeakerCompany>NTNU</SpeakerCompany>
-              </SpeakerCard>
-            </SpeakersGrid>
-          </Container>
-        </DaySection>
-        
-        <DaySection>
-          <Container>
-            <DayHeader>
-              <DayTitle>Day 3: Oct 30th</DayTitle>
-              <DaySubtitle>AI Entrepreneurship & Application</DaySubtitle>
-            </DayHeader>
+            {activeDay === 'day1' && (
+              <FeaturedSpeakers>
+                <SpeakersGrid>
+                  {speakersData.day1.slice(0, 6).map((speaker, index) => (
+                    <SpeakerCard key={index}>
+                      <SpeakerPhoto>
+                        <img src={speaker.image} alt={speaker.name} />
+                      </SpeakerPhoto>
+                      <SpeakerName>{speaker.name}</SpeakerName>
+                      <SpeakerRole>{speaker.role}</SpeakerRole>
+                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                      <SpeakerSocial>
+                        <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
+                          in
+                        </SocialIcon>
+                        <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
+                          𝕏
+                        </SocialIcon>
+                      </SpeakerSocial>
+                    </SpeakerCard>
+                  ))}
+                </SpeakersGrid>
+                
+                <div style={{ textAlign: 'center' }}>
+                  <SeeAllButton href="#all-speakers">See All Day 1 Speakers</SeeAllButton>
+                </div>
+              </FeaturedSpeakers>
+            )}
             
-            <SpeakersGrid>
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrIrinaJurenka.jpg" alt="Dr Irina Jurenka" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Irina Jurenka</SpeakerName>
-                <SpeakerRole>Research Lead</SpeakerRole>
-                <SpeakerCompany>DeepMind</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/PeteHIll.jpg" alt="Pete Hill" />
-                </SpeakerPhoto>
-                <SpeakerName>Pete Hill</SpeakerName>
-                <SpeakerRole>Co-Founder</SpeakerRole>
-                <SpeakerCompany>Cudo</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrTriasGkikopoulos.jpg" alt="Dr Trias Gkikopoulos" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Trias Gkikopoulos</SpeakerName>
-                <SpeakerRole>Innovation Lead - Robotics & AI</SpeakerRole>
-                <SpeakerCompany>Innovate UK</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/ErwannLeLannou.jpg" alt="Erwann Le Lannou" />
-                </SpeakerPhoto>
-                <SpeakerName>Erwann Le Lannou</SpeakerName>
-                <SpeakerRole>Ventures</SpeakerRole>
-                <SpeakerCompany>XTX Markets</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/TimoHannay.jpg" alt="Timo Hannay" />
-                </SpeakerPhoto>
-                <SpeakerName>Timo Hannay</SpeakerName>
-                <SpeakerRole>Entrepreneur</SpeakerRole>
-                <SpeakerCompany>Project X</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/DrLucindaScharff.jpg" alt="Dr Lucinda Scharff" />
-                </SpeakerPhoto>
-                <SpeakerName>Dr Lucinda Scharff</SpeakerName>
-                <SpeakerRole>Staff Clinical Specialist</SpeakerRole>
-                <SpeakerCompany>Google Health</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/LiLianAng.jpg" alt="Li-Lian Ang" />
-                </SpeakerPhoto>
-                <SpeakerName>Li-Lian Ang</SpeakerName>
-                <SpeakerRole>Product Manager</SpeakerRole>
-                <SpeakerCompany>BlueDot Impact</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/RehanaAlSoltane.jpg" alt="Rehana Al-Soltane" />
-                </SpeakerPhoto>
-                <SpeakerName>Rehana Al-Soltane</SpeakerName>
-                <SpeakerRole>Learning Manager</SpeakerRole>
-                <SpeakerCompany>Raspberry Pi Foundation</SpeakerCompany>
-              </SpeakerCard>
-              
-              <SpeakerCard>
-                <SpeakerPhoto>
-                  <img src="/images/speakers/ProfDanNicolauJr.jpg" alt="Prof. Dan Nicolau Jr" />
-                </SpeakerPhoto>
-                <SpeakerName>Prof. Dan Nicolau Jr</SpeakerName>
-                <SpeakerRole>Professor</SpeakerRole>
-                <SpeakerCompany>KCL</SpeakerCompany>
-              </SpeakerCard>
-            </SpeakersGrid>
+            {activeDay === 'day2' && (
+              <FeaturedSpeakers>
+                <SpeakersGrid>
+                  {speakersData.day2.slice(0, 6).map((speaker, index) => (
+                    <SpeakerCard key={index}>
+                      <SpeakerPhoto>
+                        <img src={speaker.image} alt={speaker.name} />
+                      </SpeakerPhoto>
+                      <SpeakerName>{speaker.name}</SpeakerName>
+                      <SpeakerRole>{speaker.role}</SpeakerRole>
+                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                      <SpeakerSocial>
+                        <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
+                          in
+                        </SocialIcon>
+                        <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
+                          𝕏
+                        </SocialIcon>
+                      </SpeakerSocial>
+                    </SpeakerCard>
+                  ))}
+                </SpeakersGrid>
+                
+                <div style={{ textAlign: 'center' }}>
+                  <SeeAllButton href="#all-speakers">See All Day 2 Speakers</SeeAllButton>
+                </div>
+              </FeaturedSpeakers>
+            )}
+            
+            {activeDay === 'day3' && (
+              <FeaturedSpeakers>
+                <SpeakersGrid>
+                  {speakersData.day3.slice(0, 6).map((speaker, index) => (
+                    <SpeakerCard key={index}>
+                      <SpeakerPhoto>
+                        <img src={speaker.image} alt={speaker.name} />
+                      </SpeakerPhoto>
+                      <SpeakerName>{speaker.name}</SpeakerName>
+                      <SpeakerRole>{speaker.role}</SpeakerRole>
+                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                      <SpeakerSocial>
+                        <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
+                          in
+                        </SocialIcon>
+                        <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
+                          𝕏
+                        </SocialIcon>
+                      </SpeakerSocial>
+                    </SpeakerCard>
+                  ))}
+                </SpeakersGrid>
+                
+                <div style={{ textAlign: 'center' }}>
+                  <SeeAllButton href="#all-speakers">See All Day 3 Speakers</SeeAllButton>
+                </div>
+              </FeaturedSpeakers>
+            )}
           </Container>
-        </DaySection>
+        </SpeakersSection>
         
         <FeaturesSection id="schedule">
           <Container>
@@ -1172,6 +1707,9 @@ function App() {
         <SponsorsSection id="sponsors">
           <Container>
             <SectionTitle>Partners</SectionTitle>
+            <SectionSubtitle>
+              The THAT Summit is made possible by the generous support of our partners.
+            </SectionSubtitle>
             
             <SponsorsTiers>
               <SponsorsTier>
@@ -1218,6 +1756,218 @@ function App() {
             </ContactInfo>
           </Container>
         </SponsorsSection>
+        
+        <TicketsSection id="tickets">
+          <img src="/images/Asset1.png" alt="THAT Logo" className="background-logo" />
+          <Container>
+            <SectionTitle>Tickets</SectionTitle>
+            <SectionSubtitle>
+              Secure your place at the premier AI entrepreneurship summit
+            </SectionSubtitle>
+            
+            <TicketsTabs>
+              <TicketsTab 
+                position="left"
+                active={showSingleDay} 
+                onClick={() => toggleTicketView(true)}
+              >
+                Single Day Pass
+              </TicketsTab>
+              <TicketsTab 
+                position="right"
+                active={!showSingleDay} 
+                onClick={() => toggleTicketView(false)}
+              >
+                Three Day Pass (Save 15%)
+              </TicketsTab>
+            </TicketsTabs>
+            
+            {showSingleDay ? (
+              <TicketsGrid>
+                <TicketCard>
+                  <TicketTypeBadge>Student</TicketTypeBadge>
+                  <TicketType>Student Pass</TicketType>
+                  <TicketPrice>£60</TicketPrice>
+                  <TicketPricePerDay>Single day access</TicketPricePerDay>
+                  <TicketAvailability>350 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Access to all keynotes</TicketFeature>
+                    <TicketFeature>Networking opportunities</TicketFeature>
+                    <TicketFeature>Workshop participation</TicketFeature>
+                    <TicketFeature>Digital conference materials</TicketFeature>
+                    <TicketFeature>Lunch and refreshments</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButton href="#register-form">Select Day & Register</TicketButton>
+                </TicketCard>
+
+                <TicketCard>
+                  <TicketTypeBadge>Academic</TicketTypeBadge>
+                  <TicketType>Academic Pass</TicketType>
+                  <TicketPrice>£139</TicketPrice>
+                  <TicketPricePerDay>Single day access</TicketPricePerDay>
+                  <TicketAvailability>325 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Access to all keynotes</TicketFeature>
+                    <TicketFeature>Priority networking sessions</TicketFeature>
+                    <TicketFeature>Workshop participation</TicketFeature>
+                    <TicketFeature>Digital conference materials</TicketFeature>
+                    <TicketFeature>Lunch and refreshments</TicketFeature>
+                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButton href="#register-form">Select Day & Register</TicketButton>
+                </TicketCard>
+
+                <TicketCard>
+                  <TicketTypeBadge>General</TicketTypeBadge>
+                  <TicketType>General Pass</TicketType>
+                  <TicketPrice>£199</TicketPrice>
+                  <TicketPricePerDay>Single day access</TicketPricePerDay>
+                  <TicketAvailability>325 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Access to all keynotes</TicketFeature>
+                    <TicketFeature>Premium networking sessions</TicketFeature>
+                    <TicketFeature>Workshop participation</TicketFeature>
+                    <TicketFeature>Digital conference materials</TicketFeature>
+                    <TicketFeature>Lunch and refreshments</TicketFeature>
+                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
+                    <TicketFeature>Conference recordings</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButton href="#register-form">Select Day & Register</TicketButton>
+                </TicketCard>
+
+                <TicketCard premium>
+                  <TicketTypeBadge premium>VIP</TicketTypeBadge>
+                  <TicketTypePremium>VIP All-Access</TicketTypePremium>
+                  <TicketPrice>£799</TicketPrice>
+                  <TicketPricePerDay>Single day access</TicketPricePerDay>
+                  <TicketAvailability limited>Only 50 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>All General pass benefits</TicketFeature>
+                    <TicketFeature>VIP exclusive reception</TicketFeature>
+                    <TicketFeature>Reserved premium seating</TicketFeature>
+                    <TicketFeature>Private networking with speakers</TicketFeature>
+                    <TicketFeature>Exclusive VIP lounge access</TicketFeature>
+                    <TicketFeature>Conference swag package</TicketFeature>
+                    <TicketFeature>Priority registration for 2026</TicketFeature>
+                    <TicketFeature>Complimentary workshop recordings</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButtonPremium href="#register-form">Secure VIP Access</TicketButtonPremium>
+                </TicketCard>
+              </TicketsGrid>
+            ) : (
+              <TicketsGrid>
+                <TicketCard>
+                  <TicketTypeBadge>Student</TicketTypeBadge>
+                  <TicketType>Student Pass</TicketType>
+                  <TicketPrice>£153</TicketPrice>
+                  <TicketPricePerDay>£51 per day (save 15%)</TicketPricePerDay>
+                  <TicketAvailability>350 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
+                    <TicketFeature>Access to all keynotes</TicketFeature>
+                    <TicketFeature>Networking opportunities</TicketFeature>
+                    <TicketFeature>Workshop participation</TicketFeature>
+                    <TicketFeature>Digital conference materials</TicketFeature>
+                    <TicketFeature>Lunch and refreshments daily</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButton href="#register-form">Register Now</TicketButton>
+                </TicketCard>
+                
+                <TicketCard>
+                  <TicketTypeBadge>Academic</TicketTypeBadge>
+                  <TicketType>Academic Pass</TicketType>
+                  <TicketPrice>£354</TicketPrice>
+                  <TicketPricePerDay>£118 per day (save 15%)</TicketPricePerDay>
+                  <TicketAvailability>325 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
+                    <TicketFeature>Access to all keynotes</TicketFeature>
+                    <TicketFeature>Priority networking sessions</TicketFeature>
+                    <TicketFeature>Workshop participation</TicketFeature>
+                    <TicketFeature>Digital conference materials</TicketFeature>
+                    <TicketFeature>Lunch and refreshments daily</TicketFeature>
+                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButton href="#register-form">Register Now</TicketButton>
+                </TicketCard>
+                
+                <TicketCard>
+                  <TicketTypeBadge>General</TicketTypeBadge>
+                  <TicketType>General Pass</TicketType>
+                  <TicketPrice>£507</TicketPrice>
+                  <TicketPricePerDay>£169 per day (save 15%)</TicketPricePerDay>
+                  <TicketAvailability>325 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
+                    <TicketFeature>Access to all keynotes</TicketFeature>
+                    <TicketFeature>Premium networking sessions</TicketFeature>
+                    <TicketFeature>Workshop participation</TicketFeature>
+                    <TicketFeature>Digital conference materials</TicketFeature>
+                    <TicketFeature>Lunch and refreshments daily</TicketFeature>
+                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
+                    <TicketFeature>Conference recordings</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButton href="#register-form">Register Now</TicketButton>
+                </TicketCard>
+                
+                <TicketCard premium>
+                  <TicketTypeBadge premium>VIP</TicketTypeBadge>
+                  <TicketTypePremium>VIP All-Access</TicketTypePremium>
+                  <TicketPrice>£2,037</TicketPrice>
+                  <TicketPricePerDay>£679 per day (save 15%)</TicketPricePerDay>
+                  <TicketAvailability limited>Only 50 tickets available</TicketAvailability>
+                  <TicketDivider />
+                  <TicketFeatures>
+                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
+                    <TicketFeature>All General pass benefits</TicketFeature>
+                    <TicketFeature>VIP exclusive reception</TicketFeature>
+                    <TicketFeature>Reserved premium seating</TicketFeature>
+                    <TicketFeature>Private networking with speakers</TicketFeature>
+                    <TicketFeature>Exclusive VIP lounge access</TicketFeature>
+                    <TicketFeature>Conference swag package</TicketFeature>
+                    <TicketFeature>Priority registration for 2026</TicketFeature>
+                    <TicketFeature>Complimentary workshop recordings</TicketFeature>
+                  </TicketFeatures>
+                  <TicketButtonPremium href="#register-form">Secure VIP Access</TicketButtonPremium>
+                </TicketCard>
+              </TicketsGrid>
+            )}
+          </Container>
+        </TicketsSection>
+        
+        <CTASection>
+          <Container>
+            <CTATitle>Join the conversation</CTATitle>
+            <CTADescription>
+              Connect with a community of AI researchers, entrepreneurs, and policymakers dedicated to advancing the field.
+            </CTADescription>
+            <CTAButtonGroup>
+              <RegistrationButton href="#register">Register Now</RegistrationButton>
+              <SecondaryButton href="#contact">Contact Us</SecondaryButton>
+            </CTAButtonGroup>
+          </Container>
+        </CTASection>
+        
+        <NewsletterSection>
+          <Container>
+            <SectionTitle>Stay Updated</SectionTitle>
+            <SectionSubtitle>
+              Subscribe to our newsletter for the latest updates on speakers, schedule, and more.
+            </SectionSubtitle>
+            
+            <NewsletterForm>
+              <NewsletterInput type="email" placeholder="Enter your email" />
+              <NewsletterButton>Subscribe</NewsletterButton>
+            </NewsletterForm>
+          </Container>
+        </NewsletterSection>
       </main>
       
       <Footer>
@@ -1288,7 +2038,7 @@ function App() {
           </FooterBottom>
         </Container>
       </Footer>
-    </>
+    </ThemeProvider>
   );
 }
 
