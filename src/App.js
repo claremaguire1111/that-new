@@ -10,6 +10,10 @@ const theme = {
     mediumGray: '#AAAAAA',
     darkGray: '#333333',
     accent: '#000000',
+    primary: '#000000',
+    secondary: '#333333',
+    gradient: 'linear-gradient(135deg, #000000, #333333)',
+    overlay: 'rgba(0, 0, 0, 0.7)',
   },
   fonts: {
     heading: "'Inter', sans-serif",
