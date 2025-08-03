@@ -576,8 +576,8 @@ const marqueeAnimation = keyframes`
 `;
 
 const continuousMarqueeAnimation = keyframes`
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
 `;
 
 const MarqueeContainer = styled.div`
@@ -593,26 +593,24 @@ const MarqueeContainer = styled.div`
 const LogoMarqueeContainer = styled.div`
   background-color: #f8f8f8;
   color: #000;
+  width: 100%;
+  padding: 40px 0;
+  position: relative;
   overflow: hidden;
   white-space: nowrap;
-  width: 100%;
-  padding: 25px 0;
-  position: relative;
 `;
 
 const LogoMarqueeContent = styled.div`
   display: inline-block;
-  animation: ${continuousMarqueeAnimation} 40s linear infinite;
+  white-space: nowrap;
+  animation: ${continuousMarqueeAnimation} 20s linear infinite;
   padding-left: 100%;
-  animation-delay: ${props => props.delay || '0s'};
 `;
 
 const LogoMarqueeItem = styled.span`
-  margin-right: 80px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-size: 1.2rem;
+  display: inline-block;
+  margin: 0 40px;
+  vertical-align: middle;
 `;
 
 const MarqueeContent = styled.div`
@@ -2313,6 +2311,11 @@ function App({ ticketsPage = false }) {
                           <p style={{ marginBottom: '20px', fontSize: '1.05rem' }}>
                             Join us for a full day of insightful presentations and discussions
                           </p>
+                          <div style={{ marginTop: '30px', marginBottom: '50px' }}>
+                            <img src="/images/logo_wall.png" alt="ThAT Conference Partners and Sponsors" style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }} />
+                          </div>
+                          <p style={{ display: 'none' }}>
+                          </p>
                         </div>
                       </FeaturedSpeakers>
                     </TabContent>
@@ -2325,7 +2328,16 @@ function App({ ticketsPage = false }) {
             <SponsorsSection id="sponsors">
               <Container>
                 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                  <img src="https://via.placeholder.com/1000x250?text=Partners+and+Sponsors" alt="Partners and Sponsors Banner" style={{ maxWidth: '100%', height: 'auto' }} />
+                  <h2 style={{ 
+        fontSize: '2.5rem', 
+        fontWeight: '700', 
+        marginBottom: '20px',
+        background: 'linear-gradient(90deg, #333, #000)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent'
+      }}>
+        Logo Wall
+      </h2>
                 </div>
               
                 <SectionTitle>Partners</SectionTitle>
@@ -2334,60 +2346,176 @@ function App({ ticketsPage = false }) {
                 </SectionSubtitle>
                 
                 <div style={{ marginBottom: '60px' }}>
-                  <SponsorsGrid>
-                    <SponsorLogo style={{ height: '120px' }}>
-                      <img src="https://via.placeholder.com/200x100?text=Partner+1" alt="Partner 1" />
-                    </SponsorLogo>
-                    <SponsorLogo style={{ height: '120px' }}>
-                      <img src="https://via.placeholder.com/200x100?text=Partner+2" alt="Partner 2" />
-                    </SponsorLogo>
-                    <SponsorLogo style={{ height: '120px' }}>
-                      <img src="https://via.placeholder.com/200x100?text=Partner+3" alt="Partner 3" />
-                    </SponsorLogo>
-                  </SponsorsGrid>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gap: '30px', 
+                    justifyItems: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/partners/download.png" alt="Innovate UK" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/partners/tony_blair.webp" alt="Tony Blair Institute" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/partners/multiverse_logo_transparent.png" alt="Multiverse" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                  </div>
                 </div>
                 
-                <SponsorsTiers>
-                  <SponsorsTier>
-                    <SponsorsTierTitle>Gold Sponsors</SponsorsTierTitle>
-                    <SponsorsGrid>
-                      <SponsorLogo>
-                        <img src="https://via.placeholder.com/200x100?text=Sponsor+1" alt="Sponsor 1" />
-                      </SponsorLogo>
-                      <SponsorLogo>
-                        <img src="https://via.placeholder.com/200x100?text=Sponsor+2" alt="Sponsor 2" />
-                      </SponsorLogo>
-                      <SponsorLogo>
-                        <img src="https://via.placeholder.com/200x100?text=Sponsor+3" alt="Sponsor 3" />
-                      </SponsorLogo>
-                    </SponsorsGrid>
-                  </SponsorsTier>
-                  
-                  <SponsorsTier>
-                    <SponsorsTierTitle>Silver Sponsors</SponsorsTierTitle>
-                    <SponsorsGrid>
-                      <SponsorLogo>
-                        <img src="https://via.placeholder.com/200x100?text=Sponsor+4" alt="Sponsor 4" />
-                      </SponsorLogo>
-                      <SponsorLogo>
-                        <img src="https://via.placeholder.com/200x100?text=Sponsor+5" alt="Sponsor 5" />
-                      </SponsorLogo>
-                    </SponsorsGrid>
-                  </SponsorsTier>
-                </SponsorsTiers>
+                <div style={{ marginBottom: '60px' }}>
+                  <h3 style={{ 
+                    fontSize: '1.8rem', 
+                    fontWeight: '600', 
+                    marginBottom: '30px', 
+                    textAlign: 'center',
+                    position: 'relative',
+                    paddingBottom: '15px'
+                  }}>
+                    Gold Sponsors
+                    <span style={{ 
+                      position: 'absolute', 
+                      bottom: 0, 
+                      left: '50%', 
+                      transform: 'translateX(-50%)', 
+                      width: '60px', 
+                      height: '3px', 
+                      backgroundColor: '#000', 
+                      borderRadius: '10px' 
+                    }}></span>
+                  </h3>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gap: '30px', 
+                    justifyItems: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/gold_sponsors/XTX_Markets.png" alt="XTX Markets" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/gold_sponsors/public-ai-logo-large.png" alt="Public AI" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                  </div>
+                </div>
                 
-                <div style={{ textAlign: 'center', marginTop: '60px' }}>
+                <div style={{ marginBottom: '60px' }}>
+                  <h3 style={{ 
+                    fontSize: '1.8rem', 
+                    fontWeight: '600', 
+                    marginBottom: '30px', 
+                    textAlign: 'center',
+                    position: 'relative',
+                    paddingBottom: '15px'
+                  }}>
+                    Silver Sponsors
+                    <span style={{ 
+                      position: 'absolute', 
+                      bottom: 0, 
+                      left: '50%', 
+                      transform: 'translateX(-50%)', 
+                      width: '60px', 
+                      height: '3px', 
+                      backgroundColor: '#000', 
+                      borderRadius: '10px' 
+                    }}></span>
+                  </h3>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gap: '30px', 
+                    justifyItems: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/silver_sponsors/HSBC-Logo.png" alt="HSBC" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                  </div>
+                </div>
+                
+                <div style={{ 
+                  textAlign: 'center', 
+                  marginTop: '60px', 
+                  backgroundColor: 'white', 
+                  padding: '40px 20px', 
+                  borderRadius: '8px', 
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
+                }}>
                   <h3 style={{ marginBottom: '20px', fontSize: '1.4rem' }}>Want to become a sponsor?</h3>
                   <a href="mailto:webmaster@thinkingaboutthinking.org" style={{
                     display: 'inline-block',
                     padding: '15px 30px',
                     background: '#000',
                     color: '#fff',
-                    borderRadius: '30px',
+                    borderRadius: '8px',
                     textDecoration: 'none',
                     fontWeight: '600',
                     fontSize: '1rem',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
                   }}>Contact us</a>
                 </div>
               </Container>
@@ -2407,111 +2535,558 @@ function App({ ticketsPage = false }) {
               </Container>
             </Section>
             
-            <LogoMarqueeContainer>
+            <LogoMarqueeContainer style={{ background: 'linear-gradient(135deg, #f8f8f8, #ffffff)', padding: '50px 0', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
               <LogoMarqueeContent>
-                <LogoMarqueeItem>PUBLIC AI</LogoMarqueeItem>
-                <LogoMarqueeItem>MULTIVERSE</LogoMarqueeItem>
-                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
-                <LogoMarqueeItem>TONY BLAIR INSTITUTE FOR GLOBAL CHANGE</LogoMarqueeItem>
-                <LogoMarqueeItem>DEEPMIND</LogoMarqueeItem>
-                <LogoMarqueeItem>META</LogoMarqueeItem>
-              </LogoMarqueeContent>
-              <LogoMarqueeContent style={{ animationDelay: "20s" }}>
-                <LogoMarqueeItem>PUBLIC AI</LogoMarqueeItem>
-                <LogoMarqueeItem>MULTIVERSE</LogoMarqueeItem>
-                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
-                <LogoMarqueeItem>TONY BLAIR INSTITUTE FOR GLOBAL CHANGE</LogoMarqueeItem>
-                <LogoMarqueeItem>DEEPMIND</LogoMarqueeItem>
-                <LogoMarqueeItem>META</LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/public-ai-logo-large.png" 
+                      alt="Public AI" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/multiverse_logo_transparent.png" 
+                      alt="Multiverse" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/download.png" 
+                      alt="Innovate UK" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/tony_blair.webp" 
+                      alt="Tony Blair Institute" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/public-ai-logo-large.png" 
+                      alt="Public AI" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/multiverse_logo_transparent.png" 
+                      alt="Multiverse" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/download.png" 
+                      alt="Innovate UK" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/carousel/tony_blair.webp" 
+                      alt="Tony Blair Institute" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
               </LogoMarqueeContent>
             </LogoMarqueeContainer>
             
-            <Section style={{ padding: '100px 0 80px', background: '#f8f8f8' }}>
+            <Section style={{ padding: '100px 0 80px', background: 'linear-gradient(135deg, #f8f8f8, #ffffff)' }}>
               <Container>
                 <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
-                  <h3 style={{ fontSize: '2.2rem', fontWeight: '600', marginBottom: '30px' }}>Join hundreds of like-minded researchers, policy makers, and entrepreneurs in:</h3>
+                  <h3 style={{ 
+                    fontSize: '2.2rem', 
+                    fontWeight: '600', 
+                    marginBottom: '30px',
+                    position: 'relative',
+                    display: 'inline-block',
+                    paddingBottom: '15px'
+                  }}>
+                    Join hundreds of like-minded researchers, policy makers, and entrepreneurs
+                    <span style={{ 
+                      position: 'absolute', 
+                      bottom: 0, 
+                      left: '50%', 
+                      transform: 'translateX(-50%)', 
+                      width: '80px', 
+                      height: '3px', 
+                      backgroundColor: '#000', 
+                      borderRadius: '10px' 
+                    }}></span>
+                  </h3>
                   
-                  <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '30px', margin: '40px 0' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gap: '30px', 
+                    margin: '40px 0'
+                  }}>
                     <div style={{ 
                       padding: '30px 20px', 
                       background: 'white', 
-                      borderRadius: '8px', 
+                      borderRadius: '12px', 
                       boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                      width: '200px',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      transform: 'translateY(0)',
+                      cursor: 'pointer'
                     }}>
-                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>KEYNOTE TALKS</h4>
-                      <p>Learn from world-leading experts</p>
+                      <div style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#f5f5f5', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        marginBottom: '20px',
+                        fontSize: '24px',
+                        fontWeight: 'bold'
+                      }}>🎤</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>KEYNOTE TALKS</h4>
+                      <p>Learn from world-leading experts in AI research and applications</p>
                     </div>
                     <div style={{ 
                       padding: '30px 20px', 
                       background: 'white', 
-                      borderRadius: '8px', 
+                      borderRadius: '12px', 
                       boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                      width: '200px',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      transform: 'translateY(0)',
+                      cursor: 'pointer'
                     }}>
-                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>PANELS</h4>
-                      <p>Engage with diverse perspectives</p>
+                      <div style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#f5f5f5', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        marginBottom: '20px',
+                        fontSize: '24px',
+                        fontWeight: 'bold'
+                      }}>👥</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>PANELS</h4>
+                      <p>Engage with diverse perspectives from industry leaders and academics</p>
                     </div>
                     <div style={{ 
                       padding: '30px 20px', 
                       background: 'white', 
-                      borderRadius: '8px', 
+                      borderRadius: '12px', 
                       boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                      width: '200px',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      transform: 'translateY(0)',
+                      cursor: 'pointer'
                     }}>
-                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>BREAKOUT ROOMS</h4>
-                      <p>Collaborate on specific topics</p>
+                      <div style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#f5f5f5', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        marginBottom: '20px',
+                        fontSize: '24px',
+                        fontWeight: 'bold'
+                      }}>🔍</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>BREAKOUT SESSIONS</h4>
+                      <p>Collaborate on specific topics in smaller, focused discussion groups</p>
                     </div>
                     <div style={{ 
                       padding: '30px 20px', 
                       background: 'white', 
-                      borderRadius: '8px', 
+                      borderRadius: '12px', 
                       boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                      width: '200px',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      transform: 'translateY(0)',
+                      cursor: 'pointer'
                     }}>
-                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>EXPO HALL</h4>
-                      <p>Discover cutting-edge innovations</p>
+                      <div style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#f5f5f5', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        marginBottom: '20px',
+                        fontSize: '24px',
+                        fontWeight: 'bold'
+                      }}>🚀</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>EXPO HALL</h4>
+                      <p>Discover cutting-edge innovations and network with industry pioneers</p>
                     </div>
                   </div>
                 </div>
               </Container>
             </Section>
             
-            <LogoMarqueeContainer style={{ background: 'white' }}>
-              <Container style={{ marginBottom: '20px', paddingTop: '40px' }}>
-                <h3 style={{ fontSize: '1.8rem', fontWeight: '600', textAlign: 'center', marginBottom: '30px' }}>BREAKOUT ROOMS</h3>
+            <LogoMarqueeContainer style={{ background: 'white', padding: '40px 0', boxShadow: '0 5px 15px rgba(0,0,0,0.05)' }}>
+              <Container style={{ marginBottom: '20px', paddingTop: '0' }}>
+                <h3 style={{ 
+                  fontSize: '1.8rem', 
+                  fontWeight: '600', 
+                  textAlign: 'center', 
+                  marginBottom: '30px',
+                  position: 'relative',
+                  display: 'inline-block',
+                  paddingBottom: '15px',
+                  left: '50%',
+                  transform: 'translateX(-50%)'
+                }}>
+                  BREAKOUT ROOM HOSTS
+                  <span style={{ 
+                    position: 'absolute', 
+                    bottom: 0, 
+                    left: '50%', 
+                    transform: 'translateX(-50%)', 
+                    width: '60px', 
+                    height: '3px', 
+                    backgroundColor: '#000', 
+                    borderRadius: '10px' 
+                  }}></span>
+                </h3>
               </Container>
-              <LogoMarqueeContent>
-                <LogoMarqueeItem>NVIDIA</LogoMarqueeItem>
-                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
-                <LogoMarqueeItem>ENTREPRENEUR FIRST</LogoMarqueeItem>
-                <LogoMarqueeItem>i.AI</LogoMarqueeItem>
-                <LogoMarqueeItem>CUDO COMPUTE</LogoMarqueeItem>
-              </LogoMarqueeContent>
-              <LogoMarqueeContent style={{ animationDelay: "20s" }}>
-                <LogoMarqueeItem>NVIDIA</LogoMarqueeItem>
-                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
-                <LogoMarqueeItem>ENTREPRENEUR FIRST</LogoMarqueeItem>
-                <LogoMarqueeItem>i.AI</LogoMarqueeItem>
-                <LogoMarqueeItem>CUDO COMPUTE</LogoMarqueeItem>
-              </LogoMarqueeContent>
+              <div style={{ overflow: 'hidden', width: '100%' }}>
+                <LogoMarqueeContent>
+                  {/* Logo items with images - all same size and styling */}
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 249 146" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M27 120.68h-9.24l-2.2-5.5H4.5l-2.2 5.5H0l10.4-25.9h6.2l10.4 25.9zM14.1 110.68l-4.6-11.7-4.6 11.7h9.2zM27.7 120.68V94.78h18.8v4.5H32.2v5.6h13.8v4.5H32.2v6.8h14.3v4.5H27.7zM61.5 121.38c-2.4 0-4.6-.4-6.6-1.3-2-.8-3.7-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.1-4.2-1.1-6.6 0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 1.4 0 2.7.1 3.9.4 1.2.3 2.3.6 3.3 1.1s1.9 1 2.7 1.7c.8.7 1.5 1.4 2.1 2.2l-3.5 3.2c-.8-1.1-1.9-2-3.2-2.7s-2.9-1.1-4.7-1.1c-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.4-2.1 3.8-.5 1.5-.7 3.1-.7 4.8 0 1.8.2 3.4.7 4.9.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 2.1 0 3.8-.4 5.1-1.2s2.4-1.9 3.4-3.1l3.5 2.5c-1.2 1.8-2.8 3.3-4.8 4.3-1.8 1.2-4.2 1.7-6.8 1.7zM81.3 120.68h-4.5v-25.9h6.8c1.4 0 2.6.1 3.7.2 1.1.1 2.1.4 2.8.7.8.3 1.5.8 1.9 1.5.5.7.7 1.6.7 2.7 0 1.2-.3 2.2-.9 3-.6.8-1.5 1.5-2.7 1.9v.1c.6.1 1.2.3 1.7.7.5.3 1 .7 1.4 1.2.4.5.7 1 .9 1.6.2.6.3 1.3.3 2 0 1.1-.2 2.1-.7 2.9-.5.8-1.1 1.4-1.9 1.9-.8.5-1.7.9-2.8 1.1-1.1.2-2.2.4-3.4.4h-3.3zm0-14.9h2.2c1.4 0 2.5-.2 3.4-.7.9-.5 1.3-1.3 1.3-2.4 0-1.1-.4-1.9-1.3-2.3-.9-.4-2-.6-3.5-.6h-2.1v6zm0 10.9h2.9c3.2 0 4.8-1.1 4.8-3.4 0-1.1-.4-1.9-1.3-2.5-.9-.6-2.1-.8-3.6-.8h-2.8v6.7zM120.3 120.68h-4.5v-11.3h-11.6v11.3h-4.5v-25.9h4.5v10.5h11.6v-10.5h4.5v25.9zM122.7 107.68c0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 2.3 0 4.5.4 6.4 1.3 1.9.8 3.6 2 5 3.5 1.4 1.5 2.5 3.3 3.3 5.3.8 2 1.2 4.2 1.2 6.5 0 2.4-.4 4.5-1.2 6.5-.8 2-1.9 3.8-3.3 5.3-1.4 1.5-3.1 2.7-5 3.5-1.9.8-4.1 1.3-6.4 1.3-2.3 0-4.5-.4-6.4-1.3-1.9-.8-3.6-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.2-4.2-1.2-6.5zm4.7 0c0 1.7.2 3.3.7 4.8.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 1.6 0 3.1-.3 4.4-.9 1.3-.6 2.4-1.4 3.3-2.5.9-1.1 1.6-2.4 2.1-3.9.5-1.5.7-3.1.7-4.8 0-1.7-.2-3.3-.7-4.8-.5-1.5-1.2-2.7-2.1-3.8-.9-1.1-2-1.9-3.3-2.5-1.3-.6-2.7-.9-4.4-.9-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.3-2.1 3.8-.5 1.5-.7 3.1-.7 4.8zM166.3 120.68h-10.1v-25.9h10.1c2.3 0 4.4.4 6.2 1.2 1.8.8 3.4 1.9 4.7 3.3 1.3 1.4 2.3 3.1 3 5 .7 1.9 1 4 1 6.2 0 2.3-.3 4.3-1 6.2-.7 1.9-1.7 3.6-3 5-1.3 1.4-2.9 2.5-4.7 3.3-1.8.5-3.9.7-6.2.7zm-.3-21.8h-5.3v17.7h5.3c1.5 0 2.9-.3 4.1-.8 1.2-.5 2.2-1.3 3-2.3.8-1 1.4-2.1 1.8-3.5.4-1.4.6-2.9.6-4.6 0-1.7-.2-3.2-.6-4.6-.4-1.4-1-2.5-1.8-3.5-.8-1-1.8-1.7-3-2.3-1.2-.7-2.6-1.1-4.1-1.1zM182.7 120.68v-25.9h4.5v21.4h13v4.5h-17.5zM221.4 120.68h-18.8v-25.9h18.8v4.5h-14.3v5.6h13.8v4.5h-13.8v6.8h14.3v4.5zM233.9 102.68h-8.6v-5h21.7v5h-8.6v20.9h-4.5v-20.9z" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 242 90" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M146.83 33.83c0-4.91 3.76-8.68 8.67-8.68 4.9 0 8.67 3.77 8.67 8.68 0 4.9-3.76 8.67-8.67 8.67-4.91 0-8.67-3.76-8.67-8.67zm-53.77-8.68c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.76-8.68-8.67-8.68zm-43.64 0c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.77-8.68-8.67-8.68zM3.77 25.15C1.7 25.15 0 26.84 0 28.91v51.32c0 2.07 1.7 3.77 3.77 3.77h234.46c2.07 0 3.77-1.7 3.77-3.77V28.91c0-2.07-1.7-3.76-3.77-3.76H3.77z" fill="#000" />
+                        <path d="M234.44 22.58a6.34 6.34 0 0 0-6.33-6.33h-17.24v16.47h-14.89V6h-14.88v10.25h-17.07V6h-14.88v26.72h-42.07V16.25h-17.24a6.34 6.34 0 0 0-6.33 6.33v9.17H65.8V22.58a6.34 6.34 0 0 0-6.34-6.33H42.23v16.47H27.34V16.25H10.1a6.34 6.34 0 0 0-6.33 6.33v9.17H234.6v-9.17h-.17z" fill="#000" />
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 512 98" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M28.5 1.8h23.2v62.8h38.8v19.6H28.5V1.8zM100.9 1.8h23.2v82.4h-23.2V1.8zM225.9 1.8h22.4l34.8 82.4h-25l-4.9-12.5h-32.6l-4.9 12.5h-24.6l34.8-82.4zm18.4 52.4l-6.9-17.7-7 17.7h13.9zM138.5 1.8h23.2v50.6c0 7.5 5.8 13.5 13 13.5 7.2 0 13-6 13-13.5V1.8h23.2v50.6c0 20.3-16.3 36.8-36.2 36.8-20 0-36.2-16.5-36.2-36.8V1.8zM349.2 57.4V1.8h23.2v56c0 4.8 3.7 8.6 8.2 8.6 4.5 0 8.2-3.8 8.2-8.6v-56h23.2v55.6c0 16-12.8 29-31.3 29-18.6 0-31.5-13-31.5-29zM424.1 26.3V1.8h83.4v24.5h-30.1v57.9h-23.3V26.3h-30zM291.7 60.1c9.2 0 16.6-7.7 16.6-17.3 0-9.5-7.4-17.3-16.6-17.3h-14.8v34.6h14.8zm-38-58.3h38c22.4 0 40.7 18.6 40.7 41 0 22.3-18.3 41-40.7 41h-38V1.8z" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 150 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M47.5 27.6c-1.3 0-2.3 1-2.3 2.3 0 1.3 1 2.3 2.3 2.3 1.3 0 2.3-1 2.3-2.3 0-1.3-1-2.3-2.3-2.3zm24.8-12.5c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm35.2-21c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm-60-17.5v3.6h8.7c-.3 2-1 3.5-2 4.5-1.3 1.3-3.3 2.7-6.7 2.7-5.3 0-9.5-4.3-9.5-9.6s4.2-9.6 9.5-9.6c2.9 0 5 1.1 6.5 2.6l2.5-2.5c-2.2-2.1-5-3.7-9-3.7-7.3 0-13.4 5.9-13.4 13.2 0 7.3 6.1 13.2 13.4 13.2 3.9 0 6.9-1.3 9.2-3.7 2.4-2.4 3.1-5.7 3.1-8.4 0-.8-.1-1.6-.2-2.2h-12.1zm90.4 4.4c-.7-1.9-2.9-5.5-7.4-5.5-4.4 0-8.1 3.5-8.1 8.1 0 4.5 3.7 8.1 8.6 8.1 4 0 6.3-2.4 7.2-3.8l-2.9-2c-1 1.4-2.3 2.4-4.3 2.4-1.9 0-3.3-.9-4.2-2.6l11.5-4.8-.4-.9zm-11.7 2.9c-.1-3.1 2.4-4.7 4.2-4.7 1.4 0 2.6.7 3 1.7l-7.2 3zm-9.3 8.3h5.2V9.9h-5.2v30.2zm-8.6-17.8h-.2c-1.2-1.4-3.4-2.6-6.2-2.6-5.9 0-11.3 5.2-11.3 11.8 0 6.6 5.4 11.7 11.3 11.7 2.8 0 5.1-1.3 6.2-2.7h.2v1.7c0 4.5-2.4 6.9-6.3 6.9-3.2 0-5.1-2.3-5.9-4.2l-4.5 1.9c1.3 3.1 4.7 6.9 10.4 6.9 6 0 11.1-3.5 11.1-12.1V15.8h-4.9v1.6h.1zm-5.9 14.3c-3.6 0-6.6-3-6.6-7.2 0-4.2 3-7.3 6.6-7.3 3.5 0 6.3 3.1 6.3 7.3 0 4.2-2.8 7.2-6.3 7.2zm67.6-27h-12.4v30.2h5.2V32.4h7.2c5.7 0 11.4-4.1 11.4-10.8s-5.6-10.8-11.4-10.8zm.1 16.8h-7.3v-12h7.3c3.9 0 6.1 3.2 6.1 6s-2.2 6-6.1 6zm32.4-5c-3.8 0-7.7 1.7-9.3 5.3l4.6 1.9c1-1.9 2.8-2.5 4.7-2.5 2.7 0 5.4 1.6 5.4 4.5v.4c-.9-.5-2.9-1.3-5.4-1.3-4.9 0-9.9 2.7-9.9 7.8 0 4.6 4 7.6 8.6 7.6 3.5 0 5.4-1.6 6.6-3.4h.2v2.7h5V29.8c0-6.2-4.6-9.3-10.5-9.3zm-.6 19c-1.7 0-4-0.8-4-2.9 0-2.6 2.9-3.6 5.4-3.6 2.2 0 3.3.5 4.6 1.1-0.4 3.1-3.1 5.4-6 5.4zm28.7-18.2l-6 15.1h-.2l-6.2-15.1H29.8l9.3 21.2-5.3 11.8h5.4l14.4-33h-6.1z" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 100 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M50 10c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 37c-9.4 0-17-7.6-17-17s7.6-17 17-17 17 7.6 17 17-7.6 17-17 17zm-8-17c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8zm0 0" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                </LogoMarqueeContent>
+                
+                <LogoMarqueeContent style={{ animationDelay: "20s" }}>
+                  {/* Duplicate logo items with the same styling */}
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 249 146" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M27 120.68h-9.24l-2.2-5.5H4.5l-2.2 5.5H0l10.4-25.9h6.2l10.4 25.9zM14.1 110.68l-4.6-11.7-4.6 11.7h9.2zM27.7 120.68V94.78h18.8v4.5H32.2v5.6h13.8v4.5H32.2v6.8h14.3v4.5H27.7zM61.5 121.38c-2.4 0-4.6-.4-6.6-1.3-2-.8-3.7-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.1-4.2-1.1-6.6 0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 1.4 0 2.7.1 3.9.4 1.2.3 2.3.6 3.3 1.1s1.9 1 2.7 1.7c.8.7 1.5 1.4 2.1 2.2l-3.5 3.2c-.8-1.1-1.9-2-3.2-2.7s-2.9-1.1-4.7-1.1c-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.4-2.1 3.8-.5 1.5-.7 3.1-.7 4.8 0 1.8.2 3.4.7 4.9.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 2.1 0 3.8-.4 5.1-1.2s2.4-1.9 3.4-3.1l3.5 2.5c-1.2 1.8-2.8 3.3-4.8 4.3-1.8 1.2-4.2 1.7-6.8 1.7zM81.3 120.68h-4.5v-25.9h6.8c1.4 0 2.6.1 3.7.2 1.1.1 2.1.4 2.8.7.8.3 1.5.8 1.9 1.5.5.7.7 1.6.7 2.7 0 1.2-.3 2.2-.9 3-.6.8-1.5 1.5-2.7 1.9v.1c.6.1 1.2.3 1.7.7.5.3 1 .7 1.4 1.2.4.5.7 1 .9 1.6.2.6.3 1.3.3 2 0 1.1-.2 2.1-.7 2.9-.5.8-1.1 1.4-1.9 1.9-.8.5-1.7.9-2.8 1.1-1.1.2-2.2.4-3.4.4h-3.3zm0-14.9h2.2c1.4 0 2.5-.2 3.4-.7.9-.5 1.3-1.3 1.3-2.4 0-1.1-.4-1.9-1.3-2.3-.9-.4-2-.6-3.5-.6h-2.1v6zm0 10.9h2.9c3.2 0 4.8-1.1 4.8-3.4 0-1.1-.4-1.9-1.3-2.5-.9-.6-2.1-.8-3.6-.8h-2.8v6.7zM120.3 120.68h-4.5v-11.3h-11.6v11.3h-4.5v-25.9h4.5v10.5h11.6v-10.5h4.5v25.9zM122.7 107.68c0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 2.3 0 4.5.4 6.4 1.3 1.9.8 3.6 2 5 3.5 1.4 1.5 2.5 3.3 3.3 5.3.8 2 1.2 4.2 1.2 6.5 0 2.4-.4 4.5-1.2 6.5-.8 2-1.9 3.8-3.3 5.3-1.4 1.5-3.1 2.7-5 3.5-1.9.8-4.1 1.3-6.4 1.3-2.3 0-4.5-.4-6.4-1.3-1.9-.8-3.6-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.2-4.2-1.2-6.5zm4.7 0c0 1.7.2 3.3.7 4.8.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 1.6 0 3.1-.3 4.4-.9 1.3-.6 2.4-1.4 3.3-2.5.9-1.1 1.6-2.4 2.1-3.9.5-1.5.7-3.1.7-4.8 0-1.7-.2-3.3-.7-4.8-.5-1.5-1.2-2.7-2.1-3.8-.9-1.1-2-1.9-3.3-2.5-1.3-.6-2.7-.9-4.4-.9-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.3-2.1 3.8-.5 1.5-.7 3.1-.7 4.8zM166.3 120.68h-10.1v-25.9h10.1c2.3 0 4.4.4 6.2 1.2 1.8.8 3.4 1.9 4.7 3.3 1.3 1.4 2.3 3.1 3 5 .7 1.9 1 4 1 6.2 0 2.3-.3 4.3-1 6.2-.7 1.9-1.7 3.6-3 5-1.3 1.4-2.9 2.5-4.7 3.3-1.8.5-3.9.7-6.2.7zm-.3-21.8h-5.3v17.7h5.3c1.5 0 2.9-.3 4.1-.8 1.2-.5 2.2-1.3 3-2.3.8-1 1.4-2.1 1.8-3.5.4-1.4.6-2.9.6-4.6 0-1.7-.2-3.2-.6-4.6-.4-1.4-1-2.5-1.8-3.5-.8-1-1.8-1.7-3-2.3-1.2-.7-2.6-1.1-4.1-1.1zM182.7 120.68v-25.9h4.5v21.4h13v4.5h-17.5zM221.4 120.68h-18.8v-25.9h18.8v4.5h-14.3v5.6h13.8v4.5h-13.8v6.8h14.3v4.5zM233.9 102.68h-8.6v-5h21.7v5h-8.6v20.9h-4.5v-20.9z" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 242 90" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M146.83 33.83c0-4.91 3.76-8.68 8.67-8.68 4.9 0 8.67 3.77 8.67 8.68 0 4.9-3.76 8.67-8.67 8.67-4.91 0-8.67-3.76-8.67-8.67zm-53.77-8.68c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.76-8.68-8.67-8.68zm-43.64 0c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.77-8.68-8.67-8.68zM3.77 25.15C1.7 25.15 0 26.84 0 28.91v51.32c0 2.07 1.7 3.77 3.77 3.77h234.46c2.07 0 3.77-1.7 3.77-3.77V28.91c0-2.07-1.7-3.76-3.77-3.76H3.77z" fill="#000" />
+                        <path d="M234.44 22.58a6.34 6.34 0 0 0-6.33-6.33h-17.24v16.47h-14.89V6h-14.88v10.25h-17.07V6h-14.88v26.72h-42.07V16.25h-17.24a6.34 6.34 0 0 0-6.33 6.33v9.17H65.8V22.58a6.34 6.34 0 0 0-6.34-6.33H42.23v16.47H27.34V16.25H10.1a6.34 6.34 0 0 0-6.33 6.33v9.17H234.6v-9.17h-.17z" fill="#000" />
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 512 98" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M28.5 1.8h23.2v62.8h38.8v19.6H28.5V1.8zM100.9 1.8h23.2v82.4h-23.2V1.8zM225.9 1.8h22.4l34.8 82.4h-25l-4.9-12.5h-32.6l-4.9 12.5h-24.6l34.8-82.4zm18.4 52.4l-6.9-17.7-7 17.7h13.9zM138.5 1.8h23.2v50.6c0 7.5 5.8 13.5 13 13.5 7.2 0 13-6 13-13.5V1.8h23.2v50.6c0 20.3-16.3 36.8-36.2 36.8-20 0-36.2-16.5-36.2-36.8V1.8zM349.2 57.4V1.8h23.2v56c0 4.8 3.7 8.6 8.2 8.6 4.5 0 8.2-3.8 8.2-8.6v-56h23.2v55.6c0 16-12.8 29-31.3 29-18.6 0-31.5-13-31.5-29zM424.1 26.3V1.8h83.4v24.5h-30.1v57.9h-23.3V26.3h-30zM291.7 60.1c9.2 0 16.6-7.7 16.6-17.3 0-9.5-7.4-17.3-16.6-17.3h-14.8v34.6h14.8zm-38-58.3h38c22.4 0 40.7 18.6 40.7 41 0 22.3-18.3 41-40.7 41h-38V1.8z" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 150 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M47.5 27.6c-1.3 0-2.3 1-2.3 2.3 0 1.3 1 2.3 2.3 2.3 1.3 0 2.3-1 2.3-2.3 0-1.3-1-2.3-2.3-2.3zm24.8-12.5c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm35.2-21c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm-60-17.5v3.6h8.7c-.3 2-1 3.5-2 4.5-1.3 1.3-3.3 2.7-6.7 2.7-5.3 0-9.5-4.3-9.5-9.6s4.2-9.6 9.5-9.6c2.9 0 5 1.1 6.5 2.6l2.5-2.5c-2.2-2.1-5-3.7-9-3.7-7.3 0-13.4 5.9-13.4 13.2 0 7.3 6.1 13.2 13.4 13.2 3.9 0 6.9-1.3 9.2-3.7 2.4-2.4 3.1-5.7 3.1-8.4 0-.8-.1-1.6-.2-2.2h-12.1zm90.4 4.4c-.7-1.9-2.9-5.5-7.4-5.5-4.4 0-8.1 3.5-8.1 8.1 0 4.5 3.7 8.1 8.6 8.1 4 0 6.3-2.4 7.2-3.8l-2.9-2c-1 1.4-2.3 2.4-4.3 2.4-1.9 0-3.3-.9-4.2-2.6l11.5-4.8-.4-.9zm-11.7 2.9c-.1-3.1 2.4-4.7 4.2-4.7 1.4 0 2.6.7 3 1.7l-7.2 3zm-9.3 8.3h5.2V9.9h-5.2v30.2zm-8.6-17.8h-.2c-1.2-1.4-3.4-2.6-6.2-2.6-5.9 0-11.3 5.2-11.3 11.8 0 6.6 5.4 11.7 11.3 11.7 2.8 0 5.1-1.3 6.2-2.7h.2v1.7c0 4.5-2.4 6.9-6.3 6.9-3.2 0-5.1-2.3-5.9-4.2l-4.5 1.9c1.3 3.1 4.7 6.9 10.4 6.9 6 0 11.1-3.5 11.1-12.1V15.8h-4.9v1.6h.1zm-5.9 14.3c-3.6 0-6.6-3-6.6-7.2 0-4.2 3-7.3 6.6-7.3 3.5 0 6.3 3.1 6.3 7.3 0 4.2-2.8 7.2-6.3 7.2zm67.6-27h-12.4v30.2h5.2V32.4h7.2c5.7 0 11.4-4.1 11.4-10.8s-5.6-10.8-11.4-10.8zm.1 16.8h-7.3v-12h7.3c3.9 0 6.1 3.2 6.1 6s-2.2 6-6.1 6zm32.4-5c-3.8 0-7.7 1.7-9.3 5.3l4.6 1.9c1-1.9 2.8-2.5 4.7-2.5 2.7 0 5.4 1.6 5.4 4.5v.4c-.9-.5-2.9-1.3-5.4-1.3-4.9 0-9.9 2.7-9.9 7.8 0 4.6 4 7.6 8.6 7.6 3.5 0 5.4-1.6 6.6-3.4h.2v2.7h5V29.8c0-6.2-4.6-9.3-10.5-9.3zm-.6 19c-1.7 0-4-0.8-4-2.9 0-2.6 2.9-3.6 5.4-3.6 2.2 0 3.3.5 4.6 1.1-0.4 3.1-3.1 5.4-6 5.4zm28.7-18.2l-6 15.1h-.2l-6.2-15.1H29.8l9.3 21.2-5.3 11.8h5.4l14.4-33h-6.1z" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                  
+                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
+                    <div style={{ 
+                      width: '160px', 
+                      height: '80px', 
+                      backgroundColor: 'white', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      borderRadius: '8px',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      padding: '15px'
+                    }}>
+                      <svg viewBox="0 0 100 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
+                        <path d="M50 10c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 37c-9.4 0-17-7.6-17-17s7.6-17 17-17 17 7.6 17 17-7.6 17-17 17zm-8-17c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8zm0 0" fill="#000"/>
+                      </svg>
+                    </div>
+                  </LogoMarqueeItem>
+                </LogoMarqueeContent>
+              </div>
             </LogoMarqueeContainer>
             
             <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '60px' }} id="venue">
               <Container>
                 <SectionTitle>Venue</SectionTitle>
                 <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', marginTop: '40px', 
-                    '@media (max-width: 768px)': { gridTemplateColumns: '1fr' } }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+                    gap: '40px', 
+                    marginTop: '40px'
+                  }}>
                     <div>
-                      <div style={{ width: '100%', height: '400px', border: '2px solid black', overflow: 'hidden', marginBottom: '20px' }}>
+                      <div style={{ width: '100%', height: '300px', border: '2px solid black', overflow: 'hidden', marginBottom: '20px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
                         <img src="/images/friends_house.jpg" alt="Friend's House" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
-                      <div style={{ width: '100%', height: '400px', border: '2px solid black', overflow: 'hidden' }}>
+                      <div style={{ width: '100%', height: '300px', border: '2px solid black', overflow: 'hidden', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
                         <iframe 
                           title="Friend's House Location Map"
                           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.4952695456103!2d-0.13910492392386794!3d51.52580297181142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b2f69173579%3A0xd8e8146c17e0dd9!2sFriends%20House!5e0!3m2!1sen!2sus!4v1709901294448!5m2!1sen!2sus" 
@@ -2524,7 +3099,7 @@ function App({ ticketsPage = false }) {
                         ></iframe>
                       </div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'white', padding: '30px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
                       <h3 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '15px' }}>Friend's House</h3>
                       <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>173-177 Euston Road, London, NW1 2BJ</p>
                       
@@ -2542,76 +3117,417 @@ function App({ ticketsPage = false }) {
                 </div>
               </Container>
             </Section>
+            
+            <Section style={{ padding: '100px 0', background: 'linear-gradient(135deg, #ffffff, #f8f8f8)', marginTop: '0px' }} id="breakout-rooms">
+              <Container>
+                <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+                  <h2 style={{ 
+                    fontSize: '2.5rem', 
+                    fontWeight: '700', 
+                    marginBottom: '20px',
+                    background: 'linear-gradient(90deg, #333, #000)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}>
+                    Breakout Rooms
+                  </h2>
+                  <p style={{ fontSize: '1.2rem', marginBottom: '40px', color: '#555' }}>
+                    Engage in focused discussions and collaborative sessions in our specially designed breakout spaces.
+                  </p>
+                </div>
+                
+                <div style={{ 
+                  display: 'flex', 
+                  flexWrap: 'wrap', 
+                  gap: '30px', 
+                  justifyContent: 'center',
+                  marginTop: '40px'
+                }}>
+                  <div style={{ 
+                    width: '300px', 
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 20px rgba(0,0,0,0.05)',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    cursor: 'pointer'
+                  }}>
+                    <div style={{ 
+                      height: '200px', 
+                      background: '#f0f0f0', 
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#555',
+                      fontSize: '1.2rem',
+                      fontWeight: '600'
+                    }}>
+                      Penn Room
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>AI Ethics Discussion</h3>
+                      <p style={{ color: '#666', marginBottom: '15px' }}>Capacity: 50 people</p>
+                      <p style={{ color: '#666' }}>Equipped with projector, whiteboard, and roundtable seating for collaborative discussions.</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    width: '300px', 
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 20px rgba(0,0,0,0.05)',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    cursor: 'pointer'
+                  }}>
+                    <div style={{ 
+                      height: '200px', 
+                      background: '#f0f0f0', 
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#555',
+                      fontSize: '1.2rem',
+                      fontWeight: '600'
+                    }}>
+                      Young Friends Room
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>ML Workshop</h3>
+                      <p style={{ color: '#666', marginBottom: '15px' }}>Capacity: 75 people</p>
+                      <p style={{ color: '#666' }}>Flexible space with classroom-style seating, dual projectors, and networking capabilities.</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    width: '300px', 
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 20px rgba(0,0,0,0.05)',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    cursor: 'pointer'
+                  }}>
+                    <div style={{ 
+                      height: '200px', 
+                      background: '#f0f0f0', 
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#555',
+                      fontSize: '1.2rem',
+                      fontWeight: '600'
+                    }}>
+                      Hilda Clark Room
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Startup Pitches</h3>
+                      <p style={{ color: '#666', marginBottom: '15px' }}>Capacity: 40 people</p>
+                      <p style={{ color: '#666' }}>Intimate setting with theater-style seating, presentation equipment, and sound system.</p>
+                    </div>
+                  </div>
+                </div>
+              </Container>
+            </Section>
+            
+            <Section style={{ padding: '100px 0', background: '#ffffff', marginTop: '0px' }} id="breakout-room-hosts">
+              <Container>
+                <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+                  <h2 style={{ 
+                    fontSize: '2.5rem', 
+                    fontWeight: '700', 
+                    marginBottom: '20px',
+                    background: 'linear-gradient(90deg, #333, #000)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}>
+                    BREAKOUT ROOM HOSTS
+                  </h2>
+                  <p style={{ fontSize: '1.2rem', marginBottom: '40px', color: '#555' }}>
+                    Meet our experts who will guide the focused discussions in our breakout spaces
+                  </p>
+                </div>
+                
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+                  gap: '30px', 
+                  justifyItems: 'center',
+                  alignItems: 'start',
+                  marginTop: '40px'
+                }}>
+                  <div style={{ 
+                    width: '100%',
+                    maxWidth: '300px',
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
+                  }}>
+                    <div style={{ height: '300px', overflow: 'hidden' }}>
+                      <img 
+                        src="/images/breakout_rooms/download copy 2.png" 
+                        alt="Breakout Room Host 1" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. Sarah Chen</h3>
+                      <p style={{ color: '#666', marginBottom: '10px' }}>AI Ethics Specialist</p>
+                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Penn Room</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    width: '100%',
+                    maxWidth: '300px',
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
+                  }}>
+                    <div style={{ height: '300px', overflow: 'hidden' }}>
+                      <img 
+                        src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.37.png" 
+                        alt="Breakout Room Host 2" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Prof. Michael Rivera</h3>
+                      <p style={{ color: '#666', marginBottom: '10px' }}>Machine Learning Expert</p>
+                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Young Friends Room</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    width: '100%',
+                    maxWidth: '300px',
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
+                  }}>
+                    <div style={{ height: '300px', overflow: 'hidden' }}>
+                      <img 
+                        src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.48.png" 
+                        alt="Breakout Room Host 3" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Emma Johnson</h3>
+                      <p style={{ color: '#666', marginBottom: '10px' }}>Startup Advisor</p>
+                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Hilda Clark Room</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    width: '100%',
+                    maxWidth: '300px',
+                    background: 'white', 
+                    borderRadius: '12px', 
+                    overflow: 'hidden',
+                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
+                  }}>
+                    <div style={{ height: '300px', overflow: 'hidden' }}>
+                      <img 
+                        src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.59.png" 
+                        alt="Breakout Room Host 4" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. James Wilson</h3>
+                      <p style={{ color: '#666', marginBottom: '10px' }}>Research Director</p>
+                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Special Workshop Room</p>
+                    </div>
+                  </div>
+                </div>
+              </Container>
+            </Section>
           </>
         )}
       </main>
       
       <Footer>
         <Container>
-          <FooterGrid>
-            <FooterColumn>
-              <FooterLogo>
-                <img src="/images/thatpng.jpg" alt="THAT Logo" />
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+            gap: '40px', 
+            marginBottom: '60px'
+          }}>
+            <div>
+              <div style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                marginBottom: '24px',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <img src="/images/thatpng.jpg" alt="THAT Logo" style={{ height: '30px', marginRight: '10px' }} />
                 THAT
-              </FooterLogo>
-              <FooterDescription>
+              </div>
+              <p style={{ 
+                fontSize: '0.95rem',
+                lineHeight: '1.6',
+                marginBottom: '24px',
+                opacity: '0.8',
+                maxWidth: '300px'
+              }}>
                 A premier summit bringing together researchers, entrepreneurs, and policymakers to address critical challenges in AI.
-              </FooterDescription>
-              <SocialLinks>
-                <SocialLink href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                  Youtube
-                </SocialLink>
-                <SocialLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                  LinkedIn
-                </SocialLink>
-                <SocialLink href="https://www.algopreneurship.org/" target="_blank" rel="noopener noreferrer">
-                  Website
-                </SocialLink>
-              </SocialLinks>
-            </FooterColumn>
+              </p>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{
+                  fontSize: '1rem',
+                  opacity: '0.7',
+                  transition: 'opacity 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255,255,255,0.1)'
+                }}>
+                  YT
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={{
+                  fontSize: '1rem',
+                  opacity: '0.7',
+                  transition: 'opacity 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255,255,255,0.1)'
+                }}>
+                  in
+                </a>
+                <a href="https://www.algopreneurship.org/" target="_blank" rel="noopener noreferrer" style={{
+                  fontSize: '1rem',
+                  opacity: '0.7',
+                  transition: 'opacity 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255,255,255,0.1)'
+                }}>
+                  🌐
+                </a>
+              </div>
+            </div>
             
-            <FooterColumn>
-              <FooterTitle>Summit</FooterTitle>
-              <FooterLinks>
-                <FooterLink><a href="#speakers">Speakers</a></FooterLink>
-                <FooterLink><a href="#schedule">Schedule</a></FooterLink>
-                <FooterLink><a href="#venue">Venue</a></FooterLink>
-                <FooterLink><a href="#sponsors">Partners</a></FooterLink>
-              </FooterLinks>
-            </FooterColumn>
+            <div>
+              <h4 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '24px' }}>Summit</h4>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="#speakers" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Speakers
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="#schedule" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Schedule
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="#venue" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Venue
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="#sponsors" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Partners
+                  </a>
+                </li>
+              </ul>
+            </div>
             
-            <FooterColumn>
-              <FooterTitle>Information</FooterTitle>
-              <FooterLinks>
-                <FooterLink><a href="https://www.algopreneurship.org/">Registration</a></FooterLink>
-                <FooterLink><a href="https://www.algopreneurship.org/">FAQs</a></FooterLink>
-                <FooterLink><a href="https://www.algopreneurship.org/">Travel</a></FooterLink>
-                <FooterLink><a href="https://www.algopreneurship.org/">Accommodations</a></FooterLink>
-              </FooterLinks>
-            </FooterColumn>
+            <div>
+              <h4 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '24px' }}>Information</h4>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Registration
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    FAQs
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Travel
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Accommodations
+                  </a>
+                </li>
+              </ul>
+            </div>
             
-            <FooterColumn>
-              <FooterTitle>Contact</FooterTitle>
-              <FooterLinks>
-                <FooterLink><a href="mailto:webmaster@thinkingaboutthinking.org">Email Us</a></FooterLink>
-                <FooterLink><a href="https://www.algopreneurship.org/">Sponsorship</a></FooterLink>
-                <FooterLink><a href="https://www.algopreneurship.org/">Media</a></FooterLink>
-                <FooterLink><a href="https://www.algopreneurship.org/">Support</a></FooterLink>
-              </FooterLinks>
-            </FooterColumn>
-          </FooterGrid>
+            <div>
+              <h4 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '24px' }}>Contact</h4>
+              <ul style={{ listStyle: 'none', padding: '0' }}>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="mailto:webmaster@thinkingaboutthinking.org" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Email Us
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Sponsorship
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Media
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Support
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
           
-          <FooterBottom>
-            <Copyright>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            paddingTop: '32px',
+            flexWrap: 'wrap',
+            gap: '20px'
+          }}>
+            <p style={{ fontSize: '0.875rem', opacity: '0.6' }}>
               © {new Date().getFullYear()} THAT. All rights reserved.
-            </Copyright>
+            </p>
             
-            <LegalLinks>
-              <a href="https://www.algopreneurship.org/">Privacy Policy</a>
-              <a href="https://www.algopreneurship.org/">Terms of Service</a>
-              <a href="https://www.algopreneurship.org/">Cookie Policy</a>
-            </LegalLinks>
-          </FooterBottom>
+            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+              <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.875rem', opacity: '0.6', transition: 'opacity 0.3s ease' }}>
+                Privacy Policy
+              </a>
+              <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.875rem', opacity: '0.6', transition: 'opacity 0.3s ease' }}>
+                Terms of Service
+              </a>
+              <a href="https://www.algopreneurship.org/" style={{ fontSize: '0.875rem', opacity: '0.6', transition: 'opacity 0.3s ease' }}>
+                Cookie Policy
+              </a>
+            </div>
+          </div>
         </Container>
       </Footer>
     </ThemeProvider>
