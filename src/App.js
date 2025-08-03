@@ -571,6 +571,11 @@ const marqueeAnimation = keyframes`
   100% { transform: translateX(-100%); }
 `;
 
+const continuousMarqueeAnimation = keyframes`
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+`;
+
 const MarqueeContainer = styled.div`
   background-color: #000;
   color: #fff;
@@ -581,10 +586,36 @@ const MarqueeContainer = styled.div`
   position: relative;
 `;
 
+const LogoMarqueeContainer = styled.div`
+  background-color: #f8f8f8;
+  color: #000;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  padding: 25px 0;
+  position: relative;
+`;
+
+const LogoMarqueeContent = styled.div`
+  display: inline-block;
+  animation: ${continuousMarqueeAnimation} 40s linear infinite;
+  padding-left: 100%;
+  animation-delay: ${props => props.delay || '0s'};
+`;
+
+const LogoMarqueeItem = styled.span`
+  margin-right: 80px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+`;
+
 const MarqueeContent = styled.div`
   display: inline-block;
-  animation: ${marqueeAnimation} 30s linear infinite;
+  animation: ${continuousMarqueeAnimation} 30s linear infinite;
   padding-left: 100%;
+  animation-delay: ${props => props.delay || '0s'};
 `;
 
 const MarqueeItem = styled.span`
@@ -2135,8 +2166,8 @@ function App({ ticketsPage = false }) {
                   <HeroSubtitle>
                     How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
                   </HeroSubtitle>
-                  <p style={{ marginTop: "20px", fontWeight: "500" }}>Algorithmic Innovation and Entrepreneurship</p>
-                  <p style={{ marginTop: "10px", color: "#666" }}>Registration coming soon</p>
+                  <p style={{ marginTop: "20px", fontWeight: "600", fontSize: "1.3rem" }}>Algorithmic Innovation and Entrepreneurship</p>
+                  <p style={{ marginTop: "10px", color: "#666", fontWeight: "500" }}>Registration coming soon</p>
                   <HeroActions>
                     <RegistrationButton 
                       href="#" 
@@ -2188,7 +2219,7 @@ function App({ ticketsPage = false }) {
                 <MarqueeItem>Early bird pricing <strong>£399</strong></MarqueeItem>
                 <MarqueeItem>VIP tickets include <strong>private networking dinner</strong></MarqueeItem>
               </MarqueeContent>
-              <MarqueeContent style={{ animationDelay: "15s" }}>
+              <MarqueeContent delay="-15s">
                 <MarqueeItem>London, UK • <strong>October 28-30, 2025</strong></MarqueeItem>
                 <MarqueeItem>World-class speakers from <strong>DeepMind, Meta, Harvard, Oxford</strong></MarqueeItem>
                 <MarqueeItem>Global Summit on <strong>Open Problems for AI</strong></MarqueeItem>
@@ -2272,13 +2303,12 @@ function App({ ticketsPage = false }) {
                         </SpeakersGrid>
                         
                         <div style={{ textAlign: 'center', marginTop: '40px' }}>
-                          <h4 style={{ fontSize: '18px', marginBottom: '10px' }}>Join us for a full day of:</h4>
-                          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
-                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Keynote talks</div>
-                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Panels</div>
-                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Breakout rooms</div>
-                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Expo hall</div>
-                          </div>
+                          <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '15px' }}>
+                            Speakers from the UK's leading institutions discuss the future challenges and opportunities in AI research and application
+                          </h4>
+                          <p style={{ marginBottom: '20px', fontSize: '1.05rem' }}>
+                            Join us for a full day of insightful presentations and discussions
+                          </p>
                         </div>
                       </FeaturedSpeakers>
                     </TabContent>
@@ -2287,51 +2317,43 @@ function App({ ticketsPage = false }) {
               </Container>
             </SpeakersSection>
             
-            <VenueSection id="venue">
-              <Container>
-                <SectionTitle>Event Venue</SectionTitle>
-                <SectionSubtitle>
-                  Join us at the prestigious Friends House in central London
-                </SectionSubtitle>
-                
-                <VenueGrid>
-                  <VenueInfo>
-                    <VenueTitle>Friend's House</VenueTitle>
-                    <VenueAddress>173-177 Euston Road, London, NW1 2BJ</VenueAddress>
-                    <VenueDirections>
-                      Walking distance from Euston, Euston Square, and King's Cross. No on-site parking available.
-                    </VenueDirections>
-                    <SecondaryButton href="https://maps.google.com/?q=Friends+House+London" target="_blank">
-                      Get Directions
-                    </SecondaryButton>
-                  </VenueInfo>
-                  
-                  <VenueMap>
-                    <img src="/images/friends_house.jpg" alt="Friend's House, London" />
-                  </VenueMap>
-                </VenueGrid>
-              </Container>
-            </VenueSection>
             
             <SponsorsSection id="sponsors">
               <Container>
+                <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                  <img src="https://via.placeholder.com/1000x250?text=Partners+and+Sponsors" alt="Partners and Sponsors Banner" style={{ maxWidth: '100%', height: 'auto' }} />
+                </div>
+              
                 <SectionTitle>Partners</SectionTitle>
                 <SectionSubtitle>
                   Leading organizations supporting innovation in AI
                 </SectionSubtitle>
                 
+                <div style={{ marginBottom: '60px' }}>
+                  <SponsorsGrid>
+                    <SponsorLogo style={{ height: '120px' }}>
+                      <img src="https://via.placeholder.com/200x100?text=Partner+1" alt="Partner 1" />
+                    </SponsorLogo>
+                    <SponsorLogo style={{ height: '120px' }}>
+                      <img src="https://via.placeholder.com/200x100?text=Partner+2" alt="Partner 2" />
+                    </SponsorLogo>
+                    <SponsorLogo style={{ height: '120px' }}>
+                      <img src="https://via.placeholder.com/200x100?text=Partner+3" alt="Partner 3" />
+                    </SponsorLogo>
+                  </SponsorsGrid>
+                </div>
+                
                 <SponsorsTiers>
                   <SponsorsTier>
                     <SponsorsTierTitle>Gold Sponsors</SponsorsTierTitle>
                     <SponsorsGrid>
-                      {/* Add sponsor logos here */}
-                      <SponsorLogo index={0}>
+                      <SponsorLogo>
                         <img src="https://via.placeholder.com/200x100?text=Sponsor+1" alt="Sponsor 1" />
                       </SponsorLogo>
-                      <SponsorLogo index={1}>
+                      <SponsorLogo>
                         <img src="https://via.placeholder.com/200x100?text=Sponsor+2" alt="Sponsor 2" />
                       </SponsorLogo>
-                      <SponsorLogo index={2}>
+                      <SponsorLogo>
                         <img src="https://via.placeholder.com/200x100?text=Sponsor+3" alt="Sponsor 3" />
                       </SponsorLogo>
                     </SponsorsGrid>
@@ -2340,41 +2362,178 @@ function App({ ticketsPage = false }) {
                   <SponsorsTier>
                     <SponsorsTierTitle>Silver Sponsors</SponsorsTierTitle>
                     <SponsorsGrid>
-                      <SponsorLogo index={3}>
+                      <SponsorLogo>
                         <img src="https://via.placeholder.com/200x100?text=Sponsor+4" alt="Sponsor 4" />
                       </SponsorLogo>
-                      <SponsorLogo index={4}>
+                      <SponsorLogo>
                         <img src="https://via.placeholder.com/200x100?text=Sponsor+5" alt="Sponsor 5" />
                       </SponsorLogo>
                     </SponsorsGrid>
                   </SponsorsTier>
                 </SponsorsTiers>
                 
-                <div style={{ textAlign: 'center', marginTop: '40px' }}>
-                  <p>Want to become a sponsor?</p>
-                  <ContactInfo>
-                    <a href="mailto:webmaster@thinkingaboutthinking.org">Contact us</a>
-                  </ContactInfo>
+                <div style={{ textAlign: 'center', marginTop: '60px' }}>
+                  <h3 style={{ marginBottom: '20px', fontSize: '1.4rem' }}>Want to become a sponsor?</h3>
+                  <a href="mailto:webmaster@thinkingaboutthinking.org" style={{
+                    display: 'inline-block',
+                    padding: '15px 30px',
+                    background: '#000',
+                    color: '#fff',
+                    borderRadius: '30px',
+                    textDecoration: 'none',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease'
+                  }}>Contact us</a>
                 </div>
               </Container>
             </SponsorsSection>
 
-            <Section style={{ padding: '80px 0', background: '#f8f8f8' }}>
+            
+            <Section style={{ padding: '100px 0 40px', background: 'white' }}>
               <Container>
-                <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>Inquiries</h3>
-                  <p style={{ marginBottom: '10px' }}>webmaster@thinkingaboutthinking.org</p>
+                <div style={{ textAlign: 'center', maxWidth: '1000px', margin: '0 auto' }}>
+                  <h2 style={{ fontSize: '2.4rem', fontWeight: '700', marginBottom: '20px' }}>
+                    Speakers from the UK's leading institutions
+                  </h2>
+                  <p style={{ fontSize: '1.3rem', marginBottom: '30px', maxWidth: '800px', margin: '0 auto 40px' }}>
+                    Discuss the future challenges and opportunities in AI research and application
+                  </p>
+                </div>
+              </Container>
+            </Section>
+            
+            <LogoMarqueeContainer>
+              <LogoMarqueeContent>
+                <LogoMarqueeItem>PUBLIC AI</LogoMarqueeItem>
+                <LogoMarqueeItem>MULTIVERSE</LogoMarqueeItem>
+                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
+                <LogoMarqueeItem>TONY BLAIR INSTITUTE FOR GLOBAL CHANGE</LogoMarqueeItem>
+                <LogoMarqueeItem>DEEPMIND</LogoMarqueeItem>
+                <LogoMarqueeItem>META</LogoMarqueeItem>
+              </LogoMarqueeContent>
+              <LogoMarqueeContent style={{ animationDelay: "20s" }}>
+                <LogoMarqueeItem>PUBLIC AI</LogoMarqueeItem>
+                <LogoMarqueeItem>MULTIVERSE</LogoMarqueeItem>
+                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
+                <LogoMarqueeItem>TONY BLAIR INSTITUTE FOR GLOBAL CHANGE</LogoMarqueeItem>
+                <LogoMarqueeItem>DEEPMIND</LogoMarqueeItem>
+                <LogoMarqueeItem>META</LogoMarqueeItem>
+              </LogoMarqueeContent>
+            </LogoMarqueeContainer>
+            
+            <Section style={{ padding: '100px 0 80px', background: '#f8f8f8' }}>
+              <Container>
+                <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+                  <h3 style={{ fontSize: '2.2rem', fontWeight: '600', marginBottom: '30px' }}>Join hundreds of like-minded researchers, policy makers, and entrepreneurs in:</h3>
                   
-                  <div style={{ marginTop: '40px' }}>
-                    <p>Brought to you by Thinking About Thinking, Inc.</p>
-                    <p>A 501(c)3 Nonprofit Company in the State of New Jersey.</p>
-                    <p>28 Spring Street, Unit 156, Princeton, NJ, USA, 08540</p>
+                  <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '30px', margin: '40px 0' }}>
+                    <div style={{ 
+                      padding: '30px 20px', 
+                      background: 'white', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      width: '200px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>KEYNOTE TALKS</h4>
+                      <p>Learn from world-leading experts</p>
+                    </div>
+                    <div style={{ 
+                      padding: '30px 20px', 
+                      background: 'white', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      width: '200px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>PANELS</h4>
+                      <p>Engage with diverse perspectives</p>
+                    </div>
+                    <div style={{ 
+                      padding: '30px 20px', 
+                      background: 'white', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      width: '200px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>BREAKOUT ROOMS</h4>
+                      <p>Collaborate on specific topics</p>
+                    </div>
+                    <div style={{ 
+                      padding: '30px 20px', 
+                      background: 'white', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      width: '200px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <h4 style={{ marginBottom: '10px', fontSize: '1.2rem' }}>EXPO HALL</h4>
+                      <p>Discover cutting-edge innovations</p>
+                    </div>
                   </div>
-                  
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '30px' }}>
-                    <a href="#" style={{ color: '#000' }}>Youtube</a>
-                    <a href="#" style={{ color: '#000' }}>LinkedIn</a>
-                    <a href="#" style={{ color: '#000' }}>Socials</a>
+                </div>
+              </Container>
+            </Section>
+            
+            <LogoMarqueeContainer style={{ background: 'white' }}>
+              <Container style={{ marginBottom: '20px', paddingTop: '40px' }}>
+                <h3 style={{ fontSize: '1.8rem', fontWeight: '600', textAlign: 'center', marginBottom: '30px' }}>BREAKOUT ROOMS</h3>
+              </Container>
+              <LogoMarqueeContent>
+                <LogoMarqueeItem>NVIDIA</LogoMarqueeItem>
+                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
+                <LogoMarqueeItem>ENTREPRENEUR FIRST</LogoMarqueeItem>
+                <LogoMarqueeItem>i.AI</LogoMarqueeItem>
+                <LogoMarqueeItem>CUDO COMPUTE</LogoMarqueeItem>
+              </LogoMarqueeContent>
+              <LogoMarqueeContent style={{ animationDelay: "20s" }}>
+                <LogoMarqueeItem>NVIDIA</LogoMarqueeItem>
+                <LogoMarqueeItem>INNOVATE UK</LogoMarqueeItem>
+                <LogoMarqueeItem>ENTREPRENEUR FIRST</LogoMarqueeItem>
+                <LogoMarqueeItem>i.AI</LogoMarqueeItem>
+                <LogoMarqueeItem>CUDO COMPUTE</LogoMarqueeItem>
+              </LogoMarqueeContent>
+            </LogoMarqueeContainer>
+            
+            <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '60px' }} id="venue">
+              <Container>
+                <SectionTitle>Venue</SectionTitle>
+                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', marginTop: '40px', 
+                    '@media (max-width: 768px)': { gridTemplateColumns: '1fr' } }}>
+                    <div>
+                      <div style={{ width: '100%', height: '400px', border: '2px solid black', overflow: 'hidden', marginBottom: '20px' }}>
+                        <img src="/images/friends_house.jpg" alt="Friend's House" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                      <div style={{ width: '100%', height: '400px', border: '2px solid black', overflow: 'hidden' }}>
+                        <iframe 
+                          title="Friend's House Location Map"
+                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.4952695456103!2d-0.13910492392386794!3d51.52580297181142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b2f69173579%3A0xd8e8146c17e0dd9!2sFriends%20House!5e0!3m2!1sen!2sus!4v1709901294448!5m2!1sen!2sus" 
+                          width="100%" 
+                          height="100%" 
+                          style={{ border: 'none' }} 
+                          allowFullScreen="" 
+                          loading="lazy" 
+                          referrerPolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <h3 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '15px' }}>Friend's House</h3>
+                      <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>173-177 Euston Road, London, NW1 2BJ</p>
+                      
+                      <div style={{ marginTop: '30px' }}>
+                        <h4 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Getting there</h4>
+                        <p style={{ lineHeight: '1.6' }}>Walking distance from Euston, Euston Square, and King's Cross. No on-site parking available.</p>
+                      </div>
+                      
+                      <div style={{ marginTop: '40px' }}>
+                        <h4 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Inquiries</h4>
+                        <p>webmaster@thinkingaboutthinking.org</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Container>
