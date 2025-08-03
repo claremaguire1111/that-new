@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algopreneurship Summit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #F7F3F0;
+      --black: #0A0A0A;
+      --charcoal: #1A1A1A;
+      --white: #FFFFFF;
+      --navy: #0F1B2D;
+      --dark-green: #1D3025;
+      --grey-100: #F1F1F1;
+      --grey-200: #E1E1E1;
+      --grey-300: #C4C4C4;
+      --grey-400: #8C8C8C;
+      --grey-500: #555555;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.5;
+      overflow-x: hidden;
+      font-size: 16px;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+    }
+    
+    button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      background: none;
+      font-family: inherit;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    @media (min-width: 768px) {
+      .container {
+        padding: 0 48px;
+      }
+    }
+    
+    @media (min-width: 1200px) {
+      .container {
+        padding: 0 80px;
+      }
+    }
+
+    .header {
+      background: var(--cream);
+      padding: 20px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .logo span {
+      color: var(--navy);
+    }
+
+    .nav-items {
+      display: flex;
+      gap: 40px;
+    }
+
+    .nav-link {
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero {
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background: linear-gradient(to right, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(10, 10, 10, 0.3) 100%), url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero-tagline {
+      font-size: 1.125rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: 5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      font-weight: 400;
+      line-height: 1.4;
+      margin-bottom: 48px;
+      max-width: 600px;
+    }
+
+    .button {
+      background-color: var(--charcoal);
+      color: var(--white);
+      padding: 12px 32px;
+      border-radius: 2px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .button:hover {
+      background-color: var(--black);
+      transform: translateY(-2px);
+    }
+
+    .section {
+      padding: 120px 0;
+    }
+
+    .section-title {
+      font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      margin-bottom: 64px;
+      max-width: 600px;
+    }
+
+    .ticket-section {
+      background-color: var(--black);
+      color: var(--white);
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .ticket-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .ticket-toggle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      margin-top: 40px;
+    }
+
+    .ticket-toggle-button {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--black);
+      border: 1px solid transparent;
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .ticket-toggle-button:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .ticket-toggle-button:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .ticket-help-text {
+      text-align: center;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+    
+    @media (max-width: 1200px) {
+      .ticket-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .ticket-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+      }
+
+      .section {
+        padding: 80px 0;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+
+    .ticket-card {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ticket-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .ticket-card-premium {
+      background: linear-gradient(135deg, #111111, #000000);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .ticket-card-premium:hover {
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .ticket-type-badge {
+      position: absolute;
+      top: 0;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .ticket-type-badge-premium {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: var(--black);
+    }
+
+    .ticket-type {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+
+    .ticket-type-premium {
+      color: #FFD700;
+    }
+
+    .ticket-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 16px 0 8px;
+      color: var(--white);
+    }
+
+    .ticket-price-per-day {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 8px;
+    }
+
+    .ticket-availability {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 400;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .ticket-availability-limited {
+      color: #FFD700;
+      font-weight: 600;
+    }
+
+    .ticket-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+      margin: 8px 0 24px;
+    }
+
+    .ticket-features {
+      list-style: none;
+      margin: 0 0 32px;
+      padding: 0;
+      flex: 1;
+    }
+
+    .ticket-feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+    }
+
+    .ticket-feature:before {
+      content: "✓";
+      margin-right: 8px;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .ticket-button {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      padding: 12px 24px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+
+    .ticket-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .ticket-button-premium {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: var(--black);
+      border: none;
+      font-weight: 600;
+    }
+
+    .ticket-button-premium:hover {
+      background: linear-gradient(135deg, #FFC107, #FF9800);
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+
+    .footer {
+      background-color: var(--charcoal);
+      color: var(--white);
+      padding: 80px 0 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 80px;
+    }
+
+    @media (max-width: 1024px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .footer-description {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .social-link {
+      font-size: 1.25rem;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .social-link:hover {
+      opacity: 1;
+    }
+
+    .footer-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-link {
+      margin-bottom: 12px;
+    }
+
+    .footer-link a {
+      font-size: 0.9375rem;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .footer-link a:hover {
+      opacity: 1;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+      .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+    }
+
+    .copyright {
+      font-size: 0.875rem;
+      opacity: 0.6;
+    }
+
+    .legal-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .legal-links a {
+      font-size: 0.875rem;
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+
+    .legal-links a:hover {
+      opacity: 1;
+    }
+
+    #singleDayTickets {
+      display: block;
+    }
+
+    #threeDayTickets {
+      display: none;
+    }
+
+    .background-logo {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.05;
+      width: 50%;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .ticket-info {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 32px;
+      margin-top: 64px;
+    }
+
+    .ticket-info h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+    
+    .ticket-info p {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+    }
+    
+    .ticket-info a {
+      color: #4CAF50;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+    }
+    
+    .ticket-info a:hover {
+      color: #81C784;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="logo">
+          Algopreneurship<span>.</span>
+        </div>
+        
+        <div class="nav-items">
+          <a href="#about" class="nav-link">About</a>
+          <a href="#speakers" class="nav-link">Speakers</a>
+          <a href="#schedule" class="nav-link">Schedule</a>
+          <a href="#venue" class="nav-link">Venue</a>
+          <a href="#sponsors" class="nav-link">Partners</a>
+          <a href="#tickets" class="nav-link">Tickets</a>
+          <a href="#register" class="button">Register Now</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-tagline">Global Summit</div>
+          <h1 class="hero-title">Open Problems for AI</h1>
+          <h2 class="hero-subtitle">
+            How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
+          </h2>
+          <a href="#register" class="button">Registration Coming Soon</a>
+        </div>
+      </div>
+    </section>
+    
+    <section id="tickets" class="ticket-section">
+      <img src="https://static.vecteezy.com/system/resources/previews/009/371/614/original/ai-logo-monogram-with-digital-computer-electronic-concept-for-technology-business-free-vector.jpg" alt="AI Logo" class="background-logo">
+      <div class="container">
+        <div class="ticket-header">
+          <h2 class="section-title">Tickets</h2>
+          <p class="section-subtitle">
+            Secure your place at the premier AI entrepreneurship summit
+          </p>
+        </div>
+
+        <div class="ticket-toggle">
+          <button class="ticket-toggle-button" id="singleDayBtn" onclick="toggleTickets('singleDay')">Single Day Pass</button>
+          <button class="ticket-toggle-button" id="threeDayBtn" onclick="toggleTickets('threeDay')">Three Day Pass (Save 15%)</button>
+        </div>
+        
+        <p class="ticket-help-text">
+          The earlier you book, the more you save. Book now to secure your spot for Algopreneurship 2025.
+        </p>
+        
+        <!-- Single Day Tickets -->
+        <div id="singleDayTickets" class="ticket-grid">
+          <div class="ticket-card">
+            <div class="ticket-type-badge">Student</div>
+            <h3 class="ticket-type">Student Pass</h3>
+            <div class="ticket-price">£60</div>
+            <div class="ticket-price-per-day">Single day access</div>
+            <div class="ticket-availability">350 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Access to all keynotes</li>
+              <li class="ticket-feature">Networking opportunities</li>
+              <li class="ticket-feature">Workshop participation</li>
+              <li class="ticket-feature">Digital conference materials</li>
+              <li class="ticket-feature">Lunch and refreshments</li>
+            </ul>
+            <a href="#register-form" class="ticket-button">Select Day & Register</a>
+          </div>
+
+          <div class="ticket-card">
+            <div class="ticket-type-badge">Academic</div>
+            <h3 class="ticket-type">Academic Pass</h3>
+            <div class="ticket-price">£139</div>
+            <div class="ticket-price-per-day">Single day access</div>
+            <div class="ticket-availability">325 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Access to all keynotes</li>
+              <li class="ticket-feature">Priority networking sessions</li>
+              <li class="ticket-feature">Workshop participation</li>
+              <li class="ticket-feature">Digital conference materials</li>
+              <li class="ticket-feature">Lunch and refreshments</li>
+              <li class="ticket-feature">Access to speaker Q&A sessions</li>
+            </ul>
+            <a href="#register-form" class="ticket-button">Select Day & Register</a>
+          </div>
+
+          <div class="ticket-card">
+            <div class="ticket-type-badge">General</div>
+            <h3 class="ticket-type">General Pass</h3>
+            <div class="ticket-price">£199</div>
+            <div class="ticket-price-per-day">Single day access</div>
+            <div class="ticket-availability">325 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Access to all keynotes</li>
+              <li class="ticket-feature">Premium networking sessions</li>
+              <li class="ticket-feature">Workshop participation</li>
+              <li class="ticket-feature">Digital conference materials</li>
+              <li class="ticket-feature">Lunch and refreshments</li>
+              <li class="ticket-feature">Access to speaker Q&A sessions</li>
+              <li class="ticket-feature">Conference recordings</li>
+            </ul>
+            <a href="#register-form" class="ticket-button">Select Day & Register</a>
+          </div>
+
+          <div class="ticket-card ticket-card-premium">
+            <div class="ticket-type-badge ticket-type-badge-premium">VIP</div>
+            <h3 class="ticket-type ticket-type-premium">VIP All-Access</h3>
+            <div class="ticket-price">£799</div>
+            <div class="ticket-price-per-day">Single day access</div>
+            <div class="ticket-availability ticket-availability-limited">Only 50 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">All General pass benefits</li>
+              <li class="ticket-feature">VIP exclusive reception</li>
+              <li class="ticket-feature">Reserved premium seating</li>
+              <li class="ticket-feature">Private networking with speakers</li>
+              <li class="ticket-feature">Exclusive VIP lounge access</li>
+              <li class="ticket-feature">Conference swag package</li>
+              <li class="ticket-feature">Priority registration for 2026</li>
+              <li class="ticket-feature">Complimentary workshop recordings</li>
+            </ul>
+            <a href="#register-form" class="ticket-button ticket-button-premium pulse-animation">Secure VIP Access</a>
+          </div>
+        </div>
+        
+        <!-- Three Day Tickets -->
+        <div id="threeDayTickets" class="ticket-grid">
+          <div class="ticket-card">
+            <div class="ticket-type-badge">Student</div>
+            <h3 class="ticket-type">Student Pass</h3>
+            <div class="ticket-price">£153</div>
+            <div class="ticket-price-per-day">£51 per day (save 15%)</div>
+            <div class="ticket-availability">350 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Full 3-day access (Oct 28-30)</li>
+              <li class="ticket-feature">Access to all keynotes</li>
+              <li class="ticket-feature">Networking opportunities</li>
+              <li class="ticket-feature">Workshop participation</li>
+              <li class="ticket-feature">Digital conference materials</li>
+              <li class="ticket-feature">Lunch and refreshments daily</li>
+            </ul>
+            <a href="#register-form" class="ticket-button">Register Now</a>
+          </div>
+          
+          <div class="ticket-card">
+            <div class="ticket-type-badge">Academic</div>
+            <h3 class="ticket-type">Academic Pass</h3>
+            <div class="ticket-price">£354</div>
+            <div class="ticket-price-per-day">£118 per day (save 15%)</div>
+            <div class="ticket-availability">325 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Full 3-day access (Oct 28-30)</li>
+              <li class="ticket-feature">Access to all keynotes</li>
+              <li class="ticket-feature">Priority networking sessions</li>
+              <li class="ticket-feature">Workshop participation</li>
+              <li class="ticket-feature">Digital conference materials</li>
+              <li class="ticket-feature">Lunch and refreshments daily</li>
+              <li class="ticket-feature">Access to speaker Q&A sessions</li>
+            </ul>
+            <a href="#register-form" class="ticket-button">Register Now</a>
+          </div>
+          
+          <div class="ticket-card">
+            <div class="ticket-type-badge">General</div>
+            <h3 class="ticket-type">General Pass</h3>
+            <div class="ticket-price">£507</div>
+            <div class="ticket-price-per-day">£169 per day (save 15%)</div>
+            <div class="ticket-availability">325 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Full 3-day access (Oct 28-30)</li>
+              <li class="ticket-feature">Access to all keynotes</li>
+              <li class="ticket-feature">Premium networking sessions</li>
+              <li class="ticket-feature">Workshop participation</li>
+              <li class="ticket-feature">Digital conference materials</li>
+              <li class="ticket-feature">Lunch and refreshments daily</li>
+              <li class="ticket-feature">Access to speaker Q&A sessions</li>
+              <li class="ticket-feature">Conference recordings</li>
+            </ul>
+            <a href="#register-form" class="ticket-button">Register Now</a>
+          </div>
+          
+          <div class="ticket-card ticket-card-premium">
+            <div class="ticket-type-badge ticket-type-badge-premium">VIP</div>
+            <h3 class="ticket-type ticket-type-premium">VIP All-Access</h3>
+            <div class="ticket-price">£2,037</div>
+            <div class="ticket-price-per-day">£679 per day (save 15%)</div>
+            <div class="ticket-availability ticket-availability-limited">Only 50 tickets available</div>
+            <div class="ticket-divider"></div>
+            <ul class="ticket-features">
+              <li class="ticket-feature">Full 3-day access (Oct 28-30)</li>
+              <li class="ticket-feature">All General pass benefits</li>
+              <li class="ticket-feature">VIP exclusive reception</li>
+              <li class="ticket-feature">Reserved premium seating</li>
+              <li class="ticket-feature">Private networking with speakers</li>
+              <li class="ticket-feature">Exclusive VIP lounge access</li>
+              <li class="ticket-feature">Conference swag package</li>
+              <li class="ticket-feature">Priority registration for 2026</li>
+              <li class="ticket-feature">Complimentary workshop recordings</li>
+            </ul>
+            <a href="#register-form" class="ticket-button ticket-button-premium pulse-animation">Secure VIP Access</a>
+          </div>
+        </div>
+        
+        <div class="ticket-info">
+          <h3>Group Bookings</h3>
+          <p>Looking for 3 or more tickets? Contact us for special group rates at <a href="mailto:groups@algopreneurshipsummit.com">groups@algopreneurshipsummit.com</a></p>
+          
+          <h3 style="margin-top: 30px">Sponsorship Opportunities</h3>
+          <p>Want to showcase your company at the event? Email us at <a href="mailto:sponsors@algopreneurshipsummit.com">sponsors@algopreneurshipsummit.com</a> for partnership details.</p>
+          
+          <h3 style="margin-top: 30px">Special Passes</h3>
+          <p>We offer special passes for press, startups, and future AI leaders. <a href="#special-passes">Learn more about eligibility</a> or email <a href="mailto:special@algopreneurshipsummit.com">special@algopreneurshipsummit.com</a>.</p>
+          
+          <h3 style="margin-top: 30px">Need Help?</h3>
+          <p>Have questions about which ticket is right for you? <a href="#ticket-faq">Check our FAQ</a> or contact us at <a href="mailto:tickets@algopreneurshipsummit.com">tickets@algopreneurshipsummit.com</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">Algopreneurship</div>
+          <p class="footer-description">
+            A premier summit bringing together researchers, entrepreneurs, and policymakers to address critical challenges in AI.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-link">Twitter</a>
+            <a href="#" class="social-link">LinkedIn</a>
+            <a href="#" class="social-link">Instagram</a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="footer-title">Summit</h4>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="#about">About</a></li>
+            <li class="footer-link"><a href="#speakers">Speakers</a></li>
+            <li class="footer-link"><a href="#schedule">Schedule</a></li>
+            <li class="footer-link"><a href="#venue">Venue</a></li>
+            <li class="footer-link"><a href="#sponsors">Partners</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="footer-title">Information</h4>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="#">Registration</a></li>
+            <li class="footer-link"><a href="#">FAQs</a></li>
+            <li class="footer-link"><a href="#">Travel</a></li>
+            <li class="footer-link"><a href="#">Accommodations</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-links">
+            <li class="footer-link"><a href="mailto:webmaster@thinkingaboutthinking.org">Email Us</a></li>
+            <li class="footer-link"><a href="#">Sponsorship</a></li>
+            <li class="footer-link"><a href="#">Media</a></li>
+            <li class="footer-link"><a href="#">Support</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="copyright">
+          © 2025 Algopreneurship. All rights reserved.
+        </p>
+        
+        <div class="legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTickets(type) {
+      const singleDayTickets = document.getElementById('singleDayTickets');
+      const threeDayTickets = document.getElementById('threeDayTickets');
+      const singleDayBtn = document.getElementById('singleDayBtn');
+      const threeDayBtn = document.getElementById('threeDayBtn');
+      
+      if (type === 'singleDay') {
+        singleDayTickets.style.display = 'grid';
+        threeDayTickets.style.display = 'none';
+        singleDayBtn.style.background = 'rgba(255, 255, 255, 0.9)';
+        singleDayBtn.style.color = 'var(--black)';
+        singleDayBtn.style.border = '1px solid transparent';
+        threeDayBtn.style.background = 'transparent';
+        threeDayBtn.style.color = 'var(--white)';
+        threeDayBtn.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+      } else {
+        singleDayTickets.style.display = 'none';
+        threeDayTickets.style.display = 'grid';
+        singleDayBtn.style.background = 'transparent';
+        singleDayBtn.style.color = 'var(--white)';
+        singleDayBtn.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+        threeDayBtn.style.background = 'rgba(255, 255, 255, 0.9)';
+        threeDayBtn.style.color = 'var(--black)';
+        threeDayBtn.style.border = '1px solid transparent';
+      }
+    }
+  </script>
+  
+  <div id="root"></div>
+</body>
+</html>
