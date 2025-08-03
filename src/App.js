@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+import styled, { createGlobalStyle, ThemeProvider, keyframes } from 'styled-components';
 
 // Theme
 const theme = {
@@ -166,6 +166,27 @@ const MenuButton = styled.button`
     display: block;
     font-size: 1.5rem;
     z-index: 1002;
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.05);
+      transform: scale(0);
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover::before {
+      transform: scale(1);
+    }
   }
 `;
 
@@ -183,9 +204,28 @@ const NavItems = styled.div`
     padding: 100px 40px;
     flex-direction: column;
     gap: 20px;
-    transition: right 0.3s ease;
+    transition: right 0.3s ease, box-shadow 0.3s ease;
     z-index: 1001;
-    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+    box-shadow: ${props => props.isOpen ? '-5px 0 30px rgba(0, 0, 0, 0.1)' : 'none'};
+    overflow-y: auto;
+  }
+`;
+
+const Overlay = styled.div`
+  display: none;
+  
+  @media (max-width: 1024px) {
+    display: ${props => props.isOpen ? 'block' : 'none'};
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+    opacity: ${props => props.isOpen ? '1' : '0'};
+    transition: opacity 0.3s ease;
   }
 `;
 
@@ -251,6 +291,24 @@ const HeroSection = styled.section`
   @media (max-width: 768px) {
     min-height: 600px;
   }
+`;
+
+const ConferenceInfo = styled.div`
+  margin-top: 40px;
+  text-align: center;
+`;
+
+const DayHeading = styled.h3`
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+`;
+
+const DaySubheading = styled.h4`
+  font-size: 1.3rem;
+  margin-bottom: 40px;
+  font-weight: 500;
+  color: #666;
 `;
 
 const HeroContent = styled.div`
@@ -421,9 +479,29 @@ const DayTab = styled.button`
   color: ${props => props.active ? props.theme.colors.black : props.theme.colors.mediumGray};
   border-bottom: 3px solid ${props => props.active ? props.theme.colors.black : 'transparent'};
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
   
   &:hover {
     color: ${props => props.theme.colors.black};
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: ${props => props.theme.colors.black};
+    transform: ${props => props.active ? 'translateX(0)' : 'translateX(-100%)'};
+    transition: transform 0.4s ease;
+    opacity: ${props => props.active ? '1' : '0'};
+  }
+  
+  &:hover::after {
+    opacity: 0.5;
+    transform: translateX(0);
   }
   
   @media (max-width: 768px) {
@@ -434,10 +512,13 @@ const DayTab = styled.button`
 
 // Speakers Section
 const SpeakersSection = styled(Section)`
-  padding: 100px 0;
+  padding: 100px 0 200px 0;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
   
   @media (max-width: 768px) {
-    padding: 60px 0;
+    padding: 60px 0 180px 0;
   }
 `;
 
@@ -469,33 +550,149 @@ const SectionSubtitle = styled.p`
 const SpeakersGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  gap: 50px;
+  max-width: 1200px;
+  margin: 0 auto 120px auto;
+  padding: 0 20px;
   
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
   }
   
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
+    gap: 30px;
+  }
+`;
+
+const marqueeAnimation = keyframes`
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+`;
+
+const MarqueeContainer = styled.div`
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  padding: 15px 0;
+  position: relative;
+`;
+
+const MarqueeContent = styled.div`
+  display: inline-block;
+  animation: ${marqueeAnimation} 30s linear infinite;
+  padding-left: 100%;
+`;
+
+const MarqueeItem = styled.span`
+  margin-right: 50px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  
+  strong {
+    color: #fff;
+    font-weight: 900;
   }
 `;
 
 const SpeakerCard = styled.div`
   text-align: center;
   transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+  border-radius: 0;
+  overflow: hidden;
+  background: white;
+  padding-bottom: 20px;
+  margin-bottom: 60px;
+  z-index: ${props => props.index % 2 === 0 ? '2' : '1'};
   
   &:hover {
     transform: translateY(-10px);
+    z-index: 5;
+  }
+`;
+
+const SpeakerBio = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 10;
+  color: white;
+  
+  ${SpeakerCard}:hover & {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    max-height: 150px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+  }
+`;
+
+const BioButton = styled.button`
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: white;
+    color: black;
   }
 `;
 
 const SpeakerPhoto = styled.div`
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
+  width: 100%;
+  height: 280px;
   overflow: hidden;
-  margin: 0 auto 24px;
   position: relative;
+  margin-bottom: 24px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: ${props => props.index % 3 === 0 ? 'rotate(-2deg)' : props.index % 3 === 1 ? 'rotate(0deg)' : 'rotate(2deg)'};
+  transition: all 0.3s ease;
+  border: 2px solid black;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+  }
   
   &::after {
     content: '';
@@ -504,16 +701,12 @@ const SpeakerPhoto = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   }
   
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
+  ${SpeakerCard}:hover & {
+    transform: ${props => props.index % 3 === 0 ? 'rotate(-2deg)' : props.index % 3 === 1 ? 'rotate(0deg)' : 'rotate(2deg)'};
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   }
   
   &:hover img {
@@ -567,7 +760,9 @@ const SocialIcon = styled.a`
 `;
 
 const FeaturedSpeakers = styled.div`
-  margin-bottom: 80px;
+  margin-bottom: 100px;
+  overflow: visible;
+  padding-bottom: 100px;
 `;
 
 const SeeAllButton = styled.a`
@@ -643,7 +838,11 @@ const FeatureDescription = styled.p`
 
 // Venue Section
 const VenueSection = styled(Section)`
-  padding: 100px 0;
+  padding: 160px 0 100px 0;
+  position: relative;
+  z-index: 0;
+  background: linear-gradient(to bottom, #f9f9f9, #ffffff);
+  margin-top: 0;
 `;
 
 const VenueGrid = styled.div`
@@ -656,7 +855,18 @@ const VenueGrid = styled.div`
   }
 `;
 
-const VenueInfo = styled.div``;
+const VenueInfo = styled.div`
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+  }
+`;
 
 const VenueTitle = styled.h3`
   font-size: 2rem;
@@ -676,22 +886,30 @@ const VenueDirections = styled.p`
 
 const VenueMap = styled.div`
   height: 400px;
-  border-radius: 4px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(100%);
+    filter: grayscale(80%);
+  }
+  
+  &:hover {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px);
   }
 `;
 
 // Sponsors Section
 const SponsorsSection = styled(Section)`
   background-color: ${props => props.theme.colors.lightGray};
-  padding: 100px 0;
+  padding: 120px 0;
+  position: relative;
+  z-index: 0;
 `;
 
 const SponsorsTiers = styled.div`
@@ -733,13 +951,15 @@ const SponsorLogo = styled.div`
   opacity: ${props => props.faded ? 0.7 : 1};
   transition: all 0.3s ease;
   background-color: ${props => props.theme.colors.white};
-  border-radius: 4px;
+  border-radius: 12px;
   padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
   
   &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
     filter: none;
     opacity: 1;
-    transform: scale(1.05);
   }
   
   img {
@@ -1129,6 +1349,191 @@ const LegalLinks = styled.div`
   }
 `;
 
+// Modal Components
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const slideUp = keyframes`
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: ${props => props.isOpen ? 'flex' : 'none'};
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  animation: ${fadeIn} 0.3s ease;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  padding: 40px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: ${slideUp} 0.3s ease;
+  
+  @media (max-width: 768px) {
+    max-width: 90%;
+    padding: 30px 20px;
+  }
+`;
+
+const ModalCloseButton = styled.button`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 1.75rem;
+  margin-bottom: 30px;
+  font-weight: 600;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const FormLabel = styled.label`
+  font-weight: 500;
+  font-size: 0.9rem;
+`;
+
+const FormInput = styled.input`
+  padding: 12px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 1rem;
+  
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.black};
+  }
+`;
+
+const FormSelect = styled.select`
+  padding: 12px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.black};
+  }
+`;
+
+const FormButton = styled.button`
+  background-color: ${props => props.theme.colors.black};
+  color: ${props => props.theme.colors.white};
+  padding: 16px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  
+  &:hover {
+    background-color: ${props => props.theme.colors.darkGray};
+  }
+`;
+
+// Speaker Card Bio Overlay
+const SpeakerBioOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  padding: 20px;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  
+  ${SpeakerPhoto}:hover & {
+    opacity: 1;
+  }
+`;
+
+const SpeakerBioText = styled.p`
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  line-height: 1.4;
+`;
+
+const SpeakerBioButton = styled.button`
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+`;
+
+// Tab transition styles
+const TabContent = styled.div`
+  opacity: ${props => props.active ? 1 : 0};
+  visibility: ${props => props.active ? 'visible' : 'hidden'};
+  position: ${props => props.absolute ? 'absolute' : 'relative'};
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  z-index: ${props => props.active ? '2' : '1'};
+  overflow: visible;
+  height: auto;
+`;
+
 // Speakers Data
 const speakersData = {
   day1: [
@@ -1138,7 +1543,8 @@ const speakersData = {
       company: "DeepMind",
       image: "/images/speakers/DrDavidSilver.jpg",
       linkedin: "#",
-      twitter: "#"
+      twitter: "#",
+      bio: "Dr. David Silver leads the reinforcement learning research group at DeepMind and was lead researcher on AlphaGo, AlphaZero and MuZero. His groundbreaking work in deep reinforcement learning has revolutionized the field of AI."
     },
     {
       name: "Dr Raia Hadsell",
@@ -1146,7 +1552,8 @@ const speakersData = {
       company: "DeepMind",
       image: "/images/speakers/DrRaiaHadsell.jpg",
       linkedin: "#",
-      twitter: "#"
+      twitter: "#",
+      bio: "Dr. Raia Hadsell is a senior research director at DeepMind, where she leads research on robotics, embodied AI, and continual learning. Her pioneering work includes solutions to catastrophic forgetting in neural networks."
     },
     {
       name: "Prof. Jakob Foerster",
@@ -1398,16 +1805,19 @@ const speakersData = {
 };
 
 // Main App Component
-function App() {
+function App({ ticketsPage = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDay, setActiveDay] = useState('day1');
   const [showSingleDay, setShowSingleDay] = useState(true);
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+  const [selectedTicketType, setSelectedTicketType] = useState('general');
+  const [selectedDay, setSelectedDay] = useState('day1');
   const [countdown, setCountdown] = useState({
-    days: 183,
-    hours: 10,
-    minutes: 45,
-    seconds: 30
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
   });
   
   useEffect(() => {
@@ -1426,6 +1836,41 @@ function App() {
     };
   }, []);
   
+  useEffect(() => {
+    const conferenceDate = new Date('October 28, 2025 00:00:00').getTime();
+    
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = conferenceDate - now;
+      
+      if (distance < 0) {
+        // Conference has started
+        setCountdown({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0
+        });
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      setCountdown({ days, hours, minutes, seconds });
+    };
+    
+    // Initial update
+    updateCountdown();
+    
+    // Update countdown every second
+    const interval = setInterval(updateCountdown, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -1434,9 +1879,90 @@ function App() {
     setShowSingleDay(isSingleDay);
   };
   
+  const openRegisterModal = (ticketType = 'general', day = 'day1') => {
+    setSelectedTicketType(ticketType);
+    setSelectedDay(day);
+    setRegisterModalOpen(true);
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  };
+  
+  const closeRegisterModal = () => {
+    setRegisterModalOpen(false);
+    document.body.style.overflow = 'auto'; // Restore scrolling
+  };
+  
+  const handleRegisterSubmit = (e) => {
+    e.preventDefault();
+    // Here you would normally handle form submission to a backend
+    alert('Registration successful! A confirmation email will be sent shortly.');
+    closeRegisterModal();
+  };
+  
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
+      
+      {/* Registration Modal */}
+      <ModalOverlay isOpen={registerModalOpen} onClick={closeRegisterModal}>
+        <ModalContent isOpen={registerModalOpen} onClick={e => e.stopPropagation()}>
+          <ModalCloseButton onClick={closeRegisterModal}>✕</ModalCloseButton>
+          <ModalTitle>Register for THAT Summit</ModalTitle>
+          <Form onSubmit={handleRegisterSubmit}>
+            <FormGroup>
+              <FormLabel htmlFor="ticket-type">Ticket Type</FormLabel>
+              <FormSelect 
+                id="ticket-type" 
+                value={selectedTicketType}
+                onChange={e => setSelectedTicketType(e.target.value)}
+              >
+                <option value="student">Student Pass</option>
+                <option value="academic">Academic Pass</option>
+                <option value="general">General Pass</option>
+                <option value="vip">VIP All-Access</option>
+              </FormSelect>
+            </FormGroup>
+            
+            {showSingleDay && (
+              <FormGroup>
+                <FormLabel htmlFor="day-select">Day</FormLabel>
+                <FormSelect 
+                  id="day-select" 
+                  value={selectedDay}
+                  onChange={e => setSelectedDay(e.target.value)}
+                >
+                  <option value="day1">Day 1: Algorithmic Innovation</option>
+                  <option value="day2">Day 2: AI Safety & Enterprise</option>
+                  <option value="day3">Day 3: AI Entrepreneurship</option>
+                </FormSelect>
+              </FormGroup>
+            )}
+            
+            <FormGroup>
+              <FormLabel htmlFor="name">Full Name</FormLabel>
+              <FormInput id="name" type="text" placeholder="Enter your full name" required />
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel htmlFor="email">Email Address</FormLabel>
+              <FormInput id="email" type="email" placeholder="Enter your email address" required />
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel htmlFor="organization">Organization</FormLabel>
+              <FormInput id="organization" type="text" placeholder="Enter your organization" />
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel htmlFor="role">Role</FormLabel>
+              <FormInput id="role" type="text" placeholder="Enter your role" />
+            </FormGroup>
+            
+            <FormButton type="submit">
+              Complete Registration
+            </FormButton>
+          </Form>
+        </ModalContent>
+      </ModalOverlay>
       
       <Header scrolled={scrolled}>
         <Container>
@@ -1450,524 +1976,411 @@ function App() {
               {menuOpen ? '✕' : '☰'}
             </MenuButton>
             
+            <Overlay isOpen={menuOpen} onClick={toggleMenu} />
+            
             <NavItems isOpen={menuOpen}>
-              <NavLink href="#about">About</NavLink>
-              <NavLink href="#speakers">Speakers</NavLink>
-              <NavLink href="#schedule">Schedule</NavLink>
-              <NavLink href="#venue">Venue</NavLink>
-              <NavLink href="#sponsors">Partners</NavLink>
-              <NavLink href="#tickets">Tickets</NavLink>
-              <RegistrationButton href="#register">Register Now</RegistrationButton>
+              <NavLink href="#about" onClick={() => setMenuOpen(false)}>About</NavLink>
+              <NavLink href="#speakers" onClick={() => setMenuOpen(false)}>Speakers</NavLink>
+              <NavLink href="#schedule" onClick={() => setMenuOpen(false)}>Schedule</NavLink>
+              <NavLink href="#venue" onClick={() => setMenuOpen(false)}>Venue</NavLink>
+              <NavLink href="#sponsors" onClick={() => setMenuOpen(false)}>Partners</NavLink>
+              <NavLink href="/tickets" onClick={() => setMenuOpen(false)}>Tickets</NavLink>
+              <RegistrationButton 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMenuOpen(false);
+                  openRegisterModal();
+                }}
+              >
+                Register Now
+              </RegistrationButton>
             </NavItems>
           </Nav>
         </Container>
       </Header>
       
       <main>
-        <HeroSection>
-          <Container>
-            <HeroContent>
-              <HeroTagline>Global Summit on</HeroTagline>
-              <HeroTitle>Open Problems for AI</HeroTitle>
-              <HeroSubtitle>
-                How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
-              </HeroSubtitle>
-              <HeroActions>
-                <RegistrationButton href="#tickets">Register Now</RegistrationButton>
-                <SecondaryButton href="#speakers">View Speakers</SecondaryButton>
-              </HeroActions>
-            </HeroContent>
-            <HeroLogo>
-              <img src="/images/Asset1.png" alt="THAT Logo" />
-            </HeroLogo>
-          </Container>
-          
-          <CountdownSection>
+        {ticketsPage ? (
+          <Section style={{ backgroundColor: "#000", color: "#fff", paddingTop: "100px" }}>
             <Container>
-              <CountdownContainer>
-                <CountdownItem>
-                  <CountdownNumber>{countdown.days}</CountdownNumber>
-                  <CountdownLabel>Days</CountdownLabel>
-                </CountdownItem>
-                <CountdownItem>
-                  <CountdownNumber>{countdown.hours}</CountdownNumber>
-                  <CountdownLabel>Hours</CountdownLabel>
-                </CountdownItem>
-                <CountdownItem>
-                  <CountdownNumber>{countdown.minutes}</CountdownNumber>
-                  <CountdownLabel>Minutes</CountdownLabel>
-                </CountdownItem>
-                <CountdownItem>
-                  <CountdownNumber>{countdown.seconds}</CountdownNumber>
-                  <CountdownLabel>Seconds</CountdownLabel>
-                </CountdownItem>
-              </CountdownContainer>
-            </Container>
-          </CountdownSection>
-        </HeroSection>
-        
-        <SpeakersSection id="speakers">
-          <Container>
-            <SectionTitle>World-Class Speakers</SectionTitle>
-            <SectionSubtitle>
-              Leading experts in AI research, policy, and entrepreneurship from around the world
-            </SectionSubtitle>
-            
-            <DayTabsContainer>
-              <DayTab 
-                active={activeDay === 'day1'} 
-                onClick={() => setActiveDay('day1')}
-              >
-                Day 1: Algorithmic Innovation
-              </DayTab>
-              <DayTab 
-                active={activeDay === 'day2'} 
-                onClick={() => setActiveDay('day2')}
-              >
-                Day 2: AI Safety & Enterprise
-              </DayTab>
-              <DayTab 
-                active={activeDay === 'day3'} 
-                onClick={() => setActiveDay('day3')}
-              >
-                Day 3: AI Entrepreneurship
-              </DayTab>
-            </DayTabsContainer>
-            
-            {activeDay === 'day1' && (
-              <FeaturedSpeakers>
-                <SpeakersGrid>
-                  {speakersData.day1.slice(0, 6).map((speaker, index) => (
-                    <SpeakerCard key={index}>
-                      <SpeakerPhoto>
-                        <img src={speaker.image} alt={speaker.name} />
-                      </SpeakerPhoto>
-                      <SpeakerName>{speaker.name}</SpeakerName>
-                      <SpeakerRole>{speaker.role}</SpeakerRole>
-                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                      <SpeakerSocial>
-                        <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
-                          in
-                        </SocialIcon>
-                        <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
-                          𝕏
-                        </SocialIcon>
-                      </SpeakerSocial>
-                    </SpeakerCard>
-                  ))}
-                </SpeakersGrid>
-                
-                <div style={{ textAlign: 'center' }}>
-                  <SeeAllButton href="#all-speakers">See All Day 1 Speakers</SeeAllButton>
-                </div>
-              </FeaturedSpeakers>
-            )}
-            
-            {activeDay === 'day2' && (
-              <FeaturedSpeakers>
-                <SpeakersGrid>
-                  {speakersData.day2.slice(0, 6).map((speaker, index) => (
-                    <SpeakerCard key={index}>
-                      <SpeakerPhoto>
-                        <img src={speaker.image} alt={speaker.name} />
-                      </SpeakerPhoto>
-                      <SpeakerName>{speaker.name}</SpeakerName>
-                      <SpeakerRole>{speaker.role}</SpeakerRole>
-                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                      <SpeakerSocial>
-                        <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
-                          in
-                        </SocialIcon>
-                        <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
-                          𝕏
-                        </SocialIcon>
-                      </SpeakerSocial>
-                    </SpeakerCard>
-                  ))}
-                </SpeakersGrid>
-                
-                <div style={{ textAlign: 'center' }}>
-                  <SeeAllButton href="#all-speakers">See All Day 2 Speakers</SeeAllButton>
-                </div>
-              </FeaturedSpeakers>
-            )}
-            
-            {activeDay === 'day3' && (
-              <FeaturedSpeakers>
-                <SpeakersGrid>
-                  {speakersData.day3.slice(0, 6).map((speaker, index) => (
-                    <SpeakerCard key={index}>
-                      <SpeakerPhoto>
-                        <img src={speaker.image} alt={speaker.name} />
-                      </SpeakerPhoto>
-                      <SpeakerName>{speaker.name}</SpeakerName>
-                      <SpeakerRole>{speaker.role}</SpeakerRole>
-                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                      <SpeakerSocial>
-                        <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
-                          in
-                        </SocialIcon>
-                        <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
-                          𝕏
-                        </SocialIcon>
-                      </SpeakerSocial>
-                    </SpeakerCard>
-                  ))}
-                </SpeakersGrid>
-                
-                <div style={{ textAlign: 'center' }}>
-                  <SeeAllButton href="#all-speakers">See All Day 3 Speakers</SeeAllButton>
-                </div>
-              </FeaturedSpeakers>
-            )}
-          </Container>
-        </SpeakersSection>
-        
-        <FeaturesSection id="schedule">
-          <Container>
-            <SectionTitle>Summit Highlights</SectionTitle>
-            <SectionSubtitle>
-              Speakers from the UK's leading institutions discuss the future challenges and opportunities in AI research and application.
-            </SectionSubtitle>
-            
-            <FeaturesGrid>
-              <FeatureCard>
-                <FeatureIcon>🎤</FeatureIcon>
-                <FeatureTitle>Keynote Talks</FeatureTitle>
-                <FeatureDescription>
-                  Visionary perspectives from leaders in AI research, policy, and industry on the future of the field.
-                </FeatureDescription>
-              </FeatureCard>
+              <SectionTitle style={{ color: 'white' }}>Get Your Tickets</SectionTitle>
+              <SectionSubtitle style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                Join us for an unforgettable event featuring world-class speakers and networking opportunities
+              </SectionSubtitle>
               
-              <FeatureCard dark>
-                <FeatureIcon>👥</FeatureIcon>
-                <FeatureTitle>Panels</FeatureTitle>
-                <FeatureDescription>
-                  Engaging discussions that bring together diverse viewpoints on critical AI challenges and opportunities.
-                </FeatureDescription>
-              </FeatureCard>
+              <TicketsTabs>
+                <TicketsTab 
+                  active={showSingleDay} 
+                  onClick={() => toggleTicketView(true)}
+                  position="left"
+                >
+                  Single Day
+                </TicketsTab>
+                <TicketsTab 
+                  active={!showSingleDay} 
+                  onClick={() => toggleTicketView(false)}
+                  position="right"
+                >
+                  Full Event
+                </TicketsTab>
+              </TicketsTabs>
               
-              <FeatureCard>
-                <FeatureIcon>💬</FeatureIcon>
-                <FeatureTitle>Breakout Rooms</FeatureTitle>
-                <FeatureDescription>
-                  Focused sessions for deeper exploration of specific topics with smaller groups.
-                </FeatureDescription>
-              </FeatureCard>
+              <DayTabsContainer>
+                <DayTab 
+                  active={selectedTicketType === 'general'} 
+                  onClick={() => setSelectedTicketType('general')}
+                >
+                  General Admission
+                </DayTab>
+                <DayTab 
+                  active={selectedTicketType === 'premium'} 
+                  onClick={() => setSelectedTicketType('premium')}
+                >
+                  Premium Access
+                </DayTab>
+                <DayTab 
+                  active={selectedTicketType === 'vip'} 
+                  onClick={() => setSelectedTicketType('vip')}
+                >
+                  VIP Experience
+                </DayTab>
+              </DayTabsContainer>
               
-              <FeatureCard dark>
-                <FeatureIcon>🏢</FeatureIcon>
-                <FeatureTitle>Expo Hall</FeatureTitle>
-                <FeatureDescription>
-                  Connect with innovative companies and research labs showcasing cutting-edge AI technologies.
-                </FeatureDescription>
-              </FeatureCard>
-            </FeaturesGrid>
-          </Container>
-        </FeaturesSection>
-        
-        <VenueSection id="venue">
-          <Container>
-            <SectionTitle>Venue</SectionTitle>
-            <SectionSubtitle>
-              Join us at a premier location in the heart of London.
-            </SectionSubtitle>
-            
-            <VenueGrid>
-              <VenueInfo>
-                <VenueTitle>Friend's House</VenueTitle>
-                <VenueAddress>173-177 Euston Road, London, NW1 2BJ</VenueAddress>
-                <VenueDirections>
-                  Walking distance from Euston, Euston Square, and King's Cross. No on-site parking available.
-                </VenueDirections>
+              <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px 0" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px" }}>
+                  {['day1', 'day2', 'day3'].map((day) => (
+                    <div key={day} style={{ 
+                      background: "white", 
+                      borderRadius: "12px", 
+                      overflow: "hidden",
+                      boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
+                      transform: day === 'day1' ? 'rotate(-2deg)' : day === 'day2' ? 'rotate(0deg)' : 'rotate(2deg)',
+                      zIndex: day === 'day2' ? '3' : '2',
+                      padding: "30px"
+                    }}>
+                      <h3 style={{ fontSize: "24px", marginBottom: "10px", color: "#000" }}>
+                        {day === 'day1' ? 'Day 1: Algorithmic Innovation' : 
+                         day === 'day2' ? 'Day 2: AI Safety & Enterprise' : 
+                         'Day 3: AI Entrepreneurship'}
+                      </h3>
+                      <p style={{ fontWeight: "600", fontSize: "32px", margin: "20px 0", color: "#000" }}>
+                        {selectedTicketType === 'general' ? '£299' : 
+                         selectedTicketType === 'premium' ? '£499' : 
+                         '£999'}
+                      </p>
+                      <div style={{ textAlign: "left", margin: "20px 0", color: "#000" }}>
+                        <p style={{ margin: "10px 0" }}>✓ All talks and panels</p>
+                        <p style={{ margin: "10px 0" }}>✓ Digital content access</p>
+                        {selectedTicketType !== 'general' && <p style={{ margin: "10px 0" }}>✓ Priority seating</p>}
+                        {selectedTicketType !== 'general' && <p style={{ margin: "10px 0" }}>✓ Workshop access</p>}
+                        {selectedTicketType === 'vip' && <p style={{ margin: "10px 0" }}>✓ Private networking dinner</p>}
+                        {selectedTicketType === 'vip' && <p style={{ margin: "10px 0" }}>✓ 1:1 speaker sessions</p>}
+                      </div>
+                      <button style={{ 
+                        background: "black", 
+                        color: "white", 
+                        border: "none", 
+                        padding: "15px 30px", 
+                        borderRadius: "30px",
+                        width: "100%",
+                        fontWeight: "600",
+                        marginTop: "20px",
+                        cursor: "pointer"
+                      }}>
+                        Select Ticket
+                      </button>
+                    </div>
+                  ))}
+                </div>
                 
-                <div>
-                  <h4 style={{ marginBottom: '16px', fontSize: '1.25rem' }}>Inquiries</h4>
-                  <p style={{ marginBottom: '24px', fontSize: '1rem' }}>webmaster@thinkingaboutthinking.org</p>
-                  
-                  <h4 style={{ marginBottom: '16px', fontSize: '1.25rem' }}>Organizer</h4>
-                  <p style={{ fontSize: '1rem' }}>
-                    Thinking About Thinking, Inc.<br />
-                    A 501(c)3 Nonprofit Company in the State of New Jersey.<br />
-                    28 Spring Street, Unit 156, Princeton, NJ, USA, 08540
+                <div style={{ 
+                  background: "linear-gradient(to right, #333, #000)", 
+                  color: "white", 
+                  borderRadius: "12px", 
+                  padding: "40px", 
+                  margin: "50px 0", 
+                  textAlign: "center"
+                }}>
+                  <h3 style={{ fontSize: "28px", marginBottom: "20px" }}>Full Event Access</h3>
+                  <p style={{ fontSize: "18px", marginBottom: "30px" }}>Get access to all three days and save up to 20%</p>
+                  <p style={{ fontWeight: "700", fontSize: "42px", marginBottom: "30px" }}>
+                    {selectedTicketType === 'general' ? '£699' : 
+                     selectedTicketType === 'premium' ? '£1,199' : 
+                     '£2,499'}
                   </p>
+                  <button style={{ 
+                    background: "white", 
+                    color: "black", 
+                    border: "none", 
+                    padding: "15px 40px", 
+                    borderRadius: "30px",
+                    fontWeight: "600",
+                    fontSize: "18px",
+                    cursor: "pointer"
+                  }}>
+                    Purchase Full Access
+                  </button>
                 </div>
-              </VenueInfo>
+              </div>
+            </Container>
+          </Section>
+        ) : (
+          <>
+            <HeroSection>
+              <Container>
+                <HeroContent>
+                  <HeroTagline>Global Summit on</HeroTagline>
+                  <HeroTitle>Open Problems for AI</HeroTitle>
+                  <HeroSubtitle>
+                    How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
+                  </HeroSubtitle>
+                  <p style={{ marginTop: "20px", fontWeight: "500" }}>Algorithmic Innovation and Entrepreneurship</p>
+                  <p style={{ marginTop: "10px", color: "#666" }}>Registration coming soon</p>
+                  <HeroActions>
+                    <RegistrationButton 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openRegisterModal();
+                      }}
+                    >
+                      Register Now
+                    </RegistrationButton>
+                    <SecondaryButton href="#speakers">View Speakers</SecondaryButton>
+                  </HeroActions>
+                </HeroContent>
+                <HeroLogo>
+                  <img src="/images/Asset1.png" alt="THAT Logo" />
+                </HeroLogo>
+              </Container>
               
-              <VenueMap>
-                <img src="/images/friends_house.jpg" alt="Venue Map" />
-              </VenueMap>
-            </VenueGrid>
-          </Container>
-        </VenueSection>
-        
-        <SponsorsSection id="sponsors">
-          <Container>
-            <SectionTitle>Partners</SectionTitle>
-            <SectionSubtitle>
-              The THAT Summit is made possible by the generous support of our partners.
-            </SectionSubtitle>
+              <CountdownSection>
+                <Container>
+                  <CountdownContainer>
+                    <CountdownItem>
+                      <CountdownNumber>{countdown.days}</CountdownNumber>
+                      <CountdownLabel>Days</CountdownLabel>
+                    </CountdownItem>
+                    <CountdownItem>
+                      <CountdownNumber>{countdown.hours}</CountdownNumber>
+                      <CountdownLabel>Hours</CountdownLabel>
+                    </CountdownItem>
+                    <CountdownItem>
+                      <CountdownNumber>{countdown.minutes}</CountdownNumber>
+                      <CountdownLabel>Minutes</CountdownLabel>
+                    </CountdownItem>
+                    <CountdownItem>
+                      <CountdownNumber>{countdown.seconds}</CountdownNumber>
+                      <CountdownLabel>Seconds</CountdownLabel>
+                    </CountdownItem>
+                  </CountdownContainer>
+                </Container>
+              </CountdownSection>
+            </HeroSection>
             
-            <SponsorsTiers>
-              <SponsorsTier>
-                <SponsorsTierTitle>Gold Sponsors</SponsorsTierTitle>
-                <SponsorsGrid columns={3}>
-                  <SponsorLogo height="100px">
-                    <img src="/images/Asset1.png" alt="Sponsor 1" />
-                  </SponsorLogo>
-                  
-                  <SponsorLogo height="100px">
-                    <img src="/images/Asset1.png" alt="Sponsor 2" />
-                  </SponsorLogo>
-                  
-                  <SponsorLogo height="100px">
-                    <img src="/images/Asset1.png" alt="Sponsor 3" />
-                  </SponsorLogo>
-                </SponsorsGrid>
-              </SponsorsTier>
-              
-              <SponsorsTier>
-                <SponsorsTierTitle>Silver Sponsors</SponsorsTierTitle>
-                <SponsorsGrid columns={4}>
-                  <SponsorLogo height="80px" grayscale>
-                    <img src="/images/Asset1.png" alt="Sponsor 4" />
-                  </SponsorLogo>
-                  
-                  <SponsorLogo height="80px" grayscale>
-                    <img src="/images/Asset1.png" alt="Sponsor 5" />
-                  </SponsorLogo>
-                  
-                  <SponsorLogo height="80px" grayscale>
-                    <img src="/images/Asset1.png" alt="Sponsor 6" />
-                  </SponsorLogo>
-                  
-                  <SponsorLogo height="80px" grayscale>
-                    <img src="/images/Asset1.png" alt="Sponsor 7" />
-                  </SponsorLogo>
-                </SponsorsGrid>
-              </SponsorsTier>
-            </SponsorsTiers>
+            <MarqueeContainer>
+              <MarqueeContent>
+                <MarqueeItem>London, UK • <strong>October 28-30, 2025</strong></MarqueeItem>
+                <MarqueeItem>World-class speakers from <strong>DeepMind, Meta, Harvard, Oxford</strong></MarqueeItem>
+                <MarqueeItem>Global Summit on <strong>Open Problems for AI</strong></MarqueeItem>
+                <MarqueeItem>Tickets available <strong>August 1st</strong></MarqueeItem>
+                <MarqueeItem>Early bird pricing <strong>£399</strong></MarqueeItem>
+                <MarqueeItem>VIP tickets include <strong>private networking dinner</strong></MarqueeItem>
+              </MarqueeContent>
+              <MarqueeContent style={{ animationDelay: "15s" }}>
+                <MarqueeItem>London, UK • <strong>October 28-30, 2025</strong></MarqueeItem>
+                <MarqueeItem>World-class speakers from <strong>DeepMind, Meta, Harvard, Oxford</strong></MarqueeItem>
+                <MarqueeItem>Global Summit on <strong>Open Problems for AI</strong></MarqueeItem>
+                <MarqueeItem>Tickets available <strong>August 1st</strong></MarqueeItem>
+                <MarqueeItem>Early bird pricing <strong>£399</strong></MarqueeItem>
+                <MarqueeItem>VIP tickets include <strong>private networking dinner</strong></MarqueeItem>
+              </MarqueeContent>
+            </MarqueeContainer>
             
-            <ContactInfo>
-              Want to become a sponsor? <a href="mailto:webmaster@thinkingaboutthinking.org" style={{ textDecoration: 'underline' }}>Contact us</a>
-            </ContactInfo>
-          </Container>
-        </SponsorsSection>
-        
-        <TicketsSection id="tickets">
-          <img src="/images/Asset1.png" alt="THAT Logo" className="background-logo" />
-          <Container>
-            <SectionTitle>Tickets</SectionTitle>
-            <SectionSubtitle>
-              Secure your place at the premier AI entrepreneurship summit
-            </SectionSubtitle>
-            
-            <TicketsTabs>
-              <TicketsTab 
-                position="left"
-                active={showSingleDay} 
-                onClick={() => toggleTicketView(true)}
-              >
-                Single Day Pass
-              </TicketsTab>
-              <TicketsTab 
-                position="right"
-                active={!showSingleDay} 
-                onClick={() => toggleTicketView(false)}
-              >
-                Three Day Pass (Save 15%)
-              </TicketsTab>
-            </TicketsTabs>
-            
-            {showSingleDay ? (
-              <TicketsGrid>
-                <TicketCard>
-                  <TicketTypeBadge>Student</TicketTypeBadge>
-                  <TicketType>Student Pass</TicketType>
-                  <TicketPrice>£60</TicketPrice>
-                  <TicketPricePerDay>Single day access</TicketPricePerDay>
-                  <TicketAvailability>350 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Access to all keynotes</TicketFeature>
-                    <TicketFeature>Networking opportunities</TicketFeature>
-                    <TicketFeature>Workshop participation</TicketFeature>
-                    <TicketFeature>Digital conference materials</TicketFeature>
-                    <TicketFeature>Lunch and refreshments</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButton href="#register-form">Select Day & Register</TicketButton>
-                </TicketCard>
-
-                <TicketCard>
-                  <TicketTypeBadge>Academic</TicketTypeBadge>
-                  <TicketType>Academic Pass</TicketType>
-                  <TicketPrice>£139</TicketPrice>
-                  <TicketPricePerDay>Single day access</TicketPricePerDay>
-                  <TicketAvailability>325 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Access to all keynotes</TicketFeature>
-                    <TicketFeature>Priority networking sessions</TicketFeature>
-                    <TicketFeature>Workshop participation</TicketFeature>
-                    <TicketFeature>Digital conference materials</TicketFeature>
-                    <TicketFeature>Lunch and refreshments</TicketFeature>
-                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButton href="#register-form">Select Day & Register</TicketButton>
-                </TicketCard>
-
-                <TicketCard>
-                  <TicketTypeBadge>General</TicketTypeBadge>
-                  <TicketType>General Pass</TicketType>
-                  <TicketPrice>£199</TicketPrice>
-                  <TicketPricePerDay>Single day access</TicketPricePerDay>
-                  <TicketAvailability>325 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Access to all keynotes</TicketFeature>
-                    <TicketFeature>Premium networking sessions</TicketFeature>
-                    <TicketFeature>Workshop participation</TicketFeature>
-                    <TicketFeature>Digital conference materials</TicketFeature>
-                    <TicketFeature>Lunch and refreshments</TicketFeature>
-                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
-                    <TicketFeature>Conference recordings</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButton href="#register-form">Select Day & Register</TicketButton>
-                </TicketCard>
-
-                <TicketCard premium>
-                  <TicketTypeBadge premium>VIP</TicketTypeBadge>
-                  <TicketTypePremium>VIP All-Access</TicketTypePremium>
-                  <TicketPrice>£799</TicketPrice>
-                  <TicketPricePerDay>Single day access</TicketPricePerDay>
-                  <TicketAvailability limited>Only 50 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>All General pass benefits</TicketFeature>
-                    <TicketFeature>VIP exclusive reception</TicketFeature>
-                    <TicketFeature>Reserved premium seating</TicketFeature>
-                    <TicketFeature>Private networking with speakers</TicketFeature>
-                    <TicketFeature>Exclusive VIP lounge access</TicketFeature>
-                    <TicketFeature>Conference swag package</TicketFeature>
-                    <TicketFeature>Priority registration for 2026</TicketFeature>
-                    <TicketFeature>Complimentary workshop recordings</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButtonPremium href="#register-form">Secure VIP Access</TicketButtonPremium>
-                </TicketCard>
-              </TicketsGrid>
-            ) : (
-              <TicketsGrid>
-                <TicketCard>
-                  <TicketTypeBadge>Student</TicketTypeBadge>
-                  <TicketType>Student Pass</TicketType>
-                  <TicketPrice>£153</TicketPrice>
-                  <TicketPricePerDay>£51 per day (save 15%)</TicketPricePerDay>
-                  <TicketAvailability>350 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
-                    <TicketFeature>Access to all keynotes</TicketFeature>
-                    <TicketFeature>Networking opportunities</TicketFeature>
-                    <TicketFeature>Workshop participation</TicketFeature>
-                    <TicketFeature>Digital conference materials</TicketFeature>
-                    <TicketFeature>Lunch and refreshments daily</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButton href="#register-form">Register Now</TicketButton>
-                </TicketCard>
+            <SpeakersSection id="speakers">
+              <Container>
+                <SectionTitle>World-Class Speakers</SectionTitle>
+                <SectionSubtitle>
+                  Leading experts in AI research, policy, and entrepreneurship from around the world
+                </SectionSubtitle>
                 
-                <TicketCard>
-                  <TicketTypeBadge>Academic</TicketTypeBadge>
-                  <TicketType>Academic Pass</TicketType>
-                  <TicketPrice>£354</TicketPrice>
-                  <TicketPricePerDay>£118 per day (save 15%)</TicketPricePerDay>
-                  <TicketAvailability>325 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
-                    <TicketFeature>Access to all keynotes</TicketFeature>
-                    <TicketFeature>Priority networking sessions</TicketFeature>
-                    <TicketFeature>Workshop participation</TicketFeature>
-                    <TicketFeature>Digital conference materials</TicketFeature>
-                    <TicketFeature>Lunch and refreshments daily</TicketFeature>
-                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButton href="#register-form">Register Now</TicketButton>
-                </TicketCard>
+                <DayTabsContainer>
+                  <DayTab 
+                    active={activeDay === 'day1'} 
+                    onClick={() => setActiveDay('day1')}
+                  >
+                    Day 1: Algorithmic Innovation
+                  </DayTab>
+                  <DayTab 
+                    active={activeDay === 'day2'} 
+                    onClick={() => setActiveDay('day2')}
+                  >
+                    Day 2: AI Safety & Enterprise
+                  </DayTab>
+                  <DayTab 
+                    active={activeDay === 'day3'} 
+                    onClick={() => setActiveDay('day3')}
+                  >
+                    Day 3: AI Entrepreneurship
+                  </DayTab>
+                </DayTabsContainer>
                 
-                <TicketCard>
-                  <TicketTypeBadge>General</TicketTypeBadge>
-                  <TicketType>General Pass</TicketType>
-                  <TicketPrice>£507</TicketPrice>
-                  <TicketPricePerDay>£169 per day (save 15%)</TicketPricePerDay>
-                  <TicketAvailability>325 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
-                    <TicketFeature>Access to all keynotes</TicketFeature>
-                    <TicketFeature>Premium networking sessions</TicketFeature>
-                    <TicketFeature>Workshop participation</TicketFeature>
-                    <TicketFeature>Digital conference materials</TicketFeature>
-                    <TicketFeature>Lunch and refreshments daily</TicketFeature>
-                    <TicketFeature>Access to speaker Q&A sessions</TicketFeature>
-                    <TicketFeature>Conference recordings</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButton href="#register-form">Register Now</TicketButton>
-                </TicketCard>
+                <ConferenceInfo>
+                  <DayHeading>
+                    {activeDay === 'day1' ? 'Day 1: Oct 28th' : 
+                     activeDay === 'day2' ? 'Day 2: Oct 29th' : 
+                     'Day 3: Oct 30th'}
+                  </DayHeading>
+                  <DaySubheading>
+                    {activeDay === 'day1' ? 'New Algorithmic Breakthroughs and AI Infrastructure' : 
+                     activeDay === 'day2' ? 'AI Safety, and AI in Enterprise & Society' : 
+                     'AI Entrepreneurship & Application'}
+                  </DaySubheading>
+                </ConferenceInfo>
                 
-                <TicketCard premium>
-                  <TicketTypeBadge premium>VIP</TicketTypeBadge>
-                  <TicketTypePremium>VIP All-Access</TicketTypePremium>
-                  <TicketPrice>£2,037</TicketPrice>
-                  <TicketPricePerDay>£679 per day (save 15%)</TicketPricePerDay>
-                  <TicketAvailability limited>Only 50 tickets available</TicketAvailability>
-                  <TicketDivider />
-                  <TicketFeatures>
-                    <TicketFeature>Full 3-day access (Oct 28-30)</TicketFeature>
-                    <TicketFeature>All General pass benefits</TicketFeature>
-                    <TicketFeature>VIP exclusive reception</TicketFeature>
-                    <TicketFeature>Reserved premium seating</TicketFeature>
-                    <TicketFeature>Private networking with speakers</TicketFeature>
-                    <TicketFeature>Exclusive VIP lounge access</TicketFeature>
-                    <TicketFeature>Conference swag package</TicketFeature>
-                    <TicketFeature>Priority registration for 2026</TicketFeature>
-                    <TicketFeature>Complimentary workshop recordings</TicketFeature>
-                  </TicketFeatures>
-                  <TicketButtonPremium href="#register-form">Secure VIP Access</TicketButtonPremium>
-                </TicketCard>
-              </TicketsGrid>
-            )}
-          </Container>
-        </TicketsSection>
-        
-        <CTASection>
-          <Container>
-            <CTATitle>Join the conversation</CTATitle>
-            <CTADescription>
-              Connect with a community of AI researchers, entrepreneurs, and policymakers dedicated to advancing the field.
-            </CTADescription>
-            <CTAButtonGroup>
-              <RegistrationButton href="#register">Register Now</RegistrationButton>
-              <SecondaryButton href="#contact">Contact Us</SecondaryButton>
-            </CTAButtonGroup>
-          </Container>
-        </CTASection>
-        
-        <NewsletterSection>
-          <Container>
-            <SectionTitle>Stay Updated</SectionTitle>
-            <SectionSubtitle>
-              Subscribe to our newsletter for the latest updates on speakers, schedule, and more.
-            </SectionSubtitle>
+                <div style={{ position: 'relative', minHeight: '2000px' }}>
+                  {['day1', 'day2', 'day3'].map((day) => (
+                    <TabContent key={day} active={activeDay === day} absolute>
+                      <FeaturedSpeakers>
+                        <SpeakersGrid>
+                          {speakersData[day].map((speaker, index) => (
+                            <SpeakerCard key={index} index={index}>
+                              <SpeakerPhoto index={index}>
+                                <img src={speaker.image} alt={speaker.name} />
+                                <SpeakerBioOverlay>
+                                  <SpeakerBioText>
+                                    {speaker.bio || `${speaker.name} is a leading expert in AI research at ${speaker.company}.`}
+                                  </SpeakerBioText>
+                                  <SpeakerBioButton>Full Profile</SpeakerBioButton>
+                                </SpeakerBioOverlay>
+                              </SpeakerPhoto>
+                              <SpeakerName>{speaker.name}</SpeakerName>
+                              <SpeakerRole>{speaker.role}</SpeakerRole>
+                              <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                              {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                              <SpeakerSocial>
+                                <SocialIcon href={speaker.linkedin} target="_blank" rel="noopener noreferrer">
+                                  in
+                                </SocialIcon>
+                                <SocialIcon href={speaker.twitter} target="_blank" rel="noopener noreferrer">
+                                  𝕏
+                                </SocialIcon>
+                              </SpeakerSocial>
+                            </SpeakerCard>
+                          ))}
+                        </SpeakersGrid>
+                        
+                        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                          <h4 style={{ fontSize: '18px', marginBottom: '10px' }}>Join us for a full day of:</h4>
+                          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
+                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Keynote talks</div>
+                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Panels</div>
+                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Breakout rooms</div>
+                            <div style={{ padding: '10px 20px', background: '#f8f8f8', borderRadius: '8px' }}>Expo hall</div>
+                          </div>
+                        </div>
+                      </FeaturedSpeakers>
+                    </TabContent>
+                  ))}
+                </div>
+              </Container>
+            </SpeakersSection>
             
-            <NewsletterForm>
-              <NewsletterInput type="email" placeholder="Enter your email" />
-              <NewsletterButton>Subscribe</NewsletterButton>
-            </NewsletterForm>
-          </Container>
-        </NewsletterSection>
+            <VenueSection id="venue">
+              <Container>
+                <SectionTitle>Event Venue</SectionTitle>
+                <SectionSubtitle>
+                  Join us at the prestigious Friends House in central London
+                </SectionSubtitle>
+                
+                <VenueGrid>
+                  <VenueInfo>
+                    <VenueTitle>Friend's House</VenueTitle>
+                    <VenueAddress>173-177 Euston Road, London, NW1 2BJ</VenueAddress>
+                    <VenueDirections>
+                      Walking distance from Euston, Euston Square, and King's Cross. No on-site parking available.
+                    </VenueDirections>
+                    <SecondaryButton href="https://maps.google.com/?q=Friends+House+London" target="_blank">
+                      Get Directions
+                    </SecondaryButton>
+                  </VenueInfo>
+                  
+                  <VenueMap>
+                    <img src="/images/friends_house.jpg" alt="Friend's House, London" />
+                  </VenueMap>
+                </VenueGrid>
+              </Container>
+            </VenueSection>
+            
+            <SponsorsSection id="sponsors">
+              <Container>
+                <SectionTitle>Partners</SectionTitle>
+                <SectionSubtitle>
+                  Leading organizations supporting innovation in AI
+                </SectionSubtitle>
+                
+                <SponsorsTiers>
+                  <SponsorsTier>
+                    <SponsorsTierTitle>Gold Sponsors</SponsorsTierTitle>
+                    <SponsorsGrid>
+                      {/* Add sponsor logos here */}
+                      <SponsorLogo index={0}>
+                        <img src="https://via.placeholder.com/200x100?text=Sponsor+1" alt="Sponsor 1" />
+                      </SponsorLogo>
+                      <SponsorLogo index={1}>
+                        <img src="https://via.placeholder.com/200x100?text=Sponsor+2" alt="Sponsor 2" />
+                      </SponsorLogo>
+                      <SponsorLogo index={2}>
+                        <img src="https://via.placeholder.com/200x100?text=Sponsor+3" alt="Sponsor 3" />
+                      </SponsorLogo>
+                    </SponsorsGrid>
+                  </SponsorsTier>
+                  
+                  <SponsorsTier>
+                    <SponsorsTierTitle>Silver Sponsors</SponsorsTierTitle>
+                    <SponsorsGrid>
+                      <SponsorLogo index={3}>
+                        <img src="https://via.placeholder.com/200x100?text=Sponsor+4" alt="Sponsor 4" />
+                      </SponsorLogo>
+                      <SponsorLogo index={4}>
+                        <img src="https://via.placeholder.com/200x100?text=Sponsor+5" alt="Sponsor 5" />
+                      </SponsorLogo>
+                    </SponsorsGrid>
+                  </SponsorsTier>
+                </SponsorsTiers>
+                
+                <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                  <p>Want to become a sponsor?</p>
+                  <ContactInfo>
+                    <a href="mailto:webmaster@thinkingaboutthinking.org">Contact us</a>
+                  </ContactInfo>
+                </div>
+              </Container>
+            </SponsorsSection>
+
+            <Section style={{ padding: '80px 0', background: '#f8f8f8' }}>
+              <Container>
+                <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+                  <h3 style={{ fontSize: '1.5rem', marginBottom: '20px' }}>Inquiries</h3>
+                  <p style={{ marginBottom: '10px' }}>webmaster@thinkingaboutthinking.org</p>
+                  
+                  <div style={{ marginTop: '40px' }}>
+                    <p>Brought to you by Thinking About Thinking, Inc.</p>
+                    <p>A 501(c)3 Nonprofit Company in the State of New Jersey.</p>
+                    <p>28 Spring Street, Unit 156, Princeton, NJ, USA, 08540</p>
+                  </div>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '30px' }}>
+                    <a href="#" style={{ color: '#000' }}>Youtube</a>
+                    <a href="#" style={{ color: '#000' }}>LinkedIn</a>
+                    <a href="#" style={{ color: '#000' }}>Socials</a>
+                  </div>
+                </div>
+              </Container>
+            </Section>
+          </>
+        )}
       </main>
       
       <Footer>
