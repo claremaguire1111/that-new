@@ -96,6 +96,11 @@ const GlobalStyle = createGlobalStyle`
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
   }
+  
+  @keyframes scrollVertical {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(calc(-50% - 40px)); }
+  }
 `;
 
 // Layout Components
@@ -580,10 +585,6 @@ const continuousMarqueeAnimation = keyframes`
   to { transform: translateX(-100%); }
 `;
 
-const scrollVertical = keyframes`
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
-`;
 
 const MarqueeContainer = styled.div`
   background-color: #000;
@@ -3210,16 +3211,14 @@ function App({ ticketsPage = false }) {
                   marginTop: '40px',
                   backgroundColor: 'white',
                   borderRadius: '12px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                  padding: '20px'
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
                 }}>
                   <div style={{ 
                     position: 'absolute',
                     top: '0',
                     left: '0',
                     width: '100%',
-                    height: '100%',
-                    animation: `${scrollVertical} 20s linear infinite`,
+                    animation: 'scrollVertical 20s linear infinite',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '20px',
@@ -3364,7 +3363,15 @@ function App({ ticketsPage = false }) {
       
       <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '0' }} id="venue">
         <Container>
-          <SectionTitle>Venue</SectionTitle>
+          <h2 style={{ 
+            fontSize: '2.5rem', 
+            fontWeight: '700',
+            marginBottom: '20px',
+            textAlign: 'center',
+            background: 'linear-gradient(90deg, #333, #000)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent' 
+          }}>Venue</h2>
           <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ 
               display: 'grid', 
