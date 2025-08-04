@@ -2404,7 +2404,7 @@ function App({ ticketsPage = false }) {
                     position: 'relative',
                     paddingBottom: '15px'
                   }}>
-                    Gold Sponsors
+                    Silver Sponsors
                     <span style={{ 
                       position: 'absolute', 
                       bottom: 0, 
@@ -2491,7 +2491,7 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/silver_sponsors/HSBC-Logo.png" alt="HSBC" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/gold_sponsors/XTX_Markets.png" alt="XTX Markets" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                     </div>
                   </div>
                 </div>
