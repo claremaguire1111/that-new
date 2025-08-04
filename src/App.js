@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled, { createGlobalStyle, ThemeProvider, keyframes } from 'styled-components';
 
 // Theme
@@ -97,6 +97,16 @@ const GlobalStyle = createGlobalStyle`
     100% { transform: translateY(0px); }
   }
   
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
   @keyframes scrollVertical {
     0% { transform: translateY(0); }
     100% { transform: translateY(calc(-50% - 40px)); }
@@ -105,25 +115,33 @@ const GlobalStyle = createGlobalStyle`
 
 // Layout Components
 const Container = styled.div`
-  max-width: 1440px;
+  width: 100%;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   
   @media (min-width: 768px) {
-    padding: 0 48px;
+    padding: 0 40px;
   }
   
   @media (min-width: 1200px) {
-    padding: 0 80px;
+    padding: 0 60px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 16px;
   }
 `;
 
 const Section = styled.section`
-  margin: ${props => props.margin || "120px 0"};
+  margin: ${props => props.margin || "60px 0"};
+  padding: ${props => props.padding || "40px 0"};
   position: relative;
+  overflow: hidden;
   
   @media (max-width: 768px) {
-    margin: ${props => props.mobileMargin || "80px 0"};
+    margin: ${props => props.mobileMargin || "40px 0"};
+    padding: ${props => props.mobilePadding || "30px 0"};
   }
 `;
 
@@ -136,35 +154,38 @@ const Header = styled.header`
   z-index: 1000;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  background: ${props => props.scrolled ? 'rgba(255, 255, 255, 0.95)' : 'transparent'};
-  box-shadow: ${props => props.scrolled ? '0 2px 20px rgba(0, 0, 0, 0.05)' : 'none'};
+  background: ${props => props.scrolled ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)'};
+  box-shadow: ${props => props.scrolled ? '0 2px 20px rgba(0, 0, 0, 0.05)' : '0 1px 5px rgba(0, 0, 0, 0.02)'};
 `;
 
 const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 0;
+  padding: 20px 0;
+  position: relative;
   
   @media (max-width: 768px) {
-    padding: 20px 0;
+    padding: 16px 0;
   }
 `;
 
 const Logo = styled.div`
-  font-size: 1.5rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
   
   img {
-    height: 40px;
+    height: 32px;
     margin-right: 10px;
   }
   
   span {
     color: ${props => props.theme.colors.black};
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 `;
 
@@ -173,46 +194,43 @@ const MenuButton = styled.button`
   
   @media (max-width: 1024px) {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     z-index: 1002;
     position: relative;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     background: transparent;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #000;
     
-    &::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background-color: rgba(0, 0, 0, 0.05);
-      transform: scale(0);
-      transition: transform 0.3s ease;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.03);
     }
     
-    &:hover::before {
-      transform: scale(1);
+    &:active {
+      background-color: rgba(0, 0, 0, 0.05);
     }
   }
 `;
 
 const NavItems = styled.div`
   display: flex;
-  gap: 40px;
+  gap: 25px; /* Reduced gap for better spacing */
+  align-items: center;
   
   @media (max-width: 1024px) {
     position: fixed;
     top: 0;
     right: ${props => props.isOpen ? '0' : '-100%'};
-    width: 300px;
+    width: 280px;
     height: 100vh;
     background-color: ${props => props.theme.colors.white};
-    padding: 100px 40px;
+    padding: 90px 30px 40px;
     flex-direction: column;
-    gap: 20px;
+    align-items: flex-start;
+    gap: 24px;
     transition: right 0.3s ease, box-shadow 0.3s ease;
     z-index: 1001;
     box-shadow: ${props => props.isOpen ? '-5px 0 30px rgba(0, 0, 0, 0.1)' : 'none'};
@@ -239,21 +257,27 @@ const Overlay = styled.div`
 `;
 
 const NavLink = styled.a`
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   position: relative;
+  padding: 6px 0;
+  color: #222;
   
   &::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: -4px;
+    bottom: 0;
     width: 0;
-    height: 1px;
+    height: 2px;
     background-color: ${props => props.theme.colors.black};
-    transition: width 0.3s ease;
+    transition: width 0.2s ease;
+  }
+  
+  &:hover {
+    color: #000;
   }
   
   &:hover::after {
@@ -261,24 +285,29 @@ const NavLink = styled.a`
   }
   
   @media (max-width: 1024px) {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    padding: 8px 0;
+    width: 100%;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
   }
 `;
 
 const RegistrationButton = styled.a`
   background-color: ${props => props.theme.colors.black};
   color: ${props => props.theme.colors.white};
-  padding: 12px 32px;
-  border-radius: 2px;
+  padding: 16px 34px;
+  border-radius: 4px;
   font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
   &:hover {
     background-color: ${props => props.theme.colors.darkGray};
     transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
   }
   
   @media (max-width: 1024px) {
@@ -289,16 +318,29 @@ const RegistrationButton = styled.a`
 
 // Hero Section
 const HeroSection = styled.section`
-  height: 100vh;
-  min-height: 700px;
+  min-height: 650px;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #ffffff, #f5f5f5);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding: 120px 0 40px; /* Adjusted padding to prevent header overlap and ensure content fits */
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 50%, rgba(245,245,245,0.6) 0%, rgba(255,255,255,0) 70%);
+    pointer-events: none;
+  }
   
   @media (max-width: 768px) {
     min-height: 600px;
+    padding: 100px 0 40px;
   }
 `;
 
@@ -340,19 +382,20 @@ const HeroTagline = styled.div`
 `;
 
 const HeroTitle = styled.h1`
-  font-size: 5rem;
+  font-size: 5.2rem;
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.1;
-  margin-bottom: 32px;
+  line-height: 1.05;
+  margin-bottom: 20px;
   color: ${props => props.theme.colors.black};
+  position: relative;
   
   @media (max-width: 1024px) {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
   }
   
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
   }
 `;
 
@@ -372,6 +415,7 @@ const HeroSubtitle = styled.h2`
 const HeroActions = styled.div`
   display: flex;
   gap: 20px;
+  margin-top: 40px;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -432,14 +476,14 @@ const HeroLogo = styled.div`
 
 // Countdown
 const CountdownSection = styled.div`
-  position: absolute;
-  bottom: 40px;
-  left: 0;
+  position: relative;
+  margin-top: 30px;
   width: 100%;
   z-index: 5;
+  padding-bottom: 20px;
   
   @media (max-width: 768px) {
-    bottom: 20px;
+    margin-top: 20px;
   }
 `;
 
@@ -479,6 +523,10 @@ const DayTabsContainer = styled.div`
   justify-content: center;
   margin-bottom: 60px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const DayTab = styled.button`
@@ -521,57 +569,89 @@ const DayTab = styled.button`
 
 // Speakers Section
 const SpeakersSection = styled(Section)`
-  padding: 100px 0 200px 0;
+  padding: 80px 0 60px 0;
   position: relative;
   z-index: 1;
   overflow: visible;
   
   @media (max-width: 768px) {
-    padding: 60px 0 180px 0;
+    padding: 60px 0 40px 0;
   }
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 3rem;
+  font-size: 2.6rem;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 5px;
   text-align: center;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #000;
+  }
   
   @media (max-width: 768px) {
-    font-size: 2.25rem;
+    font-size: 2rem;
+    margin-bottom: 0;
+    
+    &::after {
+      bottom: -10px;
+      width: 50px;
+      height: 2px;
+    }
   }
 `;
 
 const SectionSubtitle = styled.p`
-  font-size: 1.25rem;
-  margin-bottom: 64px;
-  max-width: 800px;
+  font-size: 1.2rem;
+  margin-top: 25px;
+  margin-bottom: 40px;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  line-height: 1.6;
+  color: #444;
   
   @media (max-width: 768px) {
-    font-size: 1.125rem;
-    margin-bottom: 40px;
+    font-size: 1.05rem;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    max-width: 95%;
+    line-height: 1.5;
   }
 `;
 
 const SpeakersGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 50px;
+  gap: 40px;
   max-width: 1200px;
-  margin: 0 auto 120px auto;
+  margin: 0 auto 60px auto;
   padding: 0 20px;
   
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
+    gap: 30px;
+    margin-bottom: 40px;
   }
   
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 25px;
+    justify-items: center;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0;
   }
 `;
 
@@ -581,8 +661,13 @@ const marqueeAnimation = keyframes`
 `;
 
 const continuousMarqueeAnimation = keyframes`
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+`;
+
+const scrollUpAnimation = keyframes`
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
 `;
 
 
@@ -592,8 +677,10 @@ const MarqueeContainer = styled.div`
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
-  padding: 15px 0;
+  padding: 12px 0;
   position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.1);
 `;
 
 const LogoMarqueeContainer = styled.div`
@@ -611,6 +698,11 @@ const LogoMarqueeContent = styled.div`
   white-space: nowrap;
   animation: ${continuousMarqueeAnimation} 20s linear infinite;
   padding-left: 100%;
+  animation-delay: ${props => props.delay || '0s'};
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 `;
 
 const LogoMarqueeItem = styled.span`
@@ -621,9 +713,13 @@ const LogoMarqueeItem = styled.span`
 
 const MarqueeContent = styled.div`
   display: inline-block;
-  animation: ${continuousMarqueeAnimation} 30s linear infinite;
+  animation: ${continuousMarqueeAnimation} 25s linear infinite;
   padding-left: 100%;
   animation-delay: ${props => props.delay || '0s'};
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 `;
 
 const MarqueeItem = styled.span`
@@ -646,12 +742,23 @@ const SpeakerCard = styled.div`
   overflow: hidden;
   background: white;
   padding-bottom: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   z-index: ${props => props.index % 2 === 0 ? '2' : '1'};
   
   &:hover {
     transform: translateY(-10px);
     z-index: 5;
+  }
+  
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  @media (max-width: 480px) {
+    max-width: 300px;
   }
 `;
 
@@ -719,7 +826,7 @@ const SpeakerPhoto = styled.div`
   height: 280px;
   overflow: hidden;
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   transform: ${props => props.index % 3 === 0 ? 'rotate(-2deg)' : props.index % 3 === 1 ? 'rotate(0deg)' : 'rotate(2deg)'};
   transition: all 0.3s ease;
@@ -752,9 +859,16 @@ const SpeakerPhoto = styled.div`
     filter: grayscale(70%);
   }
   
+  @media (max-width: 1024px) {
+    height: 240px;
+  }
+  
   @media (max-width: 768px) {
-    width: 180px;
-    height: 180px;
+    height: 220px;
+  }
+  
+  @media (max-width: 640px) {
+    height: 300px;
   }
 `;
 
@@ -799,9 +913,14 @@ const SocialIcon = styled.a`
 `;
 
 const FeaturedSpeakers = styled.div`
-  margin-bottom: 100px;
+  margin-bottom: 60px;
   overflow: visible;
-  padding-bottom: 100px;
+  padding-bottom: 40px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+  }
 `;
 
 const SeeAllButton = styled.a`
@@ -1560,6 +1679,23 @@ const SpeakerBioButton = styled.button`
 `;
 
 // Tab transition styles
+const TabsContainer = styled.div`
+  position: relative;
+  min-height: 2000px;
+  overflow: visible;
+  
+  @media (max-width: 1024px) {
+    min-height: 2400px;
+  }
+  
+  @media (max-width: 768px) {
+    min-height: 3000px;
+    overflow: visible;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+`;
+
 const TabContent = styled.div`
   opacity: ${props => props.active ? 1 : 0};
   visibility: ${props => props.active ? 'visible' : 'hidden'};
@@ -1571,6 +1707,12 @@ const TabContent = styled.div`
   z-index: ${props => props.active ? '2' : '1'};
   overflow: visible;
   height: auto;
+  
+  @media (max-width: 768px) {
+    position: relative;
+    margin-bottom: ${props => props.active ? '20px' : '0'};
+    display: ${props => props.active ? 'block' : 'none'};
+  }
 `;
 
 // Speakers Data
@@ -1844,7 +1986,8 @@ const speakersData = {
 };
 
 // Main App Component
-function App({ ticketsPage = false }) {
+function App() {
+  const [ticketsPage, setTicketsPage] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDay, setActiveDay] = useState('day1');
@@ -2007,8 +2150,8 @@ function App({ ticketsPage = false }) {
         <Container>
           <Nav>
             <Logo>
-              <img src="/images/thatpng.jpg" alt="THAT Logo" />
-              <span>THAT</span>
+              <img src="/images/thatpng.jpg" alt="Thinking About Thinking Logo" />
+              <span>THINKING ABOUT THINKING</span>
             </Logo>
             
             <MenuButton onClick={toggleMenu}>
@@ -2021,15 +2164,19 @@ function App({ ticketsPage = false }) {
               <NavLink href="#about" onClick={() => setMenuOpen(false)}>About</NavLink>
               <NavLink href="#speakers" onClick={() => setMenuOpen(false)}>Speakers</NavLink>
               <NavLink href="#schedule" onClick={() => setMenuOpen(false)}>Schedule</NavLink>
+              <NavLink href="#" onClick={(e) => {
+                e.preventDefault();
+                setTicketsPage(true);
+                setMenuOpen(false);
+              }}>Tickets</NavLink>
               <NavLink href="#venue" onClick={() => setMenuOpen(false)}>Venue</NavLink>
               <NavLink href="#sponsors" onClick={() => setMenuOpen(false)}>Partners & Sponsors</NavLink>
-              <NavLink href="/tickets" onClick={() => setMenuOpen(false)}>Tickets</NavLink>
               <RegistrationButton 
                 href="#" 
                 onClick={(e) => {
                   e.preventDefault();
                   setMenuOpen(false);
-                  openRegisterModal();
+                  setTicketsPage(true);
                 }}
               >
                 Register Now
@@ -2104,9 +2251,9 @@ function App({ ticketsPage = false }) {
                          'Day 3: AI Entrepreneurship'}
                       </h3>
                       <p style={{ fontWeight: "600", fontSize: "32px", margin: "20px 0", color: "#000" }}>
-                        {selectedTicketType === 'general' ? '£299' : 
-                         selectedTicketType === 'premium' ? '£499' : 
-                         '£999'}
+                        {selectedTicketType === 'general' ? '£199' : 
+                         selectedTicketType === 'premium' ? '£399' : 
+                         '£799'}
                       </p>
                       <div style={{ textAlign: "left", margin: "20px 0", color: "#000" }}>
                         <p style={{ margin: "10px 0" }}>✓ All talks and panels</p>
@@ -2144,9 +2291,9 @@ function App({ ticketsPage = false }) {
                   <h3 style={{ fontSize: "28px", marginBottom: "20px" }}>Full Event Access</h3>
                   <p style={{ fontSize: "18px", marginBottom: "30px" }}>Get access to all three days and save up to 20%</p>
                   <p style={{ fontWeight: "700", fontSize: "42px", marginBottom: "30px" }}>
-                    {selectedTicketType === 'general' ? '£699' : 
-                     selectedTicketType === 'premium' ? '£1,199' : 
-                     '£2,499'}
+                    {selectedTicketType === 'general' ? '£199' : 
+                     selectedTicketType === 'premium' ? '£399' : 
+                     '£799'}
                   </p>
                   <button style={{ 
                     background: "white", 
@@ -2169,19 +2316,18 @@ function App({ ticketsPage = false }) {
             <HeroSection>
               <Container>
                 <HeroContent>
-                  <HeroTagline>Global Summit on</HeroTagline>
-                  <HeroTitle>Open Problems for AI</HeroTitle>
-                  <HeroSubtitle>
+                  <p style={{ marginBottom: "15px", fontWeight: "600", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", opacity: "0.9" }}>Algorithmic Innovation and Entrepreneurship</p>
+                  <HeroTitle style={{ fontSize: "4rem", lineHeight: "1.15", marginBottom: "25px" }}>Global Summit on<br />Open Problems for AI</HeroTitle>
+                  <HeroSubtitle style={{ marginTop: "10px", fontSize: "1.35rem", maxWidth: "650px" }}>
                     How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
                   </HeroSubtitle>
-                  <p style={{ marginTop: "20px", fontWeight: "600", fontSize: "1.3rem" }}>Algorithmic Innovation and Entrepreneurship</p>
-                  <p style={{ marginTop: "10px", color: "#666", fontWeight: "500" }}>Registration coming soon</p>
+                  <p style={{ marginTop: "20px", fontWeight: "500", fontSize: "1.1rem", letterSpacing: "0.01em", color: "#444" }}>October 28-30, 2025 · London, UK</p>
                   <HeroActions>
                     <RegistrationButton 
                       href="#" 
                       onClick={(e) => {
                         e.preventDefault();
-                        openRegisterModal();
+                        setTicketsPage(true);
                       }}
                     >
                       Register Now
@@ -2238,10 +2384,10 @@ function App({ ticketsPage = false }) {
             </MarqueeContainer>
             
             <SpeakersSection id="speakers">
-              <Container>
+              <Container style={{ textAlign: "center" }}>
                 <SectionTitle>World-Class Speakers</SectionTitle>
                 <SectionSubtitle>
-                  Leading experts in AI research, policy, and entrepreneurship from around the world
+                  Leading experts in AI research, policy, and entrepreneurship from the UK's top institutions
                 </SectionSubtitle>
                 
                 <DayTabsContainer>
@@ -2278,7 +2424,7 @@ function App({ ticketsPage = false }) {
                   </DaySubheading>
                 </ConferenceInfo>
                 
-                <div style={{ position: 'relative', minHeight: '2000px' }}>
+                <TabsContainer>
                   {['day1', 'day2', 'day3'].map((day) => (
                     <TabContent key={day} active={activeDay === day} absolute>
                       <FeaturedSpeakers>
@@ -2309,38 +2455,26 @@ function App({ ticketsPage = false }) {
                             </SpeakerCard>
                           ))}
                         </SpeakersGrid>
-                        
-                        <div style={{ textAlign: 'center', marginTop: '40px' }}>
-                          <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '15px' }}>
-                            Speakers from the UK's leading institutions discuss the future challenges and opportunities in AI research and application
-                          </h4>
-                          <p style={{ marginBottom: '20px', fontSize: '1.05rem' }}>
-                            Join us for a full day of insightful presentations and discussions
-                          </p>
-                          <p style={{ display: 'none' }}>
-                          </p>
-                        </div>
                       </FeaturedSpeakers>
                     </TabContent>
                   ))}
-                </div>
+                </TabsContainer>
+                
+                {/* Extra spacer for mobile */}
+                <div style={{ height: '60px', display: 'block', width: '100%' }}></div>
               </Container>
             </SpeakersSection>
             
+            {/* Clear separator between sections */}
+            <div style={{ height: '120px', background: 'linear-gradient(to bottom, #f5f5f5, #ffffff)', display: 'block', clear: 'both' }}></div>
             
-            <SponsorsSection id="sponsors">
+            <SponsorsSection id="sponsors" padding="80px 0 60px" margin="60px 0 40px">
               <Container>
                 <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                  <h2 style={{ 
-        fontSize: '2.5rem', 
-        fontWeight: '700', 
-        marginBottom: '20px',
-        background: 'linear-gradient(90deg, #333, #000)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent'
-      }}>
-        Our Partners & Sponsors
-      </h2>
+                  <SectionTitle>Our Partners & Sponsors</SectionTitle>
+                  <SectionSubtitle>
+                    Supporting organizations that make this event possible
+                  </SectionSubtitle>
                 </div>
               
                 <h3 style={{ 
@@ -2383,20 +2517,7 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/gold_sponsors/XTX_Markets.png" alt="XTX Markets" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div style={{ 
-                      height: '120px', 
-                      backgroundColor: 'white', 
-                      padding: '20px', 
-                      borderRadius: '8px', 
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%'
-                    }}>
-                      <img src="/images/sponsors/gold_sponsors/public-ai-logo-large.png" alt="Public AI" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/gold_sponsors/XTX_Markets.png" alt="XTX Markets" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }} />
                     </div>
                   </div>
                 </div>
@@ -2440,7 +2561,7 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/silver_sponsors/HSBC-Logo.png" alt="HSBC" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/silver_sponsors/HSBC-Logo.png" alt="HSBC" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }} />
                     </div>
                   </div>
                 </div>
@@ -2484,7 +2605,7 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/partners/download.png" alt="Innovate UK" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/partners/download.png" alt="Innovate UK" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }} />
                     </div>
                     <div style={{ 
                       height: '120px', 
@@ -2497,7 +2618,7 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/partners/tony_blair.webp" alt="Tony Blair Institute" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/partners/tony_blair.webp" alt="Tony Blair Institute" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }} />
                     </div>
                     <div style={{ 
                       height: '120px', 
@@ -2510,7 +2631,7 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/partners/multiverse_logo_transparent.png" alt="Multiverse" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/partners/download.png" alt="Innovate UK" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }} />
                     </div>
                   </div>
                 </div>
@@ -2541,15 +2662,13 @@ function App({ ticketsPage = false }) {
             </SponsorsSection>
 
             
-            <Section style={{ padding: '100px 0 40px', background: 'white' }}>
+            <Section style={{ padding: '70px 0 40px', background: 'white', margin: '20px 0' }}>
               <Container>
                 <div style={{ textAlign: 'center', maxWidth: '1000px', margin: '0 auto' }}>
-                  <h2 style={{ fontSize: '2.4rem', fontWeight: '700', marginBottom: '20px' }}>
-                    Speakers from the UK's leading institutions
-                  </h2>
-                  <p style={{ fontSize: '1.3rem', marginBottom: '30px', maxWidth: '800px', margin: '0 auto 40px' }}>
-                    Discuss the future challenges and opportunities in AI research and application
-                  </p>
+                  <SectionTitle>AI Industry Leaders</SectionTitle>
+                  <SectionSubtitle>
+                    Connect with innovators and experts at the forefront of AI development
+                  </SectionSubtitle>
                 </div>
               </Container>
             </Section>
@@ -2565,8 +2684,8 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/sponsors/gold_sponsors/public-ai-logo-large.png" 
-                      alt="Public AI" 
+                      src="/images/sponsors/partners/download.png" 
+                      alt="Innovate UK" 
                       style={{ 
                         height: '100%', 
                         maxWidth: '100%',
@@ -2585,8 +2704,90 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/sponsors/partners/multiverse_logo_transparent.png" 
-                      alt="Multiverse" 
+                      src="/images/sponsors/partners/download.png" 
+                      alt="Innovate UK" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/sponsors/partners/tony_blair.webp" 
+                      alt="Tony Blair Institute" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/sponsors/gold_sponsors/XTX_Markets.png" 
+                      alt="XTX Markets" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/sponsors/silver_sponsors/HSBC-Logo.png" 
+                      alt="HSBC" 
+                      style={{ 
+                        height: '100%', 
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        filter: 'grayscale(100%)'
+                      }} 
+                    />
+                  </div>
+                </LogoMarqueeItem>
+              </LogoMarqueeContent>
+              <LogoMarqueeContent delay="-5s">
+                <LogoMarqueeItem>
+                  <div style={{ 
+                    height: '50px', 
+                    width: '160px',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src="/images/sponsors/partners/download.png" 
+                      alt="Innovate UK" 
                       style={{ 
                         height: '100%', 
                         maxWidth: '100%',
@@ -2679,7 +2880,7 @@ function App({ ticketsPage = false }) {
               </LogoMarqueeContent>
             </LogoMarqueeContainer>
             
-            <Section style={{ padding: '100px 0 80px', background: 'linear-gradient(135deg, #f8f8f8, #ffffff)' }}>
+            <Section style={{ padding: '100px 0 80px', background: 'linear-gradient(135deg, #f5f5f5, #ffffff)' }}>
               <Container>
                 <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
                   <h3 style={{ 
@@ -2710,10 +2911,10 @@ function App({ ticketsPage = false }) {
                     margin: '40px 0'
                   }}>
                     <div style={{ 
-                      padding: '30px 20px', 
+                      padding: '35px 25px', 
                       background: 'white', 
-                      borderRadius: '12px', 
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      borderRadius: '8px', 
+                      boxShadow: '0 12px 28px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.03)',
                       transition: 'all 0.3s ease',
                       height: '100%',
                       display: 'flex',
@@ -2722,28 +2923,31 @@ function App({ ticketsPage = false }) {
                       justifyContent: 'center',
                       textAlign: 'center',
                       transform: 'translateY(0)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      border: '1px solid #f0f0f0'
                     }}>
                       <div style={{ 
                         width: '60px', 
                         height: '60px', 
-                        borderRadius: '50%', 
-                        backgroundColor: '#f5f5f5', 
+                        borderRadius: '5px', 
+                        background: 'linear-gradient(135deg, #f8f8f8, #e8e8e8)', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        marginBottom: '20px',
+                        marginBottom: '25px',
                         fontSize: '24px',
-                        fontWeight: 'bold'
-                      }}>🎤</div>
-                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>KEYNOTE TALKS</h4>
-                      <p>Learn from world-leading experts in AI research and applications</p>
+                        fontWeight: 'bold',
+                        boxShadow: '0 3px 8px rgba(0,0,0,0.08)',
+                        border: '1px solid #eaeaea'
+                      }}>♪</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '700', letterSpacing: '0.03em' }}>KEYNOTE TALKS</h4>
+                      <p style={{ lineHeight: '1.6', color: '#555' }}>Learn from world-leading experts in AI research and applications</p>
                     </div>
                     <div style={{ 
-                      padding: '30px 20px', 
+                      padding: '35px 25px', 
                       background: 'white', 
-                      borderRadius: '12px', 
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      borderRadius: '8px', 
+                      boxShadow: '0 12px 28px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.03)',
                       transition: 'all 0.3s ease',
                       height: '100%',
                       display: 'flex',
@@ -2752,28 +2956,31 @@ function App({ ticketsPage = false }) {
                       justifyContent: 'center',
                       textAlign: 'center',
                       transform: 'translateY(0)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      border: '1px solid #f0f0f0'
                     }}>
                       <div style={{ 
                         width: '60px', 
                         height: '60px', 
-                        borderRadius: '50%', 
-                        backgroundColor: '#f5f5f5', 
+                        borderRadius: '5px', 
+                        background: 'linear-gradient(135deg, #f8f8f8, #e8e8e8)', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        marginBottom: '20px',
+                        marginBottom: '25px',
                         fontSize: '24px',
-                        fontWeight: 'bold'
-                      }}>👥</div>
-                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>PANELS</h4>
-                      <p>Engage with diverse perspectives from industry leaders and academics</p>
+                        fontWeight: 'bold',
+                        boxShadow: '0 3px 8px rgba(0,0,0,0.08)',
+                        border: '1px solid #eaeaea'
+                      }}>◎</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '700', letterSpacing: '0.03em' }}>PANELS</h4>
+                      <p style={{ lineHeight: '1.6', color: '#555' }}>Engage with diverse perspectives from industry leaders and academics</p>
                     </div>
                     <div style={{ 
-                      padding: '30px 20px', 
+                      padding: '35px 25px', 
                       background: 'white', 
-                      borderRadius: '12px', 
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      borderRadius: '8px', 
+                      boxShadow: '0 12px 28px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.03)',
                       transition: 'all 0.3s ease',
                       height: '100%',
                       display: 'flex',
@@ -2782,28 +2989,31 @@ function App({ ticketsPage = false }) {
                       justifyContent: 'center',
                       textAlign: 'center',
                       transform: 'translateY(0)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      border: '1px solid #f0f0f0'
                     }}>
                       <div style={{ 
                         width: '60px', 
                         height: '60px', 
-                        borderRadius: '50%', 
-                        backgroundColor: '#f5f5f5', 
+                        borderRadius: '5px', 
+                        background: 'linear-gradient(135deg, #f8f8f8, #e8e8e8)', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        marginBottom: '20px',
+                        marginBottom: '25px',
                         fontSize: '24px',
-                        fontWeight: 'bold'
-                      }}>🔍</div>
-                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>BREAKOUT SESSIONS</h4>
-                      <p>Collaborate on specific topics in smaller, focused discussion groups</p>
+                        fontWeight: 'bold',
+                        boxShadow: '0 3px 8px rgba(0,0,0,0.08)',
+                        border: '1px solid #eaeaea'
+                      }}>⊕</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '700', letterSpacing: '0.03em' }}>BREAKOUT SESSIONS</h4>
+                      <p style={{ lineHeight: '1.6', color: '#555' }}>Collaborate on specific topics in smaller, focused discussion groups</p>
                     </div>
                     <div style={{ 
-                      padding: '30px 20px', 
+                      padding: '35px 25px', 
                       background: 'white', 
-                      borderRadius: '12px', 
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                      borderRadius: '8px', 
+                      boxShadow: '0 12px 28px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.03)',
                       transition: 'all 0.3s ease',
                       height: '100%',
                       display: 'flex',
@@ -2812,375 +3022,148 @@ function App({ ticketsPage = false }) {
                       justifyContent: 'center',
                       textAlign: 'center',
                       transform: 'translateY(0)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      border: '1px solid #f0f0f0'
                     }}>
                       <div style={{ 
                         width: '60px', 
                         height: '60px', 
-                        borderRadius: '50%', 
-                        backgroundColor: '#f5f5f5', 
+                        borderRadius: '5px', 
+                        background: 'linear-gradient(135deg, #f8f8f8, #e8e8e8)', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        marginBottom: '20px',
+                        marginBottom: '25px',
                         fontSize: '24px',
-                        fontWeight: 'bold'
-                      }}>🚀</div>
-                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '600' }}>EXPO HALL</h4>
-                      <p>Discover cutting-edge innovations and network with industry pioneers</p>
+                        fontWeight: 'bold',
+                        boxShadow: '0 3px 8px rgba(0,0,0,0.08)',
+                        border: '1px solid #eaeaea'
+                      }}>↗</div>
+                      <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', fontWeight: '700', letterSpacing: '0.03em' }}>EXPO HALL</h4>
+                      <p style={{ lineHeight: '1.6', color: '#555' }}>Discover cutting-edge innovations and network with industry pioneers</p>
                     </div>
                   </div>
                 </div>
               </Container>
             </Section>
             
-            <LogoMarqueeContainer style={{ background: 'white', padding: '40px 0', boxShadow: '0 5px 15px rgba(0,0,0,0.05)' }}>
-              <Container style={{ marginBottom: '20px', paddingTop: '0' }}>
-                <h3 style={{ 
-                  fontSize: '1.8rem', 
-                  fontWeight: '600', 
-                  textAlign: 'center', 
-                  marginBottom: '30px',
-                  position: 'relative',
-                  display: 'inline-block',
-                  paddingBottom: '15px',
-                  left: '50%',
-                  transform: 'translateX(-50%)'
-                }}>
-                  BREAKOUT ROOM HOSTS
-                  <span style={{ 
-                    position: 'absolute', 
-                    bottom: 0, 
-                    left: '50%', 
-                    transform: 'translateX(-50%)', 
-                    width: '60px', 
-                    height: '3px', 
-                    backgroundColor: '#000', 
-                    borderRadius: '10px' 
-                  }}></span>
-                </h3>
-              </Container>
-              <div style={{ overflow: 'hidden', width: '100%' }}>
-                <LogoMarqueeContent>
-                  {/* Logo items with images - all same size and styling */}
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 249 146" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M27 120.68h-9.24l-2.2-5.5H4.5l-2.2 5.5H0l10.4-25.9h6.2l10.4 25.9zM14.1 110.68l-4.6-11.7-4.6 11.7h9.2zM27.7 120.68V94.78h18.8v4.5H32.2v5.6h13.8v4.5H32.2v6.8h14.3v4.5H27.7zM61.5 121.38c-2.4 0-4.6-.4-6.6-1.3-2-.8-3.7-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.1-4.2-1.1-6.6 0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 1.4 0 2.7.1 3.9.4 1.2.3 2.3.6 3.3 1.1s1.9 1 2.7 1.7c.8.7 1.5 1.4 2.1 2.2l-3.5 3.2c-.8-1.1-1.9-2-3.2-2.7s-2.9-1.1-4.7-1.1c-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.4-2.1 3.8-.5 1.5-.7 3.1-.7 4.8 0 1.8.2 3.4.7 4.9.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 2.1 0 3.8-.4 5.1-1.2s2.4-1.9 3.4-3.1l3.5 2.5c-1.2 1.8-2.8 3.3-4.8 4.3-1.8 1.2-4.2 1.7-6.8 1.7zM81.3 120.68h-4.5v-25.9h6.8c1.4 0 2.6.1 3.7.2 1.1.1 2.1.4 2.8.7.8.3 1.5.8 1.9 1.5.5.7.7 1.6.7 2.7 0 1.2-.3 2.2-.9 3-.6.8-1.5 1.5-2.7 1.9v.1c.6.1 1.2.3 1.7.7.5.3 1 .7 1.4 1.2.4.5.7 1 .9 1.6.2.6.3 1.3.3 2 0 1.1-.2 2.1-.7 2.9-.5.8-1.1 1.4-1.9 1.9-.8.5-1.7.9-2.8 1.1-1.1.2-2.2.4-3.4.4h-3.3zm0-14.9h2.2c1.4 0 2.5-.2 3.4-.7.9-.5 1.3-1.3 1.3-2.4 0-1.1-.4-1.9-1.3-2.3-.9-.4-2-.6-3.5-.6h-2.1v6zm0 10.9h2.9c3.2 0 4.8-1.1 4.8-3.4 0-1.1-.4-1.9-1.3-2.5-.9-.6-2.1-.8-3.6-.8h-2.8v6.7zM120.3 120.68h-4.5v-11.3h-11.6v11.3h-4.5v-25.9h4.5v10.5h11.6v-10.5h4.5v25.9zM122.7 107.68c0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 2.3 0 4.5.4 6.4 1.3 1.9.8 3.6 2 5 3.5 1.4 1.5 2.5 3.3 3.3 5.3.8 2 1.2 4.2 1.2 6.5 0 2.4-.4 4.5-1.2 6.5-.8 2-1.9 3.8-3.3 5.3-1.4 1.5-3.1 2.7-5 3.5-1.9.8-4.1 1.3-6.4 1.3-2.3 0-4.5-.4-6.4-1.3-1.9-.8-3.6-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.2-4.2-1.2-6.5zm4.7 0c0 1.7.2 3.3.7 4.8.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 1.6 0 3.1-.3 4.4-.9 1.3-.6 2.4-1.4 3.3-2.5.9-1.1 1.6-2.4 2.1-3.9.5-1.5.7-3.1.7-4.8 0-1.7-.2-3.3-.7-4.8-.5-1.5-1.2-2.7-2.1-3.8-.9-1.1-2-1.9-3.3-2.5-1.3-.6-2.7-.9-4.4-.9-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.3-2.1 3.8-.5 1.5-.7 3.1-.7 4.8zM166.3 120.68h-10.1v-25.9h10.1c2.3 0 4.4.4 6.2 1.2 1.8.8 3.4 1.9 4.7 3.3 1.3 1.4 2.3 3.1 3 5 .7 1.9 1 4 1 6.2 0 2.3-.3 4.3-1 6.2-.7 1.9-1.7 3.6-3 5-1.3 1.4-2.9 2.5-4.7 3.3-1.8.5-3.9.7-6.2.7zm-.3-21.8h-5.3v17.7h5.3c1.5 0 2.9-.3 4.1-.8 1.2-.5 2.2-1.3 3-2.3.8-1 1.4-2.1 1.8-3.5.4-1.4.6-2.9.6-4.6 0-1.7-.2-3.2-.6-4.6-.4-1.4-1-2.5-1.8-3.5-.8-1-1.8-1.7-3-2.3-1.2-.7-2.6-1.1-4.1-1.1zM182.7 120.68v-25.9h4.5v21.4h13v4.5h-17.5zM221.4 120.68h-18.8v-25.9h18.8v4.5h-14.3v5.6h13.8v4.5h-13.8v6.8h14.3v4.5zM233.9 102.68h-8.6v-5h21.7v5h-8.6v20.9h-4.5v-20.9z" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 242 90" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M146.83 33.83c0-4.91 3.76-8.68 8.67-8.68 4.9 0 8.67 3.77 8.67 8.68 0 4.9-3.76 8.67-8.67 8.67-4.91 0-8.67-3.76-8.67-8.67zm-53.77-8.68c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.76-8.68-8.67-8.68zm-43.64 0c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.77-8.68-8.67-8.68zM3.77 25.15C1.7 25.15 0 26.84 0 28.91v51.32c0 2.07 1.7 3.77 3.77 3.77h234.46c2.07 0 3.77-1.7 3.77-3.77V28.91c0-2.07-1.7-3.76-3.77-3.76H3.77z" fill="#000" />
-                        <path d="M234.44 22.58a6.34 6.34 0 0 0-6.33-6.33h-17.24v16.47h-14.89V6h-14.88v10.25h-17.07V6h-14.88v26.72h-42.07V16.25h-17.24a6.34 6.34 0 0 0-6.33 6.33v9.17H65.8V22.58a6.34 6.34 0 0 0-6.34-6.33H42.23v16.47H27.34V16.25H10.1a6.34 6.34 0 0 0-6.33 6.33v9.17H234.6v-9.17h-.17z" fill="#000" />
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 512 98" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M28.5 1.8h23.2v62.8h38.8v19.6H28.5V1.8zM100.9 1.8h23.2v82.4h-23.2V1.8zM225.9 1.8h22.4l34.8 82.4h-25l-4.9-12.5h-32.6l-4.9 12.5h-24.6l34.8-82.4zm18.4 52.4l-6.9-17.7-7 17.7h13.9zM138.5 1.8h23.2v50.6c0 7.5 5.8 13.5 13 13.5 7.2 0 13-6 13-13.5V1.8h23.2v50.6c0 20.3-16.3 36.8-36.2 36.8-20 0-36.2-16.5-36.2-36.8V1.8zM349.2 57.4V1.8h23.2v56c0 4.8 3.7 8.6 8.2 8.6 4.5 0 8.2-3.8 8.2-8.6v-56h23.2v55.6c0 16-12.8 29-31.3 29-18.6 0-31.5-13-31.5-29zM424.1 26.3V1.8h83.4v24.5h-30.1v57.9h-23.3V26.3h-30zM291.7 60.1c9.2 0 16.6-7.7 16.6-17.3 0-9.5-7.4-17.3-16.6-17.3h-14.8v34.6h14.8zm-38-58.3h38c22.4 0 40.7 18.6 40.7 41 0 22.3-18.3 41-40.7 41h-38V1.8z" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 150 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M47.5 27.6c-1.3 0-2.3 1-2.3 2.3 0 1.3 1 2.3 2.3 2.3 1.3 0 2.3-1 2.3-2.3 0-1.3-1-2.3-2.3-2.3zm24.8-12.5c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm35.2-21c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm-60-17.5v3.6h8.7c-.3 2-1 3.5-2 4.5-1.3 1.3-3.3 2.7-6.7 2.7-5.3 0-9.5-4.3-9.5-9.6s4.2-9.6 9.5-9.6c2.9 0 5 1.1 6.5 2.6l2.5-2.5c-2.2-2.1-5-3.7-9-3.7-7.3 0-13.4 5.9-13.4 13.2 0 7.3 6.1 13.2 13.4 13.2 3.9 0 6.9-1.3 9.2-3.7 2.4-2.4 3.1-5.7 3.1-8.4 0-.8-.1-1.6-.2-2.2h-12.1zm90.4 4.4c-.7-1.9-2.9-5.5-7.4-5.5-4.4 0-8.1 3.5-8.1 8.1 0 4.5 3.7 8.1 8.6 8.1 4 0 6.3-2.4 7.2-3.8l-2.9-2c-1 1.4-2.3 2.4-4.3 2.4-1.9 0-3.3-.9-4.2-2.6l11.5-4.8-.4-.9zm-11.7 2.9c-.1-3.1 2.4-4.7 4.2-4.7 1.4 0 2.6.7 3 1.7l-7.2 3zm-9.3 8.3h5.2V9.9h-5.2v30.2zm-8.6-17.8h-.2c-1.2-1.4-3.4-2.6-6.2-2.6-5.9 0-11.3 5.2-11.3 11.8 0 6.6 5.4 11.7 11.3 11.7 2.8 0 5.1-1.3 6.2-2.7h.2v1.7c0 4.5-2.4 6.9-6.3 6.9-3.2 0-5.1-2.3-5.9-4.2l-4.5 1.9c1.3 3.1 4.7 6.9 10.4 6.9 6 0 11.1-3.5 11.1-12.1V15.8h-4.9v1.6h.1zm-5.9 14.3c-3.6 0-6.6-3-6.6-7.2 0-4.2 3-7.3 6.6-7.3 3.5 0 6.3 3.1 6.3 7.3 0 4.2-2.8 7.2-6.3 7.2zm67.6-27h-12.4v30.2h5.2V32.4h7.2c5.7 0 11.4-4.1 11.4-10.8s-5.6-10.8-11.4-10.8zm.1 16.8h-7.3v-12h7.3c3.9 0 6.1 3.2 6.1 6s-2.2 6-6.1 6zm32.4-5c-3.8 0-7.7 1.7-9.3 5.3l4.6 1.9c1-1.9 2.8-2.5 4.7-2.5 2.7 0 5.4 1.6 5.4 4.5v.4c-.9-.5-2.9-1.3-5.4-1.3-4.9 0-9.9 2.7-9.9 7.8 0 4.6 4 7.6 8.6 7.6 3.5 0 5.4-1.6 6.6-3.4h.2v2.7h5V29.8c0-6.2-4.6-9.3-10.5-9.3zm-.6 19c-1.7 0-4-0.8-4-2.9 0-2.6 2.9-3.6 5.4-3.6 2.2 0 3.3.5 4.6 1.1-0.4 3.1-3.1 5.4-6 5.4zm28.7-18.2l-6 15.1h-.2l-6.2-15.1H29.8l9.3 21.2-5.3 11.8h5.4l14.4-33h-6.1z" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 100 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M50 10c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 37c-9.4 0-17-7.6-17-17s7.6-17 17-17 17 7.6 17 17-7.6 17-17 17zm-8-17c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8zm0 0" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                </LogoMarqueeContent>
-                
-                <LogoMarqueeContent style={{ animationDelay: "20s" }}>
-                  {/* Duplicate logo items with the same styling */}
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 249 146" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M27 120.68h-9.24l-2.2-5.5H4.5l-2.2 5.5H0l10.4-25.9h6.2l10.4 25.9zM14.1 110.68l-4.6-11.7-4.6 11.7h9.2zM27.7 120.68V94.78h18.8v4.5H32.2v5.6h13.8v4.5H32.2v6.8h14.3v4.5H27.7zM61.5 121.38c-2.4 0-4.6-.4-6.6-1.3-2-.8-3.7-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.1-4.2-1.1-6.6 0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 1.4 0 2.7.1 3.9.4 1.2.3 2.3.6 3.3 1.1s1.9 1 2.7 1.7c.8.7 1.5 1.4 2.1 2.2l-3.5 3.2c-.8-1.1-1.9-2-3.2-2.7s-2.9-1.1-4.7-1.1c-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.4-2.1 3.8-.5 1.5-.7 3.1-.7 4.8 0 1.8.2 3.4.7 4.9.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 2.1 0 3.8-.4 5.1-1.2s2.4-1.9 3.4-3.1l3.5 2.5c-1.2 1.8-2.8 3.3-4.8 4.3-1.8 1.2-4.2 1.7-6.8 1.7zM81.3 120.68h-4.5v-25.9h6.8c1.4 0 2.6.1 3.7.2 1.1.1 2.1.4 2.8.7.8.3 1.5.8 1.9 1.5.5.7.7 1.6.7 2.7 0 1.2-.3 2.2-.9 3-.6.8-1.5 1.5-2.7 1.9v.1c.6.1 1.2.3 1.7.7.5.3 1 .7 1.4 1.2.4.5.7 1 .9 1.6.2.6.3 1.3.3 2 0 1.1-.2 2.1-.7 2.9-.5.8-1.1 1.4-1.9 1.9-.8.5-1.7.9-2.8 1.1-1.1.2-2.2.4-3.4.4h-3.3zm0-14.9h2.2c1.4 0 2.5-.2 3.4-.7.9-.5 1.3-1.3 1.3-2.4 0-1.1-.4-1.9-1.3-2.3-.9-.4-2-.6-3.5-.6h-2.1v6zm0 10.9h2.9c3.2 0 4.8-1.1 4.8-3.4 0-1.1-.4-1.9-1.3-2.5-.9-.6-2.1-.8-3.6-.8h-2.8v6.7zM120.3 120.68h-4.5v-11.3h-11.6v11.3h-4.5v-25.9h4.5v10.5h11.6v-10.5h4.5v25.9zM122.7 107.68c0-2.3.4-4.5 1.2-6.5.8-2 1.9-3.8 3.3-5.3 1.4-1.5 3.1-2.7 5.1-3.5 2-.8 4.1-1.3 6.4-1.3 2.3 0 4.5.4 6.4 1.3 1.9.8 3.6 2 5 3.5 1.4 1.5 2.5 3.3 3.3 5.3.8 2 1.2 4.2 1.2 6.5 0 2.4-.4 4.5-1.2 6.5-.8 2-1.9 3.8-3.3 5.3-1.4 1.5-3.1 2.7-5 3.5-1.9.8-4.1 1.3-6.4 1.3-2.3 0-4.5-.4-6.4-1.3-1.9-.8-3.6-2-5.1-3.5-1.4-1.5-2.5-3.3-3.3-5.3-.8-2-1.2-4.2-1.2-6.5zm4.7 0c0 1.7.2 3.3.7 4.8.5 1.5 1.2 2.8 2.1 3.9.9 1.1 2 1.9 3.3 2.5 1.3.6 2.7.9 4.4.9 1.6 0 3.1-.3 4.4-.9 1.3-.6 2.4-1.4 3.3-2.5.9-1.1 1.6-2.4 2.1-3.9.5-1.5.7-3.1.7-4.8 0-1.7-.2-3.3-.7-4.8-.5-1.5-1.2-2.7-2.1-3.8-.9-1.1-2-1.9-3.3-2.5-1.3-.6-2.7-.9-4.4-.9-1.6 0-3.1.3-4.4.9-1.3.6-2.4 1.4-3.3 2.5-.9 1.1-1.6 2.3-2.1 3.8-.5 1.5-.7 3.1-.7 4.8zM166.3 120.68h-10.1v-25.9h10.1c2.3 0 4.4.4 6.2 1.2 1.8.8 3.4 1.9 4.7 3.3 1.3 1.4 2.3 3.1 3 5 .7 1.9 1 4 1 6.2 0 2.3-.3 4.3-1 6.2-.7 1.9-1.7 3.6-3 5-1.3 1.4-2.9 2.5-4.7 3.3-1.8.5-3.9.7-6.2.7zm-.3-21.8h-5.3v17.7h5.3c1.5 0 2.9-.3 4.1-.8 1.2-.5 2.2-1.3 3-2.3.8-1 1.4-2.1 1.8-3.5.4-1.4.6-2.9.6-4.6 0-1.7-.2-3.2-.6-4.6-.4-1.4-1-2.5-1.8-3.5-.8-1-1.8-1.7-3-2.3-1.2-.7-2.6-1.1-4.1-1.1zM182.7 120.68v-25.9h4.5v21.4h13v4.5h-17.5zM221.4 120.68h-18.8v-25.9h18.8v4.5h-14.3v5.6h13.8v4.5h-13.8v6.8h14.3v4.5zM233.9 102.68h-8.6v-5h21.7v5h-8.6v20.9h-4.5v-20.9z" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 242 90" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M146.83 33.83c0-4.91 3.76-8.68 8.67-8.68 4.9 0 8.67 3.77 8.67 8.68 0 4.9-3.76 8.67-8.67 8.67-4.91 0-8.67-3.76-8.67-8.67zm-53.77-8.68c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.76-8.68-8.67-8.68zm-43.64 0c-4.91 0-8.68 3.77-8.68 8.68 0 4.9 3.77 8.67 8.68 8.67 4.9 0 8.67-3.76 8.67-8.67 0-4.91-3.77-8.68-8.67-8.68zM3.77 25.15C1.7 25.15 0 26.84 0 28.91v51.32c0 2.07 1.7 3.77 3.77 3.77h234.46c2.07 0 3.77-1.7 3.77-3.77V28.91c0-2.07-1.7-3.76-3.77-3.76H3.77z" fill="#000" />
-                        <path d="M234.44 22.58a6.34 6.34 0 0 0-6.33-6.33h-17.24v16.47h-14.89V6h-14.88v10.25h-17.07V6h-14.88v26.72h-42.07V16.25h-17.24a6.34 6.34 0 0 0-6.33 6.33v9.17H65.8V22.58a6.34 6.34 0 0 0-6.34-6.33H42.23v16.47H27.34V16.25H10.1a6.34 6.34 0 0 0-6.33 6.33v9.17H234.6v-9.17h-.17z" fill="#000" />
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 512 98" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M28.5 1.8h23.2v62.8h38.8v19.6H28.5V1.8zM100.9 1.8h23.2v82.4h-23.2V1.8zM225.9 1.8h22.4l34.8 82.4h-25l-4.9-12.5h-32.6l-4.9 12.5h-24.6l34.8-82.4zm18.4 52.4l-6.9-17.7-7 17.7h13.9zM138.5 1.8h23.2v50.6c0 7.5 5.8 13.5 13 13.5 7.2 0 13-6 13-13.5V1.8h23.2v50.6c0 20.3-16.3 36.8-36.2 36.8-20 0-36.2-16.5-36.2-36.8V1.8zM349.2 57.4V1.8h23.2v56c0 4.8 3.7 8.6 8.2 8.6 4.5 0 8.2-3.8 8.2-8.6v-56h23.2v55.6c0 16-12.8 29-31.3 29-18.6 0-31.5-13-31.5-29zM424.1 26.3V1.8h83.4v24.5h-30.1v57.9h-23.3V26.3h-30zM291.7 60.1c9.2 0 16.6-7.7 16.6-17.3 0-9.5-7.4-17.3-16.6-17.3h-14.8v34.6h14.8zm-38-58.3h38c22.4 0 40.7 18.6 40.7 41 0 22.3-18.3 41-40.7 41h-38V1.8z" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 150 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M47.5 27.6c-1.3 0-2.3 1-2.3 2.3 0 1.3 1 2.3 2.3 2.3 1.3 0 2.3-1 2.3-2.3 0-1.3-1-2.3-2.3-2.3zm24.8-12.5c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm35.2-21c-7.2 0-13.1 5.9-13.1 13.1 0 7.2 5.9 13.1 13.1 13.1 7.2 0 13.1-5.9 13.1-13.1 0-7.2-5.9-13.1-13.1-13.1zm0 21c-4.3 0-7.9-3.5-7.9-7.9 0-4.3 3.5-7.9 7.9-7.9 4.3 0 7.9 3.5 7.9 7.9 0 4.3-3.5 7.9-7.9 7.9zm-60-17.5v3.6h8.7c-.3 2-1 3.5-2 4.5-1.3 1.3-3.3 2.7-6.7 2.7-5.3 0-9.5-4.3-9.5-9.6s4.2-9.6 9.5-9.6c2.9 0 5 1.1 6.5 2.6l2.5-2.5c-2.2-2.1-5-3.7-9-3.7-7.3 0-13.4 5.9-13.4 13.2 0 7.3 6.1 13.2 13.4 13.2 3.9 0 6.9-1.3 9.2-3.7 2.4-2.4 3.1-5.7 3.1-8.4 0-.8-.1-1.6-.2-2.2h-12.1zm90.4 4.4c-.7-1.9-2.9-5.5-7.4-5.5-4.4 0-8.1 3.5-8.1 8.1 0 4.5 3.7 8.1 8.6 8.1 4 0 6.3-2.4 7.2-3.8l-2.9-2c-1 1.4-2.3 2.4-4.3 2.4-1.9 0-3.3-.9-4.2-2.6l11.5-4.8-.4-.9zm-11.7 2.9c-.1-3.1 2.4-4.7 4.2-4.7 1.4 0 2.6.7 3 1.7l-7.2 3zm-9.3 8.3h5.2V9.9h-5.2v30.2zm-8.6-17.8h-.2c-1.2-1.4-3.4-2.6-6.2-2.6-5.9 0-11.3 5.2-11.3 11.8 0 6.6 5.4 11.7 11.3 11.7 2.8 0 5.1-1.3 6.2-2.7h.2v1.7c0 4.5-2.4 6.9-6.3 6.9-3.2 0-5.1-2.3-5.9-4.2l-4.5 1.9c1.3 3.1 4.7 6.9 10.4 6.9 6 0 11.1-3.5 11.1-12.1V15.8h-4.9v1.6h.1zm-5.9 14.3c-3.6 0-6.6-3-6.6-7.2 0-4.2 3-7.3 6.6-7.3 3.5 0 6.3 3.1 6.3 7.3 0 4.2-2.8 7.2-6.3 7.2zm67.6-27h-12.4v30.2h5.2V32.4h7.2c5.7 0 11.4-4.1 11.4-10.8s-5.6-10.8-11.4-10.8zm.1 16.8h-7.3v-12h7.3c3.9 0 6.1 3.2 6.1 6s-2.2 6-6.1 6zm32.4-5c-3.8 0-7.7 1.7-9.3 5.3l4.6 1.9c1-1.9 2.8-2.5 4.7-2.5 2.7 0 5.4 1.6 5.4 4.5v.4c-.9-.5-2.9-1.3-5.4-1.3-4.9 0-9.9 2.7-9.9 7.8 0 4.6 4 7.6 8.6 7.6 3.5 0 5.4-1.6 6.6-3.4h.2v2.7h5V29.8c0-6.2-4.6-9.3-10.5-9.3zm-.6 19c-1.7 0-4-0.8-4-2.9 0-2.6 2.9-3.6 5.4-3.6 2.2 0 3.3.5 4.6 1.1-0.4 3.1-3.1 5.4-6 5.4zm28.7-18.2l-6 15.1h-.2l-6.2-15.1H29.8l9.3 21.2-5.3 11.8h5.4l14.4-33h-6.1z" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                  
-                  <LogoMarqueeItem style={{ margin: '0 30px' }}>
-                    <div style={{ 
-                      width: '160px', 
-                      height: '80px', 
-                      backgroundColor: 'white', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      borderRadius: '8px',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      padding: '15px'
-                    }}>
-                      <svg viewBox="0 0 100 60" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(100%)' }}>
-                        <path d="M50 10c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 37c-9.4 0-17-7.6-17-17s7.6-17 17-17 17 7.6 17 17-7.6 17-17 17zm-8-17c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8zm0 0" fill="#000"/>
-                      </svg>
-                    </div>
-                  </LogoMarqueeItem>
-                </LogoMarqueeContent>
-              </div>
-            </LogoMarqueeContainer>
             
             
-            <Section style={{ padding: '100px 0', background: 'linear-gradient(135deg, #ffffff, #f8f8f8)', marginTop: '0px' }} id="breakout-rooms">
-              <Container>
-                <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
-                  <h2 style={{ 
-                    fontSize: '2.5rem', 
-                    fontWeight: '700', 
-                    marginBottom: '20px',
-                    background: 'linear-gradient(90deg, #333, #000)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                  }}>
-                    Breakout Rooms
-                  </h2>
-                  <p style={{ fontSize: '1.2rem', marginBottom: '40px', color: '#555' }}>
-                    Engage in focused discussions and collaborative sessions in our specially designed breakout spaces.
-                  </p>
-                </div>
-                
-                <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '30px', 
-                  justifyContent: 'center',
-                  marginTop: '40px'
-                }}>
-                  <div style={{ 
-                    width: '300px', 
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 20px rgba(0,0,0,0.05)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{ 
-                      height: '200px', 
-                      background: '#f0f0f0', 
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#555',
-                      fontSize: '1.2rem',
-                      fontWeight: '600'
-                    }}>
-                      Penn Room
-                    </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>AI Ethics Discussion</h3>
-                      <p style={{ color: '#666', marginBottom: '15px' }}>Capacity: 50 people</p>
-                      <p style={{ color: '#666' }}>Equipped with projector, whiteboard, and roundtable seating for collaborative discussions.</p>
-                    </div>
-                  </div>
-                  
-                  <div style={{ 
-                    width: '300px', 
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 20px rgba(0,0,0,0.05)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{ 
-                      height: '200px', 
-                      background: '#f0f0f0', 
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#555',
-                      fontSize: '1.2rem',
-                      fontWeight: '600'
-                    }}>
-                      Young Friends Room
-                    </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>ML Workshop</h3>
-                      <p style={{ color: '#666', marginBottom: '15px' }}>Capacity: 75 people</p>
-                      <p style={{ color: '#666' }}>Flexible space with classroom-style seating, dual projectors, and networking capabilities.</p>
-                    </div>
-                  </div>
-                  
-                  <div style={{ 
-                    width: '300px', 
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 20px rgba(0,0,0,0.05)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{ 
-                      height: '200px', 
-                      background: '#f0f0f0', 
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#555',
-                      fontSize: '1.2rem',
-                      fontWeight: '600'
-                    }}>
-                      Hilda Clark Room
-                    </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Startup Pitches</h3>
-                      <p style={{ color: '#666', marginBottom: '15px' }}>Capacity: 40 people</p>
-                      <p style={{ color: '#666' }}>Intimate setting with theater-style seating, presentation equipment, and sound system.</p>
-                    </div>
-                  </div>
-                </div>
-              </Container>
-            </Section>
             
-            <Section style={{ padding: '50px 0', background: '#ffffff', marginTop: '0px' }} id="breakout-rooms">
+            <div style={{ height: '40px', background: 'linear-gradient(to bottom, #f5f5f5, #ffffff)' }}></div>
+<Section style={{ padding: '60px 0', background: '#ffffff', margin: '20px 0' }} id="breakout-rooms">
               <Container>
                 <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                  <h2 style={{ 
-                    fontSize: '2.5rem', 
-                    fontWeight: '700', 
-                    marginBottom: '20px',
-                    background: 'linear-gradient(90deg, #333, #000)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                  }}>
-                    BREAKOUT ROOMS
-                  </h2>
+                  <SectionTitle>BREAKOUT ROOMS</SectionTitle>
+                  <SectionSubtitle>
+                    Collaborate with experts in specialized discussion groups
+                  </SectionSubtitle>
                 </div>
                 
                 <LogoMarqueeContainer style={{ background: 'linear-gradient(135deg, #f8f8f8, #ffffff)', padding: '30px 0', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
                   <LogoMarqueeContent>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
+                        <img 
+                          src="/images/breakout_rooms/download copy 2.png" 
+                          alt="Breakout Room 1" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
+                        />
+                      </div>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.37.png" 
+                          alt="Breakout Room 2" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
+                        />
+                      </div>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.48.png" 
+                          alt="Breakout Room 3" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
+                        />
+                      </div>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.59.png" 
+                          alt="Breakout Room 4" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
+                        />
+                      </div>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.24.png" 
+                          alt="Breakout Room 5" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
+                        />
+                      </div>
+                    </LogoMarqueeItem>
+                  </LogoMarqueeContent>
+                  <LogoMarqueeContent delay="-5s">
                     <LogoMarqueeItem>
                       <div style={{ 
                         height: '50px', 
@@ -3289,22 +3272,14 @@ function App({ ticketsPage = false }) {
         )}
       </main>
       
-      <Section style={{ padding: '80px 0', background: 'white', marginTop: '0' }} id="sponsors-logo-wall">
+      <div style={{ height: '40px', background: 'linear-gradient(to bottom, #f8f8f8, #ffffff)' }}></div>
+<Section style={{ padding: '60px 0', background: 'white', margin: '20px 0' }} id="sponsors-logo-wall">
         <Container>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <h2 style={{ 
-              fontSize: '2.5rem', 
-              fontWeight: '700', 
-              marginBottom: '20px',
-              background: 'linear-gradient(90deg, #333, #000)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              Our Partners & Sponsors
-            </h2>
-            <p style={{ fontSize: '1.2rem', color: '#555', maxWidth: '800px', margin: '0 auto' }}>
+            <SectionTitle>Our Partners & Sponsors</SectionTitle>
+            <SectionSubtitle>
               Supported by leading organizations committed to advancing AI research and applications
-            </p>
+            </SectionSubtitle>
           </div>
           
           <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
@@ -3313,14 +3288,15 @@ function App({ ticketsPage = false }) {
               top: '-15px', 
               left: '50%', 
               transform: 'translateX(-50%)', 
-              backgroundColor: 'rgba(255,255,255,0.9)', 
-              padding: '5px 15px', 
-              borderRadius: '20px',
-              boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+              backgroundColor: 'rgba(255,255,255,0.95)', 
+              padding: '8px 16px', 
+              borderRadius: '4px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
               zIndex: 2,
               fontSize: '0.8rem',
               fontWeight: '600',
-              color: '#666'
+              color: '#444',
+              letterSpacing: '0.03em'
             }}>
               All logos displayed in grayscale
             </div>
@@ -3328,24 +3304,752 @@ function App({ ticketsPage = false }) {
               width: '100%', 
               height: 'auto', 
               borderRadius: '8px', 
-              boxShadow: '0 5px 15px rgba(0,0,0,0.1)', 
-              filter: 'grayscale(100%)'
+              boxShadow: '0 12px 30px rgba(0,0,0,0.08)', 
+              filter: 'grayscale(100%)',
+              border: '1px solid #eaeaea'
             }} />
           </div>
         </Container>
       </Section>
       
-      <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '0' }} id="venue">
+      <Section style={{ padding: '100px 0', background: 'linear-gradient(135deg, #000000, #333333)', marginTop: '0', color: '#fff' }} id="tickets">
         <Container>
-          <h2 style={{ 
-            fontSize: '2.5rem', 
-            fontWeight: '700',
-            marginBottom: '20px',
-            textAlign: 'center',
-            background: 'linear-gradient(90deg, #333, #000)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent' 
-          }}>Venue</h2>
+          {(() => {
+            const [showSingleDay, setShowSingleDay] = useState(true);
+            
+            return (
+              <>
+                <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+                  <SectionTitle style={{ color: '#fff' }}>Tickets</SectionTitle>
+                  <SectionSubtitle style={{ color: 'rgba(255,255,255,0.9)' }}>
+                    Select the ticket type that best suits your needs. Early bird pricing available until September 1st.
+                  </SectionSubtitle>
+                </div>
+                
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  marginBottom: '40px',
+                  flexWrap: 'wrap',
+                  gap: '15px'
+                }}>
+                  <button 
+                    onClick={() => setShowSingleDay(true)}
+                    style={{ 
+                      padding: '12px 24px',
+                      fontSize: '1rem',
+                      backgroundColor: showSingleDay ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                      color: showSingleDay ? '#000' : '#fff',
+                      border: showSingleDay ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.3)',
+                      borderRadius: '4px 0 0 4px',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      fontWeight: '600'
+                    }}>
+                    Single Day
+                  </button>
+                  <button 
+                    onClick={() => setShowSingleDay(false)}
+                    style={{ 
+                      padding: '12px 24px',
+                      fontSize: '1rem',
+                      backgroundColor: !showSingleDay ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                      color: !showSingleDay ? '#000' : '#fff',
+                      border: !showSingleDay ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.3)',
+                      borderRadius: '0 4px 4px 0',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      fontWeight: '600'
+                    }}>
+                    3-Day Pass
+                  </button>
+                </div>
+                
+                {showSingleDay ? (
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+                    gap: '25px', 
+                    maxWidth: '1200px', 
+                    margin: '0 auto' 
+                  }}>
+            {/* Student Ticket */}
+            <div style={{ 
+              background: 'rgba(0, 0, 0, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              padding: '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              overflow: 'hidden',
+              zIndex: '1'
+            }}>
+              <div style={{ 
+                position: 'absolute',
+                top: '0',
+                right: '24px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                padding: '8px 16px',
+                fontSize: '0.8rem',
+                fontWeight: '600',
+                borderBottomLeftRadius: '8px',
+                borderBottomRightRadius: '8px',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}>
+                Student
+              </div>
+              
+              <h3 style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                marginBottom: '8px',
+                marginTop: '20px'
+              }}>
+                Student Pass
+              </h3>
+              
+              <div style={{ 
+                fontSize: '2.5rem',
+                fontWeight: '700',
+                margin: '16px 0 8px'
+              }}>
+                £60
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.9rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '8px'
+              }}>
+                Per day
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.85rem',
+                color: 'rgba(255, 255, 255, 0.6)',
+                marginBottom: '24px',
+                fontStyle: 'italic'
+              }}>
+                Valid student ID required
+              </div>
+              
+              <div style={{ 
+                height: '1px',
+                background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                margin: '8px 0 24px'
+              }}></div>
+              
+              <ul style={{ 
+                listStyle: 'none',
+                margin: '0 0 32px',
+                padding: '0',
+                flex: '1'
+              }}>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Access to all talks on chosen day
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Lunch and refreshments
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Expo access
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Digital access to slides
+                </li>
+              </ul>
+              
+              <a href="#" style={{ 
+                display: 'inline-block',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '4px',
+                padding: '12px 24px',
+                textAlign: 'center',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                letterSpacing: '0.05em',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none'
+              }}>
+                Register Now
+              </a>
+            </div>
+            
+            {/* Academic Ticket */}
+            <div style={{ 
+              background: 'rgba(0, 0, 0, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              padding: '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              overflow: 'hidden',
+              zIndex: '1'
+            }}>
+              <div style={{ 
+                position: 'absolute',
+                top: '0',
+                right: '24px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                padding: '8px 16px',
+                fontSize: '0.8rem',
+                fontWeight: '600',
+                borderBottomLeftRadius: '8px',
+                borderBottomRightRadius: '8px',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}>
+                Academic
+              </div>
+              
+              <h3 style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                marginBottom: '8px',
+                marginTop: '20px'
+              }}>
+                Academic Pass
+              </h3>
+              
+              <div style={{ 
+                fontSize: '2.5rem',
+                fontWeight: '700',
+                margin: '16px 0 8px'
+              }}>
+                £139
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.9rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '8px'
+              }}>
+                Per day
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.85rem',
+                color: 'rgba(255, 255, 255, 0.6)',
+                marginBottom: '24px',
+                fontStyle: 'italic'
+              }}>
+                Institutional affiliation required
+              </div>
+              
+              <div style={{ 
+                height: '1px',
+                background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                margin: '8px 0 24px'
+              }}></div>
+              
+              <ul style={{ 
+                listStyle: 'none',
+                margin: '0 0 32px',
+                padding: '0',
+                flex: '1'
+              }}>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Access to all talks on chosen day
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Lunch and refreshments
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Expo access
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Digital access to slides
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Speaker networking event
+                </li>
+              </ul>
+              
+              <a href="#" style={{ 
+                display: 'inline-block',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '4px',
+                padding: '12px 24px',
+                textAlign: 'center',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                letterSpacing: '0.05em',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none'
+              }}>
+                Register Now
+              </a>
+            </div>
+            
+            {/* General Ticket */}
+            <div style={{ 
+              background: 'rgba(0, 0, 0, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+              borderRadius: '8px',
+              padding: '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              overflow: 'hidden',
+              zIndex: '1'
+            }}>
+              <div style={{ 
+                position: 'absolute',
+                top: '0',
+                right: '24px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                padding: '8px 16px',
+                fontSize: '0.8rem',
+                fontWeight: '600',
+                borderBottomLeftRadius: '8px',
+                borderBottomRightRadius: '8px',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}>
+                General
+              </div>
+              
+              <h3 style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                marginBottom: '8px',
+                marginTop: '20px'
+              }}>
+                General Pass
+              </h3>
+              
+              <div style={{ 
+                fontSize: '2.5rem',
+                fontWeight: '700',
+                margin: '16px 0 8px'
+              }}>
+                £199
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.9rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '8px'
+              }}>
+                Per day
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.85rem',
+                color: 'rgba(255, 255, 255, 0.6)',
+                marginBottom: '24px',
+                fontStyle: 'italic'
+              }}>
+                Limited availability
+              </div>
+              
+              <div style={{ 
+                height: '1px',
+                background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                margin: '8px 0 24px'
+              }}></div>
+              
+              <ul style={{ 
+                listStyle: 'none',
+                margin: '0 0 32px',
+                padding: '0',
+                flex: '1'
+              }}>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Access to all talks on chosen day
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Lunch and refreshments
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Expo access
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Digital access to slides
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Speaker networking event
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Priority seating
+                </li>
+              </ul>
+              
+              <a href="#" style={{ 
+                display: 'inline-block',
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '4px',
+                padding: '12px 24px',
+                textAlign: 'center',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                letterSpacing: '0.05em',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none'
+              }}>
+                Register Now
+              </a>
+            </div>
+            
+            {/* VIP Ticket */}
+            <div style={{ 
+              background: 'linear-gradient(135deg, #111111, #000000)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+              borderRadius: '8px',
+              padding: '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              overflow: 'hidden',
+              zIndex: '1'
+            }}>
+              <div style={{ 
+                position: 'absolute',
+                top: '0',
+                right: '24px',
+                background: 'linear-gradient(135deg, #FFFFFF, #DDDDDD)',
+                color: '#000',
+                padding: '8px 16px',
+                fontSize: '0.8rem',
+                fontWeight: '600',
+                borderBottomLeftRadius: '8px',
+                borderBottomRightRadius: '8px',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}>
+                VIP
+              </div>
+              
+              <h3 style={{ 
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                marginBottom: '8px',
+                marginTop: '20px'
+              }}>
+                VIP All-Access
+              </h3>
+              
+              <div style={{ 
+                fontSize: '2.5rem',
+                fontWeight: '700',
+                margin: '16px 0 8px'
+              }}>
+                £799
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.9rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '8px'
+              }}>
+                Per day
+              </div>
+              
+              <div style={{ 
+                fontSize: '0.85rem',
+                color: '#FFFFFF',
+                fontWeight: '600',
+                marginBottom: '24px',
+                fontStyle: 'italic'
+              }}>
+                Very limited availability
+              </div>
+              
+              <div style={{ 
+                height: '1px',
+                background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                margin: '8px 0 24px'
+              }}></div>
+              
+              <ul style={{ 
+                listStyle: 'none',
+                margin: '0 0 32px',
+                padding: '0',
+                flex: '1'
+              }}>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Access to all talks on chosen day
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Premium lunch and refreshments
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Expo access with VIP lounge
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Digital access to all content
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Private speaker dinner
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> Premium seating
+                </li>
+                <li style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '12px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontSize: '0.95rem'
+                }}>
+                  <span style={{ marginRight: '8px' }}>✓</span> 1:1 meetings with speakers
+                </li>
+              </ul>
+              
+              <a href="#" style={{ 
+                display: 'inline-block',
+                background: 'linear-gradient(135deg, #FFFFFF, #DDDDDD)',
+                color: '#000',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '12px 24px',
+                textAlign: 'center',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                letterSpacing: '0.05em',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none'
+              }}>
+                Register Now
+              </a>
+            </div>
+          </div>
+                ) : (
+                  <>
+                    <div style={{ textAlign: 'center', marginTop: '60px' }}>
+                      <div style={{ 
+                        fontSize: '1.3rem', 
+                        fontWeight: '600', 
+                        marginBottom: '10px', 
+                        color: 'rgba(255,255,255,0.9)' 
+                      }}>
+                        3-Day Passes
+                      </div>
+                      <p style={{ 
+                        fontSize: '1.1rem', 
+                        color: 'rgba(255,255,255,0.8)',
+                        maxWidth: '800px',
+                        margin: '0 auto 30px'
+                      }}>
+                        Save with our discounted multi-day passes:
+                      </p>
+                      <div style={{ 
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                        gap: '30px',
+                        maxWidth: '900px',
+                        margin: '0 auto'
+                      }}>
+              <div style={{ 
+                background: 'rgba(255,255,255,0.1)',
+                padding: '20px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                minWidth: '200px'
+              }}>
+                <div style={{ fontWeight: '600', marginBottom: '5px' }}>Student 3-Day</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>£150</div>
+                <div style={{ fontSize: '0.8rem', opacity: '0.7' }}>(Save £30)</div>
+              </div>
+              <div style={{ 
+                background: 'rgba(255,255,255,0.1)',
+                padding: '20px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                minWidth: '200px'
+              }}>
+                <div style={{ fontWeight: '600', marginBottom: '5px' }}>Academic 3-Day</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>£359</div>
+                <div style={{ fontSize: '0.8rem', opacity: '0.7' }}>(Save £58)</div>
+              </div>
+              <div style={{ 
+                background: 'rgba(255,255,255,0.1)',
+                padding: '20px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                minWidth: '200px'
+              }}>
+                <div style={{ fontWeight: '600', marginBottom: '5px' }}>General 3-Day</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>£499</div>
+                <div style={{ fontSize: '0.8rem', opacity: '0.7' }}>(Save £98)</div>
+              </div>
+              <div style={{ 
+                background: 'rgba(255,255,255,0.2)',
+                padding: '20px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                minWidth: '200px'
+              }}>
+                <div style={{ fontWeight: '600', marginBottom: '5px' }}>VIP 3-Day</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>£1,999</div>
+                <div style={{ fontSize: '0.8rem', opacity: '0.7' }}>(Save £398)</div>
+              </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </>
+            );
+          })()}
+        </Container>
+      </Section>
+      
+      <div style={{ height: '40px', background: 'linear-gradient(to bottom, #333333, #f8f8f8)' }}></div>
+<Section style={{ padding: '80px 0', background: '#f8f8f8', margin: '20px 0' }} id="venue">
+        <Container>
+          <div style={{ textAlign: 'center' }}>
+            <SectionTitle>Venue</SectionTitle>
+            <SectionSubtitle>
+              Join us at the iconic Friend's House in central London
+            </SectionSubtitle>
+          </div>
           <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ 
               display: 'grid', 
@@ -3474,6 +4178,11 @@ function App({ ticketsPage = false }) {
                 <li style={{ marginBottom: '12px' }}>
                   <a href="#schedule" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
                     Schedule
+                  </a>
+                </li>
+                <li style={{ marginBottom: '12px' }}>
+                  <a href="#tickets" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
+                    Tickets
                   </a>
                 </li>
                 <li style={{ marginBottom: '12px' }}>
