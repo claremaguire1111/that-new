@@ -580,6 +580,11 @@ const continuousMarqueeAnimation = keyframes`
   to { transform: translateX(-100%); }
 `;
 
+const scrollVertical = keyframes`
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+`;
+
 const MarqueeContainer = styled.div`
   background-color: #000;
   color: #fff;
@@ -2311,8 +2316,24 @@ function App({ ticketsPage = false }) {
                           <p style={{ marginBottom: '20px', fontSize: '1.05rem' }}>
                             Join us for a full day of insightful presentations and discussions
                           </p>
-                          <div style={{ marginTop: '30px', marginBottom: '50px' }}>
-                            <img src="/images/logo_wall.png" alt="ThAT Conference Partners and Sponsors" style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }} />
+                          <div style={{ marginTop: '60px', marginBottom: '80px', position: 'relative' }}>
+                            <div style={{ 
+                              position: 'absolute', 
+                              top: '-30px', 
+                              left: '50%', 
+                              transform: 'translateX(-50%)', 
+                              backgroundColor: 'rgba(255,255,255,0.9)', 
+                              padding: '10px 20px', 
+                              borderRadius: '30px',
+                              boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+                              zIndex: 2,
+                              fontSize: '0.9rem',
+                              fontWeight: '600',
+                              color: '#666'
+                            }}>
+                              All logos displayed in grayscale
+                            </div>
+                            <img src="/images/logo_wall.png" alt="ThAT Conference Partners and Sponsors" style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 5px 15px rgba(0,0,0,0.1)', filter: 'grayscale(100%)' }} />
                           </div>
                           <p style={{ display: 'none' }}>
                           </p>
@@ -3048,51 +3069,6 @@ function App({ ticketsPage = false }) {
               </div>
             </LogoMarqueeContainer>
             
-            <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '60px' }} id="venue">
-              <Container>
-                <SectionTitle>Venue</SectionTitle>
-                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-                    gap: '40px', 
-                    marginTop: '40px'
-                  }}>
-                    <div>
-                      <div style={{ width: '100%', height: '300px', border: '2px solid black', overflow: 'hidden', marginBottom: '20px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-                        <img src="/images/friends_house.jpg" alt="Friend's House" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
-                      <div style={{ width: '100%', height: '300px', border: '2px solid black', overflow: 'hidden', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-                        <iframe 
-                          title="Friend's House Location Map"
-                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.4952695456103!2d-0.13910492392386794!3d51.52580297181142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b2f69173579%3A0xd8e8146c17e0dd9!2sFriends%20House!5e0!3m2!1sen!2sus!4v1709901294448!5m2!1sen!2sus" 
-                          width="100%" 
-                          height="100%" 
-                          style={{ border: 'none' }} 
-                          allowFullScreen="" 
-                          loading="lazy" 
-                          referrerPolicy="no-referrer-when-downgrade"
-                        ></iframe>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'white', padding: '30px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-                      <h3 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '15px' }}>Friend's House</h3>
-                      <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>173-177 Euston Road, London, NW1 2BJ</p>
-                      
-                      <div style={{ marginTop: '30px' }}>
-                        <h4 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Getting there</h4>
-                        <p style={{ lineHeight: '1.6' }}>Walking distance from Euston, Euston Square, and King's Cross. No on-site parking available.</p>
-                      </div>
-                      
-                      <div style={{ marginTop: '40px' }}>
-                        <h4 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Inquiries</h4>
-                        <p>webmaster@thinkingaboutthinking.org</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Container>
-            </Section>
             
             <Section style={{ padding: '100px 0', background: 'linear-gradient(135deg, #ffffff, #f8f8f8)', marginTop: '0px' }} id="breakout-rooms">
               <Container>
@@ -3225,98 +3201,158 @@ function App({ ticketsPage = false }) {
                 </div>
                 
                 <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-                  gap: '30px', 
-                  justifyItems: 'center',
-                  alignItems: 'start',
-                  marginTop: '40px'
+                  width: '100%',
+                  maxWidth: '800px',
+                  margin: '0 auto',
+                  position: 'relative',
+                  height: '450px',
+                  overflow: 'hidden',
+                  marginTop: '40px',
+                  backgroundColor: 'white',
+                  borderRadius: '12px',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                  padding: '20px'
                 }}>
                   <div style={{ 
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
                     width: '100%',
-                    maxWidth: '300px',
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
+                    height: '100%',
+                    animation: `${scrollVertical} 20s linear infinite`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                    padding: '20px'
                   }}>
-                    <div style={{ height: '300px', overflow: 'hidden' }}>
-                      <img 
-                        src="/images/breakout_rooms/download copy 2.png" 
-                        alt="Breakout Room Host 1" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                      />
+                    <div style={{ 
+                      display: 'flex',
+                      gap: '20px',
+                      minHeight: '200px',
+                      backgroundColor: '#f9f9f9',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                        <img 
+                          src="/images/breakout_rooms/download copy 2.png" 
+                          alt="Breakout Room Host 1" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                      </div>
+                      <div style={{ padding: '20px', flex: '1' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. Sarah Chen</h3>
+                        <p style={{ color: '#666', marginBottom: '10px' }}>AI Ethics Specialist</p>
+                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Penn Room</p>
+                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
+                          Leading discussions on ethical considerations in AI development and deployment, with focus on practical frameworks for responsible innovation.
+                        </p>
+                      </div>
                     </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. Sarah Chen</h3>
-                      <p style={{ color: '#666', marginBottom: '10px' }}>AI Ethics Specialist</p>
-                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Penn Room</p>
+                    
+                    <div style={{ 
+                      display: 'flex',
+                      gap: '20px',
+                      minHeight: '200px',
+                      backgroundColor: '#f9f9f9',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.37.png" 
+                          alt="Breakout Room Host 2" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                      </div>
+                      <div style={{ padding: '20px', flex: '1' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Prof. Michael Rivera</h3>
+                        <p style={{ color: '#666', marginBottom: '10px' }}>Machine Learning Expert</p>
+                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Young Friends Room</p>
+                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
+                          Facilitating hands-on workshops on the latest ML techniques and their applications across industries.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div style={{ 
-                    width: '100%',
-                    maxWidth: '300px',
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
-                  }}>
-                    <div style={{ height: '300px', overflow: 'hidden' }}>
-                      <img 
-                        src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.37.png" 
-                        alt="Breakout Room Host 2" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                      />
+                    
+                    <div style={{ 
+                      display: 'flex',
+                      gap: '20px',
+                      minHeight: '200px',
+                      backgroundColor: '#f9f9f9',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.48.png" 
+                          alt="Breakout Room Host 3" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                      </div>
+                      <div style={{ padding: '20px', flex: '1' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Emma Johnson</h3>
+                        <p style={{ color: '#666', marginBottom: '10px' }}>Startup Advisor</p>
+                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Hilda Clark Room</p>
+                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
+                          Coordinating pitch sessions and providing feedback to AI startups on product development, go-to-market strategies, and fundraising.
+                        </p>
+                      </div>
                     </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Prof. Michael Rivera</h3>
-                      <p style={{ color: '#666', marginBottom: '10px' }}>Machine Learning Expert</p>
-                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Young Friends Room</p>
+                    
+                    <div style={{ 
+                      display: 'flex',
+                      gap: '20px',
+                      minHeight: '200px',
+                      backgroundColor: '#f9f9f9',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.59.png" 
+                          alt="Breakout Room Host 4" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                      </div>
+                      <div style={{ padding: '20px', flex: '1' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. James Wilson</h3>
+                        <p style={{ color: '#666', marginBottom: '10px' }}>Research Director</p>
+                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Special Workshop Room</p>
+                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
+                          Leading collaborative research sessions focused on frontier AI systems and their capabilities.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div style={{ 
-                    width: '100%',
-                    maxWidth: '300px',
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
-                  }}>
-                    <div style={{ height: '300px', overflow: 'hidden' }}>
-                      <img 
-                        src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.48.png" 
-                        alt="Breakout Room Host 3" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                      />
-                    </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Emma Johnson</h3>
-                      <p style={{ color: '#666', marginBottom: '10px' }}>Startup Advisor</p>
-                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Hilda Clark Room</p>
-                    </div>
-                  </div>
-                  
-                  <div style={{ 
-                    width: '100%',
-                    maxWidth: '300px',
-                    background: 'white', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden',
-                    boxShadow: '0px 10px 30px rgba(0,0,0,0.1)',
-                  }}>
-                    <div style={{ height: '300px', overflow: 'hidden' }}>
-                      <img 
-                        src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.59.png" 
-                        alt="Breakout Room Host 4" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                      />
-                    </div>
-                    <div style={{ padding: '20px' }}>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. James Wilson</h3>
-                      <p style={{ color: '#666', marginBottom: '10px' }}>Research Director</p>
-                      <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Special Workshop Room</p>
+                    
+                    <div style={{ 
+                      display: 'flex',
+                      gap: '20px',
+                      minHeight: '200px',
+                      backgroundColor: '#f9f9f9',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
+                    }}>
+                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                        <img 
+                          src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.24.png" 
+                          alt="Breakout Room Host 5" 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        />
+                      </div>
+                      <div style={{ padding: '20px', flex: '1' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. Alexandra Lee</h3>
+                        <p style={{ color: '#666', marginBottom: '10px' }}>Policy Specialist</p>
+                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Café Room</p>
+                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
+                          Moderating discussions on AI policy, governance, and international cooperation frameworks.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3325,6 +3361,52 @@ function App({ ticketsPage = false }) {
           </>
         )}
       </main>
+      
+      <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '0' }} id="venue">
+        <Container>
+          <SectionTitle>Venue</SectionTitle>
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+              gap: '40px', 
+              marginTop: '40px'
+            }}>
+              <div>
+                <div style={{ width: '100%', height: '300px', border: '2px solid black', overflow: 'hidden', marginBottom: '20px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+                  <img src="/images/friends_house.jpg" alt="Friend's House" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ width: '100%', height: '300px', border: '2px solid black', overflow: 'hidden', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+                  <iframe 
+                    title="Friend's House Location Map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.4952695456103!2d-0.13910492392386794!3d51.52580297181142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b2f69173579%3A0xd8e8146c17e0dd9!2sFriends%20House!5e0!3m2!1sen!2sus!4v1709901294448!5m2!1sen!2sus" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 'none' }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'white', padding: '30px', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '15px' }}>Friend's House</h3>
+                <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>173-177 Euston Road, London, NW1 2BJ</p>
+                
+                <div style={{ marginTop: '30px' }}>
+                  <h4 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Getting there</h4>
+                  <p style={{ lineHeight: '1.6' }}>Walking distance from Euston, Euston Square, and King's Cross. No on-site parking available.</p>
+                </div>
+                
+                <div style={{ marginTop: '40px' }}>
+                  <h4 style={{ fontSize: '1.3rem', fontWeight: '600', marginBottom: '10px' }}>Inquiries</h4>
+                  <p>webmaster@thinkingaboutthinking.org</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
       
       <Footer>
         <Container>
