@@ -2317,25 +2317,6 @@ function App({ ticketsPage = false }) {
                           <p style={{ marginBottom: '20px', fontSize: '1.05rem' }}>
                             Join us for a full day of insightful presentations and discussions
                           </p>
-                          <div style={{ marginTop: '60px', marginBottom: '80px', position: 'relative' }}>
-                            <div style={{ 
-                              position: 'absolute', 
-                              top: '-30px', 
-                              left: '50%', 
-                              transform: 'translateX(-50%)', 
-                              backgroundColor: 'rgba(255,255,255,0.9)', 
-                              padding: '10px 20px', 
-                              borderRadius: '30px',
-                              boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
-                              zIndex: 2,
-                              fontSize: '0.9rem',
-                              fontWeight: '600',
-                              color: '#666'
-                            }}>
-                              All logos displayed in grayscale
-                            </div>
-                            <img src="/images/logo_wall.png" alt="ThAT Conference Partners and Sponsors" style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 5px 15px rgba(0,0,0,0.1)', filter: 'grayscale(100%)' }} />
-                          </div>
                           <p style={{ display: 'none' }}>
                           </p>
                         </div>
@@ -3183,9 +3164,9 @@ function App({ ticketsPage = false }) {
               </Container>
             </Section>
             
-            <Section style={{ padding: '100px 0', background: '#ffffff', marginTop: '0px' }} id="breakout-room-hosts">
+            <Section style={{ padding: '50px 0', background: '#ffffff', marginTop: '0px' }} id="breakout-rooms">
               <Container>
-                <div style={{ textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+                <div style={{ textAlign: 'center', marginBottom: '30px' }}>
                   <h2 style={{ 
                     fontSize: '2.5rem', 
                     fontWeight: '700', 
@@ -3194,172 +3175,165 @@ function App({ ticketsPage = false }) {
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent'
                   }}>
-                    BREAKOUT ROOM HOSTS
+                    BREAKOUT ROOMS
                   </h2>
-                  <p style={{ fontSize: '1.2rem', marginBottom: '40px', color: '#555' }}>
-                    Meet our experts who will guide the focused discussions in our breakout spaces
-                  </p>
                 </div>
                 
-                <div style={{ 
-                  width: '100%',
-                  maxWidth: '800px',
-                  margin: '0 auto',
-                  position: 'relative',
-                  height: '450px',
-                  overflow: 'hidden',
-                  marginTop: '40px',
-                  backgroundColor: 'white',
-                  borderRadius: '12px',
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-                }}>
-                  <div style={{ 
-                    position: 'absolute',
-                    top: '0',
-                    left: '0',
-                    width: '100%',
-                    animation: 'scrollVertical 20s linear infinite',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '20px',
-                    padding: '20px'
-                  }}>
-                    <div style={{ 
-                      display: 'flex',
-                      gap: '20px',
-                      minHeight: '200px',
-                      backgroundColor: '#f9f9f9',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
-                    }}>
-                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                <LogoMarqueeContainer style={{ background: 'linear-gradient(135deg, #f8f8f8, #ffffff)', padding: '30px 0', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+                  <LogoMarqueeContent>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
                         <img 
                           src="/images/breakout_rooms/download copy 2.png" 
-                          alt="Breakout Room Host 1" 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          alt="Breakout Room 1" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
                         />
                       </div>
-                      <div style={{ padding: '20px', flex: '1' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. Sarah Chen</h3>
-                        <p style={{ color: '#666', marginBottom: '10px' }}>AI Ethics Specialist</p>
-                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Penn Room</p>
-                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
-                          Leading discussions on ethical considerations in AI development and deployment, with focus on practical frameworks for responsible innovation.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div style={{ 
-                      display: 'flex',
-                      gap: '20px',
-                      minHeight: '200px',
-                      backgroundColor: '#f9f9f9',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
-                    }}>
-                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
                         <img 
                           src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.37.png" 
-                          alt="Breakout Room Host 2" 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          alt="Breakout Room 2" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
                         />
                       </div>
-                      <div style={{ padding: '20px', flex: '1' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Prof. Michael Rivera</h3>
-                        <p style={{ color: '#666', marginBottom: '10px' }}>Machine Learning Expert</p>
-                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Young Friends Room</p>
-                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
-                          Facilitating hands-on workshops on the latest ML techniques and their applications across industries.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div style={{ 
-                      display: 'flex',
-                      gap: '20px',
-                      minHeight: '200px',
-                      backgroundColor: '#f9f9f9',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
-                    }}>
-                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
                         <img 
                           src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.48.png" 
-                          alt="Breakout Room Host 3" 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          alt="Breakout Room 3" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
                         />
                       </div>
-                      <div style={{ padding: '20px', flex: '1' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Emma Johnson</h3>
-                        <p style={{ color: '#666', marginBottom: '10px' }}>Startup Advisor</p>
-                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Hilda Clark Room</p>
-                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
-                          Coordinating pitch sessions and providing feedback to AI startups on product development, go-to-market strategies, and fundraising.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div style={{ 
-                      display: 'flex',
-                      gap: '20px',
-                      minHeight: '200px',
-                      backgroundColor: '#f9f9f9',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
-                    }}>
-                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
                         <img 
                           src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.59.png" 
-                          alt="Breakout Room Host 4" 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          alt="Breakout Room 4" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
                         />
                       </div>
-                      <div style={{ padding: '20px', flex: '1' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. James Wilson</h3>
-                        <p style={{ color: '#666', marginBottom: '10px' }}>Research Director</p>
-                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Special Workshop Room</p>
-                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
-                          Leading collaborative research sessions focused on frontier AI systems and their capabilities.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div style={{ 
-                      display: 'flex',
-                      gap: '20px',
-                      minHeight: '200px',
-                      backgroundColor: '#f9f9f9',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)'
-                    }}>
-                      <div style={{ width: '180px', height: '200px', overflow: 'hidden' }}>
+                    </LogoMarqueeItem>
+                    <LogoMarqueeItem>
+                      <div style={{ 
+                        height: '50px', 
+                        width: '160px',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center'
+                      }}>
                         <img 
                           src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.24.png" 
-                          alt="Breakout Room Host 5" 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                          alt="Breakout Room 5" 
+                          style={{ 
+                            height: '100%', 
+                            maxWidth: '100%',
+                            objectFit: 'contain',
+                            filter: 'grayscale(100%)'
+                          }} 
                         />
                       </div>
-                      <div style={{ padding: '20px', flex: '1' }}>
-                        <h3 style={{ fontSize: '1.4rem', fontWeight: '600', marginBottom: '5px' }}>Dr. Alexandra Lee</h3>
-                        <p style={{ color: '#666', marginBottom: '10px' }}>Policy Specialist</p>
-                        <p style={{ color: '#888', fontSize: '0.95rem' }}>Hosting in: Café Room</p>
-                        <p style={{ fontSize: '0.9rem', marginTop: '10px', lineHeight: '1.4' }}>
-                          Moderating discussions on AI policy, governance, and international cooperation frameworks.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    </LogoMarqueeItem>
+                  </LogoMarqueeContent>
+                </LogoMarqueeContainer>
               </Container>
             </Section>
           </>
         )}
       </main>
+      
+      <Section style={{ padding: '80px 0', background: 'white', marginTop: '0' }} id="sponsors-logo-wall">
+        <Container>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <h2 style={{ 
+              fontSize: '2.5rem', 
+              fontWeight: '700', 
+              marginBottom: '20px',
+              background: 'linear-gradient(90deg, #333, #000)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              Our Partners & Sponsors
+            </h2>
+            <p style={{ fontSize: '1.2rem', color: '#555', maxWidth: '800px', margin: '0 auto' }}>
+              Supported by leading organizations committed to advancing AI research and applications
+            </p>
+          </div>
+          
+          <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
+            <div style={{ 
+              position: 'absolute', 
+              top: '-15px', 
+              left: '50%', 
+              transform: 'translateX(-50%)', 
+              backgroundColor: 'rgba(255,255,255,0.9)', 
+              padding: '5px 15px', 
+              borderRadius: '20px',
+              boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+              zIndex: 2,
+              fontSize: '0.8rem',
+              fontWeight: '600',
+              color: '#666'
+            }}>
+              All logos displayed in grayscale
+            </div>
+            <img src="/images/logo_wall.png" alt="ThAT Conference Partners and Sponsors" style={{ 
+              width: '100%', 
+              height: 'auto', 
+              borderRadius: '8px', 
+              boxShadow: '0 5px 15px rgba(0,0,0,0.1)', 
+              filter: 'grayscale(100%)'
+            }} />
+          </div>
+        </Container>
+      </Section>
       
       <Section style={{ padding: '100px 0', background: '#f8f8f8', marginTop: '0' }} id="venue">
         <Container>
