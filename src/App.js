@@ -1,5 +1,64 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled, { createGlobalStyle, ThemeProvider, keyframes } from 'styled-components';
+
+// Custom hook for tracking mouse position and adding stars
+function useMousePosition() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  useEffect(() => {
+    function handleMouseMove(e) {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    }
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    // Add stars to the background
+    const createStars = () => {
+      const body = document.body;
+      const numStars = 100;
+      
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        const size = Math.random() * 2;
+        
+        star.style.position = 'fixed';
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+        star.style.borderRadius = '50%';
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.zIndex = '-1';
+        star.style.opacity = Math.random() * 0.8;
+        star.style.animation = `twinkle ${2 + Math.random() * 3}s infinite ease-in-out`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.className = 'star-element';
+        
+        body.appendChild(star);
+      }
+      
+      // Add keyframes for twinkling
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.8; }
+        }
+      `;
+      document.head.appendChild(style);
+    };
+    
+    createStars();
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      // Clean up stars
+      document.querySelectorAll('.star-element').forEach(star => star.remove());
+    };
+  }, []);
+  
+  return mousePosition;
+}
 
 // Theme
 const theme = {
@@ -8,12 +67,16 @@ const theme = {
     white: '#FFFFFF',
     lightGray: '#F5F5F5',
     mediumGray: '#AAAAAA',
-    darkGray: '#333333',
-    accent: '#000000',
-    primary: '#000000',
-    secondary: '#333333',
-    gradient: 'linear-gradient(135deg, #000000, #333333)',
+    darkGray: '#121212',
+    accent: '#6610f2',
+    primary: '#8A2BE2',
+    secondary: '#4B0082',
+    gradient: 'linear-gradient(135deg, #4B0082, #8A2BE2)',
     overlay: 'rgba(0, 0, 0, 0.7)',
+    glass: 'rgba(30, 30, 40, 0.3)',
+    glassLight: 'rgba(255, 255, 255, 0.1)',
+    glassHighlight: 'rgba(255, 255, 255, 0.05)',
+    starColor: '#ffffff',
   },
   fonts: {
     heading: "'Inter', sans-serif",
@@ -43,13 +106,28 @@ const GlobalStyle = createGlobalStyle`
   
   body {
     font-family: ${props => props.theme.fonts.body};
-    background-color: ${props => props.theme.colors.white};
-    color: ${props => props.theme.colors.black};
+    background-color: ${props => props.theme.colors.black};
+    color: ${props => props.theme.colors.white};
     line-height: 1.5;
     overflow-x: hidden;
     font-size: 16px;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(74, 16, 138, 0.2) 0%, transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(138, 43, 226, 0.2) 0%, transparent 25%);
+    pointer-events: none;
+    z-index: -1;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -153,9 +231,10 @@ const Header = styled.header`
   width: 100%;
   z-index: 1000;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  background: ${props => props.scrolled ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)'};
-  box-shadow: ${props => props.scrolled ? '0 2px 20px rgba(0, 0, 0, 0.05)' : '0 1px 5px rgba(0, 0, 0, 0.02)'};
+  backdrop-filter: blur(15px);
+  background: ${props => props.scrolled ? 'rgba(18, 18, 24, 0.85)' : 'rgba(10, 10, 15, 0.65)'};
+  box-shadow: ${props => props.scrolled ? '0 2px 20px rgba(138, 43, 226, 0.15)' : '0 1px 5px rgba(106, 90, 205, 0.1)'};
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 `;
 
 const Nav = styled.nav`
@@ -323,9 +402,21 @@ const HeroSection = styled.section`
   align-items: center;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #ffffff, #f5f5f5);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background: linear-gradient(135deg, #111, #333);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   padding: 120px 0 40px; /* Adjusted padding to prevent header overlap and ensure content fits */
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
   
   &::after {
     content: '';
@@ -334,8 +425,13 @@ const HeroSection = styled.section`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 70% 50%, rgba(245,245,245,0.6) 0%, rgba(255,255,255,0) 70%);
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(128, 0, 255, 0.3) 0%, 
+                rgba(0, 128, 255, 0.2) 25%, 
+                rgba(0, 0, 0, 0) 70%);
     pointer-events: none;
+    transition: background 0.1s ease-out;
+    z-index: 1;
   }
   
   @media (max-width: 768px) {
@@ -366,6 +462,8 @@ const HeroContent = styled.div`
   position: relative;
   z-index: 2;
   max-width: 800px;
+  color: white;
+  text-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
 `;
 
 const HeroTagline = styled.div`
@@ -374,7 +472,7 @@ const HeroTagline = styled.div`
   letter-spacing: 0.15em;
   text-transform: uppercase;
   margin-bottom: 24px;
-  color: ${props => props.theme.colors.black};
+  color: rgba(255, 255, 255, 0.9);
   
   @media (max-width: 768px) {
     font-size: 0.875rem;
@@ -387,8 +485,9 @@ const HeroTitle = styled.h1`
   letter-spacing: -0.03em;
   line-height: 1.05;
   margin-bottom: 20px;
-  color: ${props => props.theme.colors.black};
+  color: white;
   position: relative;
+  text-shadow: 0 0 15px rgba(128, 0, 255, 0.3);
   
   @media (max-width: 1024px) {
     font-size: 3.8rem;
@@ -405,7 +504,7 @@ const HeroSubtitle = styled.h2`
   line-height: 1.4;
   margin-bottom: 48px;
   max-width: 600px;
-  color: ${props => props.theme.colors.black};
+  color: rgba(255, 255, 255, 0.85);
   
   @media (max-width: 768px) {
     font-size: 1.25rem;
@@ -738,16 +837,39 @@ const SpeakerCard = styled.div`
   transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 12px;
   overflow: hidden;
-  background: white;
+  background: rgba(30, 30, 40, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 20px;
   margin-bottom: 40px;
   z-index: ${props => props.index % 2 === 0 ? '2' : '1'};
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(1.02);
     z-index: 5;
+    box-shadow: 0 22px 40px rgba(138, 43, 226, 0.15), 0 8px 15px rgba(106, 90, 205, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.3), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    transition: all 0.5s ease;
+  }
+  
+  &:hover::before {
+    transform: scale(1.5);
   }
   
   @media (max-width: 768px) {
@@ -827,17 +949,17 @@ const SpeakerPhoto = styled.div`
   overflow: hidden;
   position: relative;
   margin-bottom: 20px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
   transform: ${props => props.index % 3 === 0 ? 'rotate(-2deg)' : props.index % 3 === 1 ? 'rotate(0deg)' : 'rotate(2deg)'};
   transition: all 0.3s ease;
-  border: 2px solid black;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
+    filter: grayscale(80%) brightness(0.9);
+    transition: all 0.5s ease;
   }
   
   &::after {
@@ -847,16 +969,27 @@ const SpeakerPhoto = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(
+      to bottom,
+      transparent 60%,
+      rgba(10, 10, 15, 0.3) 70%,
+      rgba(10, 10, 15, 0.6) 80%,
+      rgba(10, 10, 15, 0.8) 90%,
+      rgba(10, 10, 15, 0.9) 95%
+    );
+    z-index: 1;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
   
   ${SpeakerCard}:hover & {
-    transform: ${props => props.index % 3 === 0 ? 'rotate(-2deg)' : props.index % 3 === 1 ? 'rotate(0deg)' : 'rotate(2deg)'};
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: ${props => props.index % 3 === 0 ? 'rotate(0deg)' : props.index % 3 === 1 ? 'rotate(0deg)' : 'rotate(0deg)'};
+    box-shadow: 0 20px 40px rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.3);
   }
   
   &:hover img {
-    filter: grayscale(70%);
+    filter: grayscale(0%) brightness(1.1);
+    transform: scale(1.05);
   }
   
   @media (max-width: 1024px) {
@@ -876,17 +1009,21 @@ const SpeakerName = styled.h4`
   font-size: 1.375rem;
   font-weight: 600;
   margin-bottom: 8px;
+  color: ${props => props.theme.colors.white};
+  text-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
 `;
 
 const SpeakerRole = styled.p`
   font-size: 1rem;
   margin-bottom: 4px;
-  color: ${props => props.theme.colors.darkGray};
+  color: ${props => props.theme.colors.glassLight};
 `;
 
 const SpeakerCompany = styled.p`
   font-size: 1rem;
   font-weight: 500;
+  color: ${props => props.theme.colors.accent};
+  opacity: 0.9;
 `;
 
 const SpeakerSocial = styled.div`
@@ -1992,6 +2129,10 @@ function App() {
   const [scrolled, setScrolled] = useState(false);
   const [activeDay, setActiveDay] = useState('day1');
   const [showSingleDay, setShowSingleDay] = useState(true);
+  const heroRef = useRef(null);
+  
+  // Use mouse position for gradient effects
+  const { x, y } = useMousePosition();
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [selectedTicketType, setSelectedTicketType] = useState('general');
   const [selectedDay, setSelectedDay] = useState('day1');
@@ -2313,7 +2454,18 @@ function App() {
           </Section>
         ) : (
           <>
-            <HeroSection>
+            <HeroSection
+              ref={heroRef}
+              onMouseMove={(e) => {
+                if (heroRef.current) {
+                  const rect = heroRef.current.getBoundingClientRect();
+                  const x = ((e.clientX - rect.left) / rect.width) * 100;
+                  const y = ((e.clientY - rect.top) / rect.height) * 100;
+                  heroRef.current.style.setProperty('--mouse-x', `${x}%`);
+                  heroRef.current.style.setProperty('--mouse-y', `${y}%`);
+                }
+              }}
+            >
               <Container>
                 <HeroContent>
                   <p style={{ marginBottom: "15px", fontWeight: "600", fontSize: "0.85rem", letterSpacing: "0.1em", textTransform: "uppercase", opacity: "0.9" }}>Algorithmic Innovation and Entrepreneurship</p>
@@ -2321,7 +2473,7 @@ function App() {
                   <HeroSubtitle style={{ marginTop: "10px", fontSize: "1.35rem", maxWidth: "650px" }}>
                     How can Britain leverage AI research breakthroughs safely to drive productivity and growth?
                   </HeroSubtitle>
-                  <p style={{ marginTop: "20px", fontWeight: "500", fontSize: "1.1rem", letterSpacing: "0.01em", color: "#444" }}>October 28-30, 2025 · London, UK</p>
+                  <p style={{ marginTop: "20px", fontWeight: "500", fontSize: "1.1rem", letterSpacing: "0.01em", color: "rgba(255, 255, 255, 0.7)" }}>October 28-30, 2025 · London, UK</p>
                   <HeroActions>
                     <RegistrationButton 
                       href="#" 
