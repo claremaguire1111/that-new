@@ -2016,7 +2016,7 @@ function App({ ticketsPage = false }) {
               <NavLink href="#speakers" onClick={() => setMenuOpen(false)}>Speakers</NavLink>
               <NavLink href="#schedule" onClick={() => setMenuOpen(false)}>Schedule</NavLink>
               <NavLink href="#venue" onClick={() => setMenuOpen(false)}>Venue</NavLink>
-              <NavLink href="#sponsors" onClick={() => setMenuOpen(false)}>Partners</NavLink>
+              <NavLink href="#sponsors" onClick={() => setMenuOpen(false)}>Partners & Sponsors</NavLink>
               <NavLink href="/tickets" onClick={() => setMenuOpen(false)}>Tickets</NavLink>
               <RegistrationButton 
                 href="#" 
@@ -2336,89 +2336,35 @@ function App({ ticketsPage = false }) {
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent'
       }}>
-        Logo Wall
+        Our Partners & Sponsors
       </h2>
                 </div>
               
-                <SectionTitle>Partners</SectionTitle>
-                <SectionSubtitle>
-                  Leading organizations supporting innovation in AI
-                </SectionSubtitle>
+                <h3 style={{ 
+                  fontSize: '1.8rem', 
+                  fontWeight: '600', 
+                  marginBottom: '30px', 
+                  textAlign: 'center',
+                  position: 'relative',
+                  paddingBottom: '15px'
+                }}>
+                  Gold Sponsors
+                  <span style={{ 
+                    position: 'absolute', 
+                    bottom: 0, 
+                    left: '50%', 
+                    transform: 'translateX(-50%)', 
+                    width: '60px', 
+                    height: '3px', 
+                    backgroundColor: '#000', 
+                    borderRadius: '10px' 
+                  }}></span>
+                </h3>
                 
                 <div style={{ marginBottom: '60px' }}>
                   <div style={{ 
                     display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-                    gap: '30px', 
-                    justifyItems: 'center',
-                    alignItems: 'center'
-                  }}>
-                    <div style={{ 
-                      height: '120px', 
-                      backgroundColor: 'white', 
-                      padding: '20px', 
-                      borderRadius: '8px', 
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%'
-                    }}>
-                      <img src="/images/sponsors/partners/download.png" alt="Innovate UK" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div style={{ 
-                      height: '120px', 
-                      backgroundColor: 'white', 
-                      padding: '20px', 
-                      borderRadius: '8px', 
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%'
-                    }}>
-                      <img src="/images/sponsors/partners/tony_blair.webp" alt="Tony Blair Institute" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                    </div>
-                    <div style={{ 
-                      height: '120px', 
-                      backgroundColor: 'white', 
-                      padding: '20px', 
-                      borderRadius: '8px', 
-                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%'
-                    }}>
-                      <img src="/images/sponsors/partners/multiverse_logo_transparent.png" alt="Multiverse" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                    </div>
-                  </div>
-                </div>
-                
-                <div style={{ marginBottom: '60px' }}>
-                  <h3 style={{ 
-                    fontSize: '1.8rem', 
-                    fontWeight: '600', 
-                    marginBottom: '30px', 
-                    textAlign: 'center',
-                    position: 'relative',
-                    paddingBottom: '15px'
-                  }}>
-                    Silver Sponsors
-                    <span style={{ 
-                      position: 'absolute', 
-                      bottom: 0, 
-                      left: '50%', 
-                      transform: 'translateX(-50%)', 
-                      width: '60px', 
-                      height: '3px', 
-                      backgroundColor: '#000', 
-                      borderRadius: '10px' 
-                    }}></span>
-                  </h3>
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
                     gap: '30px', 
                     justifyItems: 'center',
                     alignItems: 'center'
@@ -2475,7 +2421,7 @@ function App({ ticketsPage = false }) {
                   </h3>
                   <div style={{ 
                     display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
                     gap: '30px', 
                     justifyItems: 'center',
                     alignItems: 'center'
@@ -2491,7 +2437,77 @@ function App({ ticketsPage = false }) {
                       alignItems: 'center',
                       width: '100%'
                     }}>
-                      <img src="/images/sponsors/gold_sponsors/XTX_Markets.png" alt="XTX Markets" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                      <img src="/images/sponsors/silver_sponsors/HSBC-Logo.png" alt="HSBC" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                  </div>
+                </div>
+                
+                <div style={{ marginBottom: '60px' }}>
+                  <h3 style={{ 
+                    fontSize: '1.8rem', 
+                    fontWeight: '600', 
+                    marginBottom: '30px', 
+                    textAlign: 'center',
+                    position: 'relative',
+                    paddingBottom: '15px'
+                  }}>
+                    Partners
+                    <span style={{ 
+                      position: 'absolute', 
+                      bottom: 0, 
+                      left: '50%', 
+                      transform: 'translateX(-50%)', 
+                      width: '60px', 
+                      height: '3px', 
+                      backgroundColor: '#000', 
+                      borderRadius: '10px' 
+                    }}></span>
+                  </h3>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+                    gap: '30px', 
+                    justifyItems: 'center',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/partners/download.png" alt="Innovate UK" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/partners/tony_blair.webp" alt="Tony Blair Institute" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ 
+                      height: '120px', 
+                      backgroundColor: 'white', 
+                      padding: '20px', 
+                      borderRadius: '8px', 
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: '100%'
+                    }}>
+                      <img src="/images/sponsors/partners/multiverse_logo_transparent.png" alt="Multiverse" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                     </div>
                   </div>
                 </div>
@@ -2546,7 +2562,7 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/carousel/public-ai-logo-large.png" 
+                      src="/images/sponsors/gold_sponsors/public-ai-logo-large.png" 
                       alt="Public AI" 
                       style={{ 
                         height: '100%', 
@@ -2566,7 +2582,7 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/carousel/multiverse_logo_transparent.png" 
+                      src="/images/sponsors/partners/multiverse_logo_transparent.png" 
                       alt="Multiverse" 
                       style={{ 
                         height: '100%', 
@@ -2586,7 +2602,7 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/carousel/download.png" 
+                      src="/images/sponsors/partners/download.png" 
                       alt="Innovate UK" 
                       style={{ 
                         height: '100%', 
@@ -2606,7 +2622,7 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/carousel/tony_blair.webp" 
+                      src="/images/sponsors/partners/tony_blair.webp" 
                       alt="Tony Blair Institute" 
                       style={{ 
                         height: '100%', 
@@ -2626,8 +2642,8 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/carousel/public-ai-logo-large.png" 
-                      alt="Public AI" 
+                      src="/images/sponsors/gold_sponsors/XTX_Markets.png" 
+                      alt="XTX Markets" 
                       style={{ 
                         height: '100%', 
                         maxWidth: '100%',
@@ -2646,48 +2662,8 @@ function App({ ticketsPage = false }) {
                     justifyContent: 'center'
                   }}>
                     <img 
-                      src="/images/carousel/multiverse_logo_transparent.png" 
-                      alt="Multiverse" 
-                      style={{ 
-                        height: '100%', 
-                        maxWidth: '100%',
-                        objectFit: 'contain',
-                        filter: 'grayscale(100%)'
-                      }} 
-                    />
-                  </div>
-                </LogoMarqueeItem>
-                <LogoMarqueeItem>
-                  <div style={{ 
-                    height: '50px', 
-                    width: '160px',
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center'
-                  }}>
-                    <img 
-                      src="/images/carousel/download.png" 
-                      alt="Innovate UK" 
-                      style={{ 
-                        height: '100%', 
-                        maxWidth: '100%',
-                        objectFit: 'contain',
-                        filter: 'grayscale(100%)'
-                      }} 
-                    />
-                  </div>
-                </LogoMarqueeItem>
-                <LogoMarqueeItem>
-                  <div style={{ 
-                    height: '50px', 
-                    width: '160px',
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center'
-                  }}>
-                    <img 
-                      src="/images/carousel/tony_blair.webp" 
-                      alt="Tony Blair Institute" 
+                      src="/images/sponsors/silver_sponsors/HSBC-Logo.png" 
+                      alt="HSBC" 
                       style={{ 
                         height: '100%', 
                         maxWidth: '100%',
@@ -3444,7 +3420,7 @@ function App({ ticketsPage = false }) {
                 </li>
                 <li style={{ marginBottom: '12px' }}>
                   <a href="#sponsors" style={{ fontSize: '0.95rem', opacity: '0.7', transition: 'opacity 0.3s ease', display: 'inline-block', paddingLeft: '0', position: 'relative' }}>
-                    Partners
+                    Partners & Sponsors
                   </a>
                 </li>
               </ul>
