@@ -1,9 +1,12 @@
 {
-  "framework": "create-react-app",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "framework": "create-react-app",
+  "github": {
+    "silent": true
+  }
 }
+EOF < /dev/null
