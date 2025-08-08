@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle, ThemeProvider, css, keyframes } from 'styled-components';
+import Navigation from './components/Navigation';
 
 // ElevenLabs-inspired dark theme
 const darkTheme = {
@@ -257,6 +258,38 @@ const GlobalStyle = createGlobalStyle`
     
     &:hover {
       opacity: 0.8;
+    }
+  }
+  
+  .dropdown {
+    position: relative;
+    
+    &:hover .dropdown-content {
+      display: block !important;
+    }
+    
+    &::after {
+      content: "▼";
+      font-size: 8px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+  }
+  
+  .dropdown-content {
+    a {
+      display: block;
+      padding: 8px 0;
+      margin: 5px 0;
+      
+      &:hover {
+        opacity: 1;
+        color: ${props => props.theme.colors.accent};
+      }
+      
+      &::after {
+        display: none;
+      }
     }
   }
   
@@ -609,6 +642,89 @@ const NavLinks = styled.div`
     padding-top: 5rem;
     gap: 1.5rem;
   }
+`;
+
+// Ticket table styling
+const TicketsSection = styled(Section)`
+  position: relative;
+  
+  ${props => props.theme.isDark && css`
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+  `}
+`;
+
+const TicketTable = styled.div`
+  overflow-x: auto;
+  margin: 2rem 0;
+  border-radius: ${props => props.theme.radii.md};
+  ${props => props.theme.isDark && css`
+    ${glassEffect}
+  `}
+  border: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : props.theme.colors.border};
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+`;
+
+const TableHead = styled.thead`
+  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.6)' : '#F5F5F5'};
+  
+  th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : props.theme.colors.border};
+  }
+`;
+
+const TableBody = styled.tbody`
+  tr {
+    &:nth-child(even) {
+      background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.3)' : '#FAFAFA'};
+    }
+    
+    &:hover {
+      background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#F0F0F0'};
+    }
+  }
+  
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : props.theme.colors.border};
+    
+    &:last-child {
+      color: ${props => props.theme.colors.textSecondary};
+      font-style: italic;
+      font-size: 0.875rem;
+    }
+  }
+`;
+
+const CategoryHeader = styled.tr`
+  background-color: ${props => props.theme.isDark ? 'rgba(16, 163, 127, 0.2)' : '#E6F7F2'} !important;
+  
+  td {
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    color: ${props => props.theme.isDark ? '#FFFFFF' : '#10A37F'};
+  }
+`;
+
+const TicketCTA = styled.div`
+  margin: 3rem 0;
+  text-align: center;
 `;
 
 const NavLink = styled.a`
@@ -1424,7 +1540,32 @@ function App() {
   }, []);
   
   // Speaker data
-  const day1Speakers = [
+  // Ticket pricing data
+const ticketPricing = {
+  student: [
+    { tier: "Super Early Bird", price: "£60", dailyPrice: "£25", notes: "Strict student ID check" },
+    { tier: "Early Bird", price: "£99", dailyPrice: "£39", notes: "~150 available" },
+    { tier: "Regular", price: "£139", dailyPrice: "£55", notes: "" }
+  ],
+  academic: [
+    { tier: "Super Early Bird", price: "£120", dailyPrice: "£45", notes: "~320 available" },
+    { tier: "Early Bird", price: "£139", dailyPrice: "£55", notes: "" },
+    { tier: "Regular", price: "£199", dailyPrice: "£75", notes: "" }
+  ],
+  general: [
+    { tier: "Super Early Bird", price: "£199", dailyPrice: "£75", notes: "~400 available" },
+    { tier: "Early Bird", price: "£249", dailyPrice: "£95", notes: "" },
+    { tier: "Regular", price: "£299", dailyPrice: "£115", notes: "" }
+  ],
+  special: [
+    { category: "Pro Pass", tier: "Flat Rate", price: "£349", dailyPrice: "N/A", notes: "Merch bundle + priority seating" },
+    { category: "VIP", tier: "Flat Rate", price: "£795", dailyPrice: "N/A", notes: "All-access, lounge, speaker dinner" },
+    { category: "Group", tier: "Flat Rate", price: "-10% on total", dailyPrice: "N/A", notes: "Min. 5 tickets, any category" },
+    { category: "Digital", tier: "Flat Rate", price: "£49", dailyPrice: "N/A", notes: "Livestream + recordings" }
+  ]
+};
+
+const day1Speakers = [
     {
       name: "Dr David Silver",
       title: "Principal Research Scientist",
@@ -1472,6 +1613,32 @@ function App() {
       title: "Founder & CIO",
       company: "DeepGreen",
       image: "/images/speakers/MarkBjornsgaard.jpg"
+    },
+    {
+      name: "Dr Joshua Tan",
+      title: "Head of Policy",
+      company: "Public AI",
+      image: "/images/speakers/DrJoshuaTan.jpg"
+    },
+    {
+      name: "Dr James Whittington",
+      title: "Vice-President & Research Scientist",
+      company: "Thinking About Thinking",
+      company2: "Stanford & Oxford",
+      image: "/images/speakers/DrJamesWhittington.jpg"
+    },
+    {
+      name: "Dr Ruairidh McLennan Battleday",
+      title: "President & Research Scientist",
+      company: "Thinking About Thinking",
+      company2: "Harvard & MIT",
+      image: "/images/speakers/DrRuairidhMcLennanBattleday.jpg"
+    },
+    {
+      name: "Dr Felix Sosa",
+      title: "Research Scientist",
+      company: "Harvard & MIT",
+      image: "/images/speakers/DrFelixSosa.jpg"
     }
   ];
 
@@ -1517,6 +1684,18 @@ function App() {
       title: "Director",
       company: "Tony Blair Institute",
       image: "/images/speakers/DrJakobMökander.jpg"
+    },
+    {
+      name: "Dr Kevin Loi-Heng",
+      title: "Co-Founder & CEO",
+      company: "Avalon Insights",
+      image: "/images/speakers/DrKevinLoiHeng.jpg"
+    },
+    {
+      name: "Nicolay Hagen",
+      title: "Lecturer",
+      company: "NTNU",
+      image: "/images/speakers/NicolayHagen.jpg"
     },
     {
       name: "Julian Von Nehammer",
@@ -1574,6 +1753,12 @@ function App() {
       title: "Learning Manager",
       company: "Raspberry Pi Foundation",
       image: "/images/speakers/RehanaAlSoltane.jpg"
+    },
+    {
+      name: "Prof. Dan Nicolau Jr",
+      title: "Professor",
+      company: "KCL",
+      image: "/images/speakers/ProfDanNicolauJr.jpg"
     }
   ];
 
@@ -1595,49 +1780,32 @@ function App() {
         </ThemeToggleButton>
       </ThemeToggleContainer>
       
-      {/* Header */}
-      <Header scrolled={scrolled}>
-        <Container>
-          <Nav>
-            <Logo href="#">
-              <img 
-                src="/images/misc/thatpng.jpg" 
-                alt="THAT Logo" 
-                style={{
-                  height: "30px",
-                  filter: isDarkMode ? "none" : "grayscale(100%)"
-                }}
-              />
-            </Logo>
-            <MobileMenuButton onClick={toggleMenu}>
-              {isMenuOpen ? '✕' : '☰'}
-            </MobileMenuButton>
-            <NavLinks isOpen={isMenuOpen}>
-              <NavLink href="#about">About</NavLink>
-              <NavLink href="#schedule">Schedule</NavLink>
-              <NavLink href="#sponsors">Sponsors</NavLink>
-              <NavLink href="#venue">Venue</NavLink>
-              <Button as="a" href="#register" primary>
-                Register Now
-              </Button>
-            </NavLinks>
-          </Nav>
-        </Container>
-      </Header>
+      {/* Import and use the Navigation component */}
+      <Navigation activePath="/" />
       
       {/* Hero Section */}
       <HeroSection id="home">
         <Container>
           <HeroContent>
-            <Badge>October 28-30, 2023</Badge>
+            <Badge>October 28-30, 2025</Badge>
+            <SmallHeading style={{ 
+              marginBottom: '0.75rem', 
+              color: '#FFFFFF', 
+              fontSize: '1.2rem',
+              fontWeight: '500',
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase'
+            }}>
+              Algorithmic Innovation and Entrepreneurship
+            </SmallHeading>
             <MainHeading data-text="Global Summit on Open Problems for AI">Global Summit on<br />Open Problems for AI</MainHeading>
             <SubHeading>How can Britain leverage AI research breakthroughs safely to drive productivity and growth?</SubHeading>
             <ButtonGroup>
-              <Button as="a" href="#register" primary>
-                Register Now
+              <Button as="a" href="/tickets" primary>
+                Buy Tickets
               </Button>
-              <Button as="a" href="#schedule">
-                View Schedule
+              <Button as="a" href="#register">
+                Sign Up
               </Button>
             </ButtonGroup>
           </HeroContent>
@@ -1665,6 +1833,7 @@ function App() {
                     <SpeakerName>{speaker.name}</SpeakerName>
                     <SpeakerTitle>{speaker.title}</SpeakerTitle>
                     <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
                   </SpeakerInfo>
                 </SpeakerCard>
               ))}
@@ -1685,6 +1854,7 @@ function App() {
                     <SpeakerName>{speaker.name}</SpeakerName>
                     <SpeakerTitle>{speaker.title}</SpeakerTitle>
                     <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
                   </SpeakerInfo>
                 </SpeakerCard>
               ))}
@@ -1705,6 +1875,7 @@ function App() {
                     <SpeakerName>{speaker.name}</SpeakerName>
                     <SpeakerTitle>{speaker.title}</SpeakerTitle>
                     <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
                   </SpeakerInfo>
                 </SpeakerCard>
               ))}
@@ -1797,7 +1968,7 @@ function App() {
       </Section>
       
       {/* Features Section */}
-      <FeaturesSection id="about">
+      <FeaturesSection id="algopreneurship">
         <Container>
           <SmallHeading>What to Expect</SmallHeading>
           <MainHeading>Join Us at THAT</MainHeading>
@@ -1922,6 +2093,7 @@ function App() {
         </Container>
       </FeaturesSection>
       
+      
       {/* Venue Section */}
       <VenueSection id="venue">
         <Container>
@@ -1955,20 +2127,355 @@ function App() {
             </VenueInfo>
             
             <VenueMap>
-              <img 
-                src="/images/misc/friends_house.jpg" 
-                alt="Friends House Venue"
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.415700557149!2d-0.1350049233905342!3d51.52730870950385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b25ce671315%3A0x28af3d0d00fa38c0!2sFriends%20House!5e0!3m2!1sen!2sus!4v1691512895777!5m2!1sen!2sus" 
+                width="100%" 
+                height="100%" 
                 style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover',
+                  border: 0,
                   borderRadius: '8px'
                 }}
-              />
+                title="Friends House venue location map"
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
             </VenueMap>
           </Flex>
         </Container>
       </VenueSection>
+      
+      {/* Media & Community Partners Section */}
+      <Section id="media-community" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
+        <Container>
+          <SmallHeading>Join Our Community</SmallHeading>
+          <MainHeading>Media & Community Partners</MainHeading>
+          <SubHeading style={{ maxWidth: '800px', margin: '0 auto 3rem auto', textAlign: 'center' }}>
+            Join the thriving community of AI innovators and entrepreneurs building the future together.
+          </SubHeading>
+          
+          <Flex direction="column" align="center" gap="3rem">
+            {/* Partner Benefits */}
+            <div style={{ 
+              width: '100%', 
+              maxWidth: '900px',
+              padding: '2rem',
+              borderRadius: '16px',
+              backgroundColor: isDarkMode ? 'rgba(32, 33, 35, 0.4)' : '#F9F9F9',
+              border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE',
+            }}>
+              <h3 style={{ 
+                textAlign: 'center', 
+                marginBottom: '2rem',
+                fontSize: '1.5rem',
+              }}>Partnership Benefits</h3>
+              
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+                gap: '1.5rem' 
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '2rem', 
+                    marginBottom: '1rem',
+                    color: isDarkMode ? '#FFFFFF' : '#333333',
+                  }}>🎯</div>
+                  <h4>Targeted Reach</h4>
+                  <p style={{ fontSize: '0.9rem' }}>Connect with a focused audience of AI researchers, entrepreneurs, and decision-makers.</p>
+                </div>
+                
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '2rem', 
+                    marginBottom: '1rem',
+                    color: isDarkMode ? '#FFFFFF' : '#333333', 
+                  }}>🔄</div>
+                  <h4>Cross Promotion</h4>
+                  <p style={{ fontSize: '0.9rem' }}>Mutual promotion across our channels and networks for maximum visibility.</p>
+                </div>
+                
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '2rem', 
+                    marginBottom: '1rem',
+                    color: isDarkMode ? '#FFFFFF' : '#333333',
+                  }}>🎟️</div>
+                  <h4>Event Passes</h4>
+                  <p style={{ fontSize: '0.9rem' }}>Complimentary passes to THAT Summit for your team or community members.</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Call to Action */}
+            <div style={{ textAlign: 'center', maxWidth: '700px' }}>
+              <h3 style={{ marginBottom: '1.5rem' }}>Become a Partner</h3>
+              <p style={{ marginBottom: '2rem' }}>
+                We're looking for media outlets, communities, organizations and networks who want to support algorithmic innovation and entrepreneurship.
+              </p>
+              
+              <ButtonGroup>
+                <Button as="a" href="mailto:partnerships@thinkingaboutthinking.org" primary>
+                  Contact Our Partnership Team
+                </Button>
+                <Button as="a" href="#register">
+                  Join Our Newsletter
+                </Button>
+              </ButtonGroup>
+            </div>
+          </Flex>
+        </Container>
+      </Section>
+      
+      {/* Newsletter Signup Section */}
+      <Section id="register" style={{ paddingTop: '3rem', paddingBottom: '5rem' }}>
+        <Container>
+          <SmallHeading>Stay Updated</SmallHeading>
+          <MainHeading>Sign Up For Updates</MainHeading>
+          <SubHeading style={{ maxWidth: '700px', margin: '0 auto 2rem auto', textAlign: 'center' }}>
+            Join our mailing list to receive the latest news and updates about THAT Summit
+          </SubHeading>
+          
+          <div style={{ 
+            maxWidth: '600px', 
+            margin: '0 auto',
+            padding: '2.5rem',
+            borderRadius: '20px',
+            background: darkTheme.isDark ? 'rgba(32, 33, 35, 0.5)' : '#F9F9F9',
+            border: darkTheme.isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #EEEEEE',
+            boxShadow: darkTheme.isDark ? '0 20px 50px rgba(0, 0, 0, 0.5)' : '0 20px 50px rgba(0, 0, 0, 0.08)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Glass overlay effect */}
+            {darkTheme.isDark && (
+              <>
+                <div style={{
+                  position: 'absolute',
+                  top: '-50%',
+                  left: '-50%',
+                  width: '200%',
+                  height: '200%',
+                  background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 20%, transparent 60%)',
+                  opacity: '0.5',
+                  pointerEvents: 'none',
+                  animation: 'liquidMove 15s infinite alternate ease-in-out'
+                }}></div>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%, rgba(255, 255, 255, 0.02) 100%)',
+                  pointerEvents: 'none'
+                }}></div>
+              </>
+            )}
+            
+            <form action="https://formspree.io/f/mvgqvezg" method="POST">
+              {/* Decorative star elements */}
+              {darkTheme.isDark && (
+                <>
+                  <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '30px',
+                    width: '3px',
+                    height: '3px',
+                    background: '#FFFFFF',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
+                    opacity: '0.6'
+                  }}></div>
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '40px',
+                    left: '20px',
+                    width: '2px',
+                    height: '2px',
+                    background: '#FFFFFF',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 8px rgba(255, 255, 255, 0.6)',
+                    opacity: '0.5'
+                  }}></div>
+                </>
+              )}
+              
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '0.75rem',
+                  fontWeight: '500',
+                  fontSize: '0.95rem',
+                  letterSpacing: '0.02em'
+                }}>
+                  Your Name
+                </label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  required
+                  placeholder="Enter your full name"
+                  style={{
+                    width: '100%',
+                    padding: '0.9rem 1rem',
+                    borderRadius: '12px',
+                    border: darkTheme.isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #DDDDDD',
+                    background: darkTheme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
+                    color: darkTheme.isDark ? '#FFFFFF' : '#333333',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    outline: 'none',
+                    boxShadow: darkTheme.isDark ? 'inset 0 1px 3px rgba(0, 0, 0, 0.2)' : 'inset 0 1px 3px rgba(0, 0, 0, 0.05)'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '0.75rem',
+                  fontWeight: '500',
+                  fontSize: '0.95rem',
+                  letterSpacing: '0.02em'
+                }}>
+                  Email Address
+                </label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  required
+                  placeholder="your.email@example.com"
+                  style={{
+                    width: '100%',
+                    padding: '0.9rem 1rem',
+                    borderRadius: '12px',
+                    border: darkTheme.isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #DDDDDD',
+                    background: darkTheme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
+                    color: darkTheme.isDark ? '#FFFFFF' : '#333333',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    outline: 'none',
+                    boxShadow: darkTheme.isDark ? 'inset 0 1px 3px rgba(0, 0, 0, 0.2)' : 'inset 0 1px 3px rgba(0, 0, 0, 0.05)'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '0.75rem',
+                  fontWeight: '500',
+                  fontSize: '0.95rem',
+                  letterSpacing: '0.02em'
+                }}>
+                  Your Interest
+                </label>
+                <select 
+                  name="interests" 
+                  style={{
+                    width: '100%',
+                    padding: '0.9rem 1rem',
+                    borderRadius: '12px',
+                    border: darkTheme.isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #DDDDDD',
+                    background: darkTheme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
+                    color: darkTheme.isDark ? '#FFFFFF' : '#333333',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    outline: 'none',
+                    boxShadow: darkTheme.isDark ? 'inset 0 1px 3px rgba(0, 0, 0, 0.2)' : 'inset 0 1px 3px rgba(0, 0, 0, 0.05)',
+                    appearance: 'none',
+                    backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23' + (darkTheme.isDark ? 'FFFFFF' : '444444') + '%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 1rem top 50%',
+                    backgroundSize: '0.65rem auto',
+                    paddingRight: '2.5rem'
+                  }}
+                >
+                  <option value="general">General Interest</option>
+                  <option value="academic">Academic Research</option>
+                  <option value="industry">Industry Applications</option>
+                  <option value="policy">AI Policy</option>
+                  <option value="speaking">Speaking Opportunities</option>
+                  <option value="sponsorship">Sponsorship Opportunities</option>
+                </select>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <Button 
+                  as="button" 
+                  type="submit" 
+                  primary
+                  style={{
+                    padding: '1rem 2.8rem',
+                    fontSize: '1.05rem',
+                    borderRadius: '12px',
+                    fontWeight: '600',
+                    letterSpacing: '0.01em',
+                    boxShadow: darkTheme.isDark ? '0 10px 20px rgba(0, 0, 0, 0.4)' : '0 10px 20px rgba(0, 0, 0, 0.15)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    textTransform: 'uppercase',
+                    transition: 'all 0.3s ease',
+                    background: darkTheme.isDark ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85))' : '#202123'
+                  }}
+                >
+                  Subscribe for Updates
+                </Button>
+              </div>
+              
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                marginTop: '2rem', 
+                gap: '1.5rem' 
+              }}>
+                <a href="https://x.com/thought_channel" target="_blank" rel="noopener noreferrer" style={{
+                  opacity: 0.7,
+                  transition: 'all 0.3s ease',
+                  ':hover': { opacity: 1 }
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill={darkTheme.isDark ? "#FFFFFF" : "#202123"}>
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </a>
+                <a href="https://www.instagram.com/thoughts_channel" target="_blank" rel="noopener noreferrer" style={{
+                  opacity: 0.7,
+                  transition: 'all 0.3s ease',
+                  ':hover': { opacity: 1 }
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill={darkTheme.isDark ? "#FFFFFF" : "#202123"}>
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/thinking-about-thinking-inc/posts/?feedView=all" target="_blank" rel="noopener noreferrer" style={{
+                  opacity: 0.7,
+                  transition: 'all 0.3s ease',
+                  ':hover': { opacity: 1 }
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill={darkTheme.isDark ? "#FFFFFF" : "#202123"}>
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+              
+              <p style={{ 
+                fontSize: '0.8rem', 
+                color: darkTheme.isDark ? 'rgba(255, 255, 255, 0.5)' : '#888888', 
+                textAlign: 'center',
+                marginTop: '1.5rem',
+                marginBottom: '0'
+              }}>
+                We respect your privacy and will never share your information.
+              </p>
+            </form>
+          </div>
+        </Container>
+      </Section>
       
       {/* Footer */}
       <Footer>
@@ -1976,12 +2483,12 @@ function App() {
           <FooterText>Brought to you by Thinking About Thinking, Inc.<br />A 501(c)3 Nonprofit Company in the State of New Jersey.<br /><br />28 Spring Street, Unit 156, Princeton, NJ, USA, 08540</FooterText>
           
           <FooterBottom>
-            <Copyright>© 2023 THAT. All rights reserved.</Copyright>
+            <Copyright>© 2025 THAT. All rights reserved.</Copyright>
             
             <SocialLinks>
-              <SocialLink href="https://youtube.com" target="_blank" rel="noopener noreferrer">Youtube</SocialLink>
-              <SocialLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
-              <SocialLink href="#" target="_blank" rel="noopener noreferrer">Socials</SocialLink>
+              <SocialLink href="https://x.com/thought_channel" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
+              <SocialLink href="https://www.instagram.com/thoughts_channel" target="_blank" rel="noopener noreferrer">Instagram</SocialLink>
+              <SocialLink href="https://www.linkedin.com/company/thinking-about-thinking-inc/posts/?feedView=all" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
             </SocialLinks>
           </FooterBottom>
         </Container>
