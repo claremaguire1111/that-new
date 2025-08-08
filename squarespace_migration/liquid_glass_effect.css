@@ -1,0 +1,210 @@
+/* Liquid Glass Effect CSS for Squarespace
+ * This file contains CSS to create a liquid glass effect for the entire site
+ * Add this to your Squarespace site via Design > Custom CSS
+ */
+
+/* Base Glass Effect for All Sections */
+.page-section,
+.header-inner,
+.footer-inner,
+.content-wrapper,
+.sqs-block-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Add glass overlay to all sections */
+.page-section::before,
+.header-wrapper::before,
+.footer-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+
+/* Add animated liquid effect with bubbles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  z-index: -2;
+}
+
+/* Liquid bubble animations */
+.liquid-bubble {
+  position: fixed;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  z-index: -1;
+  opacity: 0.6;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* Create multiple bubble elements with varying sizes and animations */
+.bubble-1 {
+  width: 300px;
+  height: 300px;
+  left: 5%;
+  top: 20%;
+  animation: float-bubble 15s ease-in-out infinite;
+}
+
+.bubble-2 {
+  width: 200px;
+  height: 200px;
+  right: 10%;
+  top: 30%;
+  animation: float-bubble 12s ease-in-out infinite 2s;
+}
+
+.bubble-3 {
+  width: 150px;
+  height: 150px;
+  left: 15%;
+  bottom: 20%;
+  animation: float-bubble 20s ease-in-out infinite 1s;
+}
+
+.bubble-4 {
+  width: 250px;
+  height: 250px;
+  right: 20%;
+  bottom: 25%;
+  animation: float-bubble 18s ease-in-out infinite 3s;
+}
+
+.bubble-5 {
+  width: 180px;
+  height: 180px;
+  left: 40%;
+  top: 15%;
+  animation: float-bubble 16s ease-in-out infinite 2.5s;
+}
+
+/* Animation for floating bubbles */
+@keyframes float-bubble {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(15px);
+  }
+  50% {
+    transform: translateY(10px) translateX(-15px);
+  }
+  75% {
+    transform: translateY(-15px) translateX(10px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* Liquid Glass Cards */
+.summary-item,
+.sqs-block-image .design-layout-card,
+.sqs-block-gallery .slide,
+.sqs-block-summary-v2 .summary-block-wrapper,
+.sqs-block-products .products-list-item {
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s ease !important;
+}
+
+.summary-item:hover,
+.sqs-block-image .design-layout-card:hover,
+.sqs-block-gallery .slide:hover,
+.sqs-block-summary-v2 .summary-block-wrapper:hover,
+.sqs-block-products .products-list-item:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-5px);
+}
+
+/* Navigation with glass effect */
+.header-nav-wrapper {
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Buttons with glass effect */
+.sqs-block-button .sqs-block-button-element,
+.sqs-add-to-cart-button,
+.form-wrapper .form-button {
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.3s ease !important;
+}
+
+.sqs-block-button .sqs-block-button-element:hover,
+.sqs-add-to-cart-button:hover,
+.form-wrapper .form-button:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 768px) {
+  .bubble-1, .bubble-2, .bubble-3, .bubble-4, .bubble-5 {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .page-section::before,
+  .header-wrapper::before,
+  .footer-wrapper::before {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* JavaScript for creating the bubbles (to be injected to Squarespace) */
+/*
+document.addEventListener('DOMContentLoaded', function() {
+  const body = document.body;
+  
+  // Create bubble elements
+  for (let i = 1; i <= 5; i++) {
+    const bubble = document.createElement('div');
+    bubble.className = `liquid-bubble bubble-${i}`;
+    body.appendChild(bubble);
+  }
+  
+  // Randomly reposition bubbles on scroll
+  window.addEventListener('scroll', function() {
+    const scrollPos = window.scrollY;
+    const bubbles = document.querySelectorAll('.liquid-bubble');
+    
+    bubbles.forEach(bubble => {
+      const randomX = Math.sin(scrollPos * 0.001 + parseInt(bubble.className.slice(-1))) * 20;
+      bubble.style.transform = `translateX(${randomX}px)`;
+    });
+  });
+});
+*/

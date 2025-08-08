@@ -1,0 +1,278 @@
+/* Dark Liquid Glass Effect CSS for Squarespace
+ * This file creates a dark theme with purple accents and liquid glass effects throughout the site
+ * Add this to your Squarespace site via Design > Custom CSS
+ */
+
+/* Base Dark Theme */
+body {
+  background-color: #050510;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(80, 20, 120, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.15) 0%, transparent 45%);
+  color: white;
+}
+
+/* Glowing Stars Background Animation */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+@keyframes float-bubble {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-15px, -20px); }
+  50% { transform: translate(15px, 15px); }
+  75% { transform: translate(20px, -15px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Fancy Gradient Animation for Glass Elements */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Base Glass Effect for All Sections */
+.page-section,
+.header-inner,
+.footer-inner,
+.content-wrapper,
+.sqs-block-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Add dark glass overlay to all sections */
+.page-section::before,
+.header-wrapper::before,
+.footer-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(10, 10, 20, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+/* Add animated liquid effect with bubbles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(40, 10, 60, 0.4), rgba(10, 10, 30, 0.7));
+  z-index: -2;
+}
+
+/* Liquid bubble animations */
+.liquid-bubble {
+  position: fixed;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.2), rgba(80, 20, 120, 0.1));
+  box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+  z-index: -1;
+  opacity: 0.3;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Create multiple bubble elements with varying sizes and animations */
+.bubble-1 {
+  width: 300px;
+  height: 300px;
+  left: 5%;
+  top: 20%;
+  animation: float-bubble 25s ease-in-out infinite;
+}
+
+.bubble-2 {
+  width: 200px;
+  height: 200px;
+  right: 10%;
+  top: 30%;
+  animation: float-bubble 18s ease-in-out infinite 2s;
+}
+
+.bubble-3 {
+  width: 350px;
+  height: 350px;
+  left: 15%;
+  bottom: 20%;
+  animation: float-bubble 30s ease-in-out infinite 1s;
+}
+
+.bubble-4 {
+  width: 250px;
+  height: 250px;
+  right: 20%;
+  bottom: 25%;
+  animation: float-bubble 22s ease-in-out infinite 3s;
+}
+
+.bubble-5 {
+  width: 180px;
+  height: 180px;
+  left: 40%;
+  top: 15%;
+  animation: float-bubble 20s ease-in-out infinite 2.5s;
+}
+
+/* Stars background */
+.star {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  z-index: -1;
+  animation: twinkle 3s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Dark Glass Cards */
+.summary-item,
+.sqs-block-image .design-layout-card,
+.sqs-block-gallery .slide,
+.sqs-block-summary-v2 .summary-block-wrapper,
+.sqs-block-products .products-list-item {
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  background: rgba(20, 20, 35, 0.5) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(138, 43, 226, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.summary-item:hover,
+.sqs-block-image .design-layout-card:hover,
+.sqs-block-gallery .slide:hover,
+.sqs-block-summary-v2 .summary-block-wrapper:hover,
+.sqs-block-products .products-list-item:hover {
+  background: rgba(30, 30, 50, 0.6) !important;
+  box-shadow: 0 8px 32px rgba(138, 43, 226, 0.15) !important;
+  transform: translateY(-5px);
+}
+
+/* Navigation with glass effect */
+.header-nav-wrapper {
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  background: rgba(10, 10, 20, 0.7) !important;
+  border-bottom: 1px solid rgba(138, 43, 226, 0.2) !important;
+}
+
+/* Buttons with glass effect */
+.sqs-block-button .sqs-block-button-element,
+.sqs-add-to-cart-button,
+.form-wrapper .form-button {
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  background: rgba(138, 43, 226, 0.3) !important;
+  border: 1px solid rgba(138, 43, 226, 0.4) !important;
+  transition: all 0.3s ease !important;
+  color: white !important;
+  text-shadow: 0 0 10px rgba(138, 43, 226, 0.5) !important;
+}
+
+.sqs-block-button .sqs-block-button-element:hover,
+.sqs-add-to-cart-button:hover,
+.form-wrapper .form-button:hover {
+  background: rgba(138, 43, 226, 0.5) !important;
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+/* Text glow effects */
+h1, h2, h3, .sqs-block-html .sqs-block-content h1,
+.sqs-block-html .sqs-block-content h2,
+.sqs-block-html .sqs-block-content h3 {
+  color: white !important;
+  text-shadow: 0 0 20px rgba(138, 43, 226, 0.4) !important;
+}
+
+/* Apply purple glow to images */
+.sqs-block-image .intrinsic img,
+.sqs-block-gallery .slide img {
+  filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.3));
+  transition: all 0.3s ease;
+}
+
+.sqs-block-image .intrinsic:hover img,
+.sqs-block-gallery .slide:hover img {
+  filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.5));
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 768px) {
+  .bubble-1, .bubble-2, .bubble-3, .bubble-4, .bubble-5 {
+    opacity: 0.2;
+    width: 150px;
+    height: 150px;
+  }
+  
+  .page-section::before,
+  .header-wrapper::before,
+  .footer-wrapper::before {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(10, 10, 20, 0.7);
+  }
+}
+
+/* Add this JavaScript to the Code Injection section */
+/*
+document.addEventListener('DOMContentLoaded', function() {
+  const body = document.body;
+  
+  // Create bubble elements
+  for (let i = 1; i <= 5; i++) {
+    const bubble = document.createElement('div');
+    bubble.className = `liquid-bubble bubble-${i}`;
+    body.appendChild(bubble);
+  }
+  
+  // Create star elements
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = `${Math.random() * 100}vw`;
+    star.style.top = `${Math.random() * 100}vh`;
+    star.style.opacity = Math.random() * 0.8;
+    star.style.animation = `twinkle ${2 + Math.random() * 3}s infinite ease-in-out`;
+    star.style.animationDelay = `${Math.random() * 5}s`;
+    body.appendChild(star);
+  }
+  
+  // Add gradient animation based on mouse movement
+  let mouseX = 0;
+  let mouseY = 0;
+  
+  document.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
+    
+    // Move bubbles slightly with mouse
+    document.querySelectorAll('.liquid-bubble').forEach((bubble, index) => {
+      const offsetX = (mouseX - 0.5) * (index + 1) * 10;
+      const offsetY = (mouseY - 0.5) * (index + 1) * 5;
+      bubble.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    });
+    
+    // Update gradient positions
+    document.querySelectorAll('.page-section::before').forEach(section => {
+      section.style.background = `radial-gradient(circle at ${mouseX * 100}% ${mouseY * 100}%, rgba(138, 43, 226, 0.2), rgba(10, 10, 20, 0.6))`;
+    });
+  });
+});
+*/
