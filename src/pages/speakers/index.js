@@ -1,9 +1,26 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import { PageLayout, Section, Container, SmallHeading, SubHeading } from '../../components/PageLayout';
 import { Link } from 'react-router-dom';
 
 // Styling
+const SpeakersHero = styled.div`
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 3rem;
+`;
+
+const HeroDescription = styled.div`
+  font-size: 1.25rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  color: ${props => props.theme.colors.textSecondary};
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    font-size: 1.125rem;
+  }
+`;
+
 const SpeakersGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -308,11 +325,21 @@ const SpeakersPage = () => {
   return (
     <PageLayout 
       title="Speakers" 
-      subtitle="Meet our distinguished lineup of speakers from academia, industry, and policy" 
+      subtitle="Meet the brilliant minds shaping the future of AI" 
       activePath="/speakers"
     >
       <Section>
         <Container>
+          <SpeakersHero>
+            <HeroDescription>
+              From pioneering researchers to visionary protofounders, we bring the most influential minds in AI to the stage.
+              <br /><br />
+              In 2025, we're raising the bar — with a lineup that could define the decade.
+              <br /><br />
+              Meet the thinkers, builders, and leaders shaping the future of artificial intelligence.
+            </HeroDescription>
+          </SpeakersHero>
+
           <SectionHeading>Day 1: New Algorithmic Breakthroughs and AI Infrastructure</SectionHeading>
           <SpeakersGrid>
             {day1Speakers.map((speaker, index) => (
