@@ -1,13 +1,25 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container, SmallHeading, SubHeading } from '../../components/PageLayout';
+import { PageLayout, Section, Container } from '../../components/PageLayout';
 import { Link } from 'react-router-dom';
+
+// Glass effect styling from App.js
+const glassEffect = css`
+  background: ${props => props.theme.colors.glassEffect};
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-image: ${props => props.theme.colors.glassGradient};
+  border: 1px solid ${props => props.theme.colors.glassBorder};
+  box-shadow: ${props => props.theme.colors.glassShadow};
+  position: relative;
+  overflow: hidden;
+`;
 
 // Styling
 const SpeakersHero = styled.div`
   text-align: center;
   max-width: 900px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 4rem;
 `;
 
 const HeroDescription = styled.div`
@@ -48,10 +60,7 @@ const SpeakerCard = styled.div`
   border: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#EEEEEE'};
   
   ${props => props.theme.isDark && css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    box-shadow: ${props => props.theme.colors.glassShadow};
+    ${glassEffect}
   `}
   
   &:hover {
@@ -121,6 +130,20 @@ const SectionHeading = styled.h2`
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     font-size: 1.75rem;
   }
+`;
+
+const DayTitle = styled.h3`
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: ${props => props.theme.colors.text};
+`;
+
+const DaySubtitle = styled.p`
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: ${props => props.theme.colors.primary};
+  font-weight: 500;
 `;
 
 // Speaker data
@@ -340,50 +363,59 @@ const SpeakersPage = () => {
             </HeroDescription>
           </SpeakersHero>
 
-          <SectionHeading>Day 1: New Algorithmic Breakthroughs and AI Infrastructure</SectionHeading>
-          <SpeakersGrid>
-            {day1Speakers.map((speaker, index) => (
-              <SpeakerCard key={index}>
-                <SpeakerImage src={speaker.image} />
-                <SpeakerInfo>
-                  <SpeakerName>{speaker.name}</SpeakerName>
-                  <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                  <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                  {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                </SpeakerInfo>
-              </SpeakerCard>
-            ))}
-          </SpeakersGrid>
+          <div>
+            <DayTitle>Day 1: Oct 28th</DayTitle>
+            <DaySubtitle>New Algorithmic Breakthroughs and AI Infrastructure</DaySubtitle>
+            <SpeakersGrid>
+              {day1Speakers.map((speaker, index) => (
+                <SpeakerCard key={index}>
+                  <SpeakerImage src={speaker.image} />
+                  <SpeakerInfo>
+                    <SpeakerName>{speaker.name}</SpeakerName>
+                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                  </SpeakerInfo>
+                </SpeakerCard>
+              ))}
+            </SpeakersGrid>
+          </div>
           
-          <SectionHeading style={{ marginTop: '4rem' }}>Day 2: AI Safety, and AI in Enterprise & Society</SectionHeading>
-          <SpeakersGrid>
-            {day2Speakers.map((speaker, index) => (
-              <SpeakerCard key={index}>
-                <SpeakerImage src={speaker.image} />
-                <SpeakerInfo>
-                  <SpeakerName>{speaker.name}</SpeakerName>
-                  <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                  <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                  {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                </SpeakerInfo>
-              </SpeakerCard>
-            ))}
-          </SpeakersGrid>
+          <div style={{ marginTop: '4rem' }}>
+            <DayTitle>Day 2: Oct 29th</DayTitle>
+            <DaySubtitle>AI Safety, and AI in Enterprise & Society</DaySubtitle>
+            <SpeakersGrid>
+              {day2Speakers.map((speaker, index) => (
+                <SpeakerCard key={index}>
+                  <SpeakerImage src={speaker.image} />
+                  <SpeakerInfo>
+                    <SpeakerName>{speaker.name}</SpeakerName>
+                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                  </SpeakerInfo>
+                </SpeakerCard>
+              ))}
+            </SpeakersGrid>
+          </div>
           
-          <SectionHeading style={{ marginTop: '4rem' }}>Day 3: AI Entrepreneurship & Application</SectionHeading>
-          <SpeakersGrid>
-            {day3Speakers.map((speaker, index) => (
-              <SpeakerCard key={index}>
-                <SpeakerImage src={speaker.image} />
-                <SpeakerInfo>
-                  <SpeakerName>{speaker.name}</SpeakerName>
-                  <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                  <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                  {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                </SpeakerInfo>
-              </SpeakerCard>
-            ))}
-          </SpeakersGrid>
+          <div style={{ marginTop: '4rem' }}>
+            <DayTitle>Day 3: Oct 30th</DayTitle>
+            <DaySubtitle>AI Entrepreneurship & Application</DaySubtitle>
+            <SpeakersGrid>
+              {day3Speakers.map((speaker, index) => (
+                <SpeakerCard key={index}>
+                  <SpeakerImage src={speaker.image} />
+                  <SpeakerInfo>
+                    <SpeakerName>{speaker.name}</SpeakerName>
+                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                  </SpeakerInfo>
+                </SpeakerCard>
+              ))}
+            </SpeakersGrid>
+          </div>
         </Container>
       </Section>
     </PageLayout>
