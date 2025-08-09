@@ -25,7 +25,7 @@ const darkTheme = {
     glassShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
   },
   fonts: {
-    heading: "'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    heading: "'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
     body: "'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
     mono: "'JetBrains Mono', 'SF Mono', monospace",
   },

@@ -24,6 +24,11 @@ const darkTheme = {
     glassBorder: 'rgba(255, 255, 255, 0.05)',
     glassShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
   },
+  fonts: {
+    heading: "'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    body: "'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    mono: "'JetBrains Mono', 'SF Mono', monospace",
+  },
   radii: {
     sm: '4px',
     md: '8px',
@@ -59,6 +64,11 @@ const lightTheme = {
     glassGradient: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6))',
     glassBorder: '#EEEEEE',
     glassShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  },
+  fonts: {
+    heading: "'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    body: "'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    mono: "'JetBrains Mono', 'SF Mono', monospace",
   },
   radii: {
     sm: '4px',
@@ -106,6 +116,10 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     background: ${props => props.theme.colors.backgroundGradient};
     min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4, h5, h6, .heading {
+    font-family: ${props => props.theme.fonts.heading};
   }
   
   a {
