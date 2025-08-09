@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import styled, { css } from 'styled-components';
+import { SharedLayout, Container, glassEffect } from '../../components/SharedLayout';
 import { Link } from 'react-router-dom';
 
 // Styling
@@ -64,7 +64,8 @@ const Button = styled.button`
 `;
 
 const TopicsContainer = styled.div`
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.3)' : '#F9F9F9'};
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
+  border: ${props => props.theme.isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE'};
   padding: 3rem;
   border-radius: 16px;
   margin-bottom: 4rem;
@@ -118,7 +119,7 @@ const FormContainer = styled.div`
   margin: 0 auto;
   padding: 2.5rem;
   border-radius: 16px;
-  background: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.4)' : '#F9F9F9'};
+  background: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
   border: ${props => props.theme.isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE'};
   box-shadow: ${props => props.theme.isDark ? '0 15px 40px rgba(0, 0, 0, 0.4)' : '0 15px 40px rgba(0, 0, 0, 0.05)'};
   backdrop-filter: blur(16px);

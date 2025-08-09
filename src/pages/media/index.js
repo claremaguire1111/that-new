@@ -1,9 +1,13 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import { SharedLayout, Container, glassEffect } from '../../components/SharedLayout';
 import { Link } from 'react-router-dom';
 
 // Styling
+const Section = styled.section`
+  padding: 6rem 0;
+  position: relative;
+`;
 const MediaSection = styled.div`
   margin-bottom: 5rem;
 `;
@@ -23,13 +27,7 @@ const MediaCard = styled.div`
   border-radius: 16px;
   height: 100%;
   
-  ${props => props.theme.isDark ? css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    border: 1px solid ${props => props.theme.colors.glassBorder};
-    box-shadow: ${props => props.theme.colors.glassShadow};
-  ` : css`
+  ${props => props.theme.isDark ? glassEffect : css`
     background-color: #FFFFFF;
     border: 1px solid #EEEEEE;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -52,25 +50,6 @@ const MediaCard = styled.div`
   }
 `;
 
-const DownloadLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#F5F5F5'};
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#EEEEEE'};
-  }
-  
-  .icon {
-    font-size: 1.5rem;
-  }
-`;
 
 const SectionHeading = styled.h2`
   font-size: 2rem;
@@ -100,13 +79,8 @@ const BenefitCard = styled.div`
   text-align: center;
   padding: 2rem;
   border-radius: 12px;
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.3)' : '#F9F9F9'};
-  
-  .icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: ${props => props.theme.colors.text};
-  }
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
+  border: ${props => props.theme.isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE'};
   
   h4 {
     margin-bottom: 0.75rem;
@@ -176,7 +150,7 @@ const FormContainer = styled.div`
   margin: 0 auto;
   padding: 2.5rem;
   border-radius: 16px;
-  background: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.4)' : '#F9F9F9'};
+  background: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
   border: ${props => props.theme.isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE'};
   box-shadow: ${props => props.theme.isDark ? '0 15px 40px rgba(0, 0, 0, 0.4)' : '0 15px 40px rgba(0, 0, 0, 0.05)'};
   backdrop-filter: blur(16px);
@@ -283,13 +257,24 @@ const FormPrivacyText = styled.p`
 
 const MediaPage = () => {
   return (
-    <PageLayout 
-      title="Media & Community" 
-      subtitle="Press resources, media contacts, and partnership opportunities" 
-      activePath="/media"
-    >
+    <SharedLayout activePath="/media">
       <Section>
         <Container>
+          <h1 style={{ 
+            fontSize: '3.75rem', 
+            fontWeight: '700', 
+            marginBottom: '1rem', 
+            letterSpacing: '-0.03em' 
+          }}>
+            Media & Community Partners
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            marginBottom: '3rem', 
+            maxWidth: '800px' 
+          }}>
+            Press resources, media contacts, and partnership opportunities
+          </p>
           <MediaSection>
             <SectionHeading>Press & Media Resources</SectionHeading>
             
@@ -299,20 +284,11 @@ const MediaPage = () => {
                 <p>Download our press kit for logos, speaker photos, and key event information. For high-resolution images and custom materials, please contact our media team.</p>
                 
                 <div style={{ marginTop: '2rem' }}>
-                  <DownloadLink href="#" download>
-                    <span className="icon">📁</span>
-                    THAT Summit Press Kit (ZIP)
-                  </DownloadLink>
-                  <br />
-                  <DownloadLink href="#" download>
-                    <span className="icon">🖼️</span>
-                    Logo Package (PNG/SVG)
-                  </DownloadLink>
-                  <br />
-                  <DownloadLink href="#" download>
-                    <span className="icon">📄</span>
-                    Press Release (PDF)
-                  </DownloadLink>
+                  <p>For press materials and more information about THAT Summit, including our mission, speakers, and upcoming events, please contact our press team. We'll be happy to provide you with the information you need.</p>
+                  
+                  <Button as="a" href="mailto:clare@thinkingaboutthinking.org" primary style={{ marginTop: '1rem' }}>
+                    Request Press Materials
+                  </Button>
                 </div>
               </MediaCard>
               
@@ -322,12 +298,11 @@ const MediaPage = () => {
                 
                 <div style={{ marginTop: '2rem' }}>
                   <strong>Media Contact</strong>
-                  <p>Sarah Johnson<br />
-                  Press Relations Manager<br />
-                  <a href="mailto:media@thinkingaboutthinking.org">media@thinkingaboutthinking.org</a><br />
-                  +44 20 1234 5678</p>
+                  <p>Clare Maguire<br />
+                  Press Relations<br />
+                  <a href="mailto:clare@thinkingaboutthinking.org">clare@thinkingaboutthinking.org</a></p>
                   
-                  <Button as="a" href="mailto:media@thinkingaboutthinking.org" primary>
+                  <Button as="a" href="mailto:clare@thinkingaboutthinking.org" primary>
                     Request Media Pass
                   </Button>
                 </div>
@@ -341,19 +316,16 @@ const MediaPage = () => {
             
             <BenefitsGrid>
               <BenefitCard>
-                <div className="icon">🎯</div>
                 <h4>Targeted Reach</h4>
                 <p>Connect with a focused audience of AI researchers, entrepreneurs, and decision-makers.</p>
               </BenefitCard>
               
               <BenefitCard>
-                <div className="icon">🔄</div>
                 <h4>Cross Promotion</h4>
                 <p>Mutual promotion across our channels and networks for maximum visibility.</p>
               </BenefitCard>
               
               <BenefitCard>
-                <div className="icon">🎟️</div>
                 <h4>Event Passes</h4>
                 <p>Complimentary passes to THAT Summit for your team or community members.</p>
               </BenefitCard>
@@ -364,7 +336,7 @@ const MediaPage = () => {
               <p>We're looking for media outlets, communities, organizations, and networks who want to support algorithmic innovation and entrepreneurship.</p>
               
               <div>
-                <Button as="a" href="mailto:partnerships@thinkingaboutthinking.org" primary>
+                <Button as="a" href="mailto:clare@thinkingaboutthinking.org" primary>
                   Contact Our Partnership Team
                 </Button>
                 <Button as={Link} to="/sponsors">
@@ -467,9 +439,66 @@ const MediaPage = () => {
               </form>
             </FormContainer>
           </MediaSection>
+          
+          <MediaSection>
+            <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+              <SectionHeading>Stay Updated</SectionHeading>
+              <p style={{ marginBottom: '2rem' }}>
+                Sign up to receive updates about THAT Summit, including speaker announcements, program details, and partnership opportunities.
+              </p>
+              
+              <FormContainer>
+                <form action="https://formspree.io/f/mvgqvezg" method="POST">
+                  <div style={{ marginBottom: '2rem' }}>
+                    <FormLabel>Your Name</FormLabel>
+                    <FormInput 
+                      type="text" 
+                      name="name" 
+                      required
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                  
+                  <div style={{ marginBottom: '2rem' }}>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormInput 
+                      type="email" 
+                      name="email" 
+                      required
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  
+                  <div style={{ textAlign: 'center' }}>
+                    <Button 
+                      as="button" 
+                      type="submit" 
+                      primary
+                      style={{
+                        padding: '0.9rem 2.5rem',
+                        fontSize: '1rem',
+                        borderRadius: '10px',
+                        fontWeight: '600',
+                        letterSpacing: '0.01em',
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      Sign Up For Updates
+                    </Button>
+                  </div>
+                  
+                  <FormPrivacyText>
+                    We respect your privacy and will never share your information.
+                  </FormPrivacyText>
+                </form>
+              </FormContainer>
+            </div>
+          </MediaSection>
         </Container>
       </Section>
-    </PageLayout>
+    </SharedLayout>
   );
 };
 

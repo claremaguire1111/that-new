@@ -1,21 +1,53 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import { SharedLayout, Container, glassEffect } from '../../components/SharedLayout';
 import { Link } from 'react-router-dom';
 
 // Styling
+const Section = styled.section`
+  padding: 6rem 0;
+  position: relative;
+`;
+
+const Button = styled.button`
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: ${props => props.primary 
+    ? props.theme.isDark ? 'rgba(255, 255, 255, 0.9)' : '#202123'
+    : props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#F1F1F1'
+  };
+  color: ${props => props.primary
+    ? props.theme.isDark ? '#000000' : '#FFFFFF'
+    : props.theme.colors.text
+  };
+  border: 1px solid ${props => props.primary
+    ? 'transparent'
+    : props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#E5E5E5'
+  };
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, ${props => props.theme.isDark ? 0.2 : 0.1});
+    background-color: ${props => props.primary
+      ? props.theme.isDark ? '#FFFFFF' : '#333333'
+      : props.theme.isDark ? 'rgba(255, 255, 255, 0.15)' : '#E5E5E5'
+    };
+  }
+`;
 const SponsorCategory = styled.div`
   margin-bottom: 5rem;
   padding: 2rem;
   border-radius: 16px;
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.2)' : '#F9F9F9'};
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
   
-  ${props => props.theme.isDark && css`
-    background: rgba(32, 33, 35, 0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  `}
+  ${props => props.theme.isDark && glassEffect}
   
   &:last-child {
     margin-bottom: 0;
@@ -58,7 +90,7 @@ const SponsorGrid = styled.div`
 
 const SponsorLogo = styled.div`
   height: 120px;
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.4)' : '#FFFFFF'};
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#FFFFFF'};
   border-radius: ${props => props.theme.radii.md};
   display: flex;
   align-items: center;
@@ -67,12 +99,7 @@ const SponsorLogo = styled.div`
   transition: all 0.3s ease;
   border: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#EEEEEE'};
   
-  ${props => props.theme.isDark && css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    box-shadow: ${props => props.theme.colors.glassShadow};
-  `}
+  ${props => props.theme.isDark && glassEffect}
   
   &:hover {
     transform: translateY(-4px);
@@ -129,13 +156,7 @@ const PackageCard = styled.div`
   display: flex;
   flex-direction: column;
   
-  ${props => props.theme.isDark ? css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    border: 1px solid ${props => props.theme.colors.glassBorder};
-    box-shadow: ${props => props.theme.colors.glassShadow};
-  ` : css`
+  ${props => props.theme.isDark ? glassEffect : css`
     border: 1px solid ${props.theme.colors.border};
     background-color: #FFFFFF;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -199,38 +220,6 @@ const PackageFeatures = styled.ul`
   }
 `;
 
-const Button = styled.button`
-  display: inline-block;
-  padding: 0.75rem 1.25rem;
-  background-color: ${props => props.primary 
-    ? props.theme.isDark ? 'rgba(255, 255, 255, 0.9)' : '#202123'
-    : props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#F1F1F1'
-  };
-  color: ${props => props.primary
-    ? props.theme.isDark ? '#000000' : '#FFFFFF'
-    : props.theme.colors.text
-  };
-  border: 1px solid ${props => props.primary
-    ? 'transparent'
-    : props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#E5E5E5'
-  };
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, ${props => props.theme.isDark ? 0.2 : 0.1});
-    background-color: ${props => props.primary
-      ? props.theme.isDark ? '#FFFFFF' : '#333333'
-      : props.theme.isDark ? 'rgba(255, 255, 255, 0.15)' : '#E5E5E5'
-    };
-  }
-`;
 
 const ContactBox = styled.div`
   background-color: ${props => props.theme.isDark ? 'rgba(16, 163, 127, 0.1)' : 'rgba(16, 163, 127, 0.05)'};
@@ -264,60 +253,26 @@ const sponsors = {
   ]
 };
 
-// Sponsorship packages
-const packages = [
-  {
-    title: "Gold Sponsor",
-    price: "£15,000",
-    features: [
-      "Prominent logo placement on all event materials",
-      "5 VIP tickets to the summit",
-      "Premium booth location in exhibition area",
-      "Keynote speaking opportunity",
-      "Full-page ad in digital program",
-      "Logo on stage backdrop",
-      "Sponsored session opportunity",
-      "Access to attendee list (opt-in)",
-      "Sponsor highlight in email campaigns"
-    ]
-  },
-  {
-    title: "Silver Sponsor",
-    price: "£7,500",
-    features: [
-      "Logo placement on event website and materials",
-      "3 VIP tickets to the summit",
-      "Booth in exhibition area",
-      "Panel speaking opportunity",
-      "Half-page ad in digital program",
-      "Logo on digital signage",
-      "Mention in press releases",
-      "Social media promotion"
-    ]
-  },
-  {
-    title: "Bronze Sponsor",
-    price: "£3,500",
-    features: [
-      "Logo on event website",
-      "2 General tickets to the summit",
-      "Tabletop display in exhibition area",
-      "Quarter-page ad in digital program",
-      "Logo in email communications",
-      "Social media mention"
-    ]
-  }
-];
-
 const SponsorsPage = () => {
   return (
-    <PageLayout 
-      title="Sponsors & Partners" 
-      subtitle="Meet the organizations helping make THAT Summit possible" 
-      activePath="/sponsors"
-    >
+    <SharedLayout activePath="/sponsors">
       <Section>
         <Container>
+          <h1 style={{ 
+            fontSize: '3.75rem', 
+            fontWeight: '700', 
+            marginBottom: '1rem', 
+            letterSpacing: '-0.03em' 
+          }}>
+            Sponsors & Partners
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            marginBottom: '3rem', 
+            maxWidth: '800px' 
+          }}>
+            Meet the organizations helping make THAT Summit possible
+          </p>
           {/* Gold Sponsors */}
           <SponsorCategory>
             <SponsorCategoryTitle>Gold Sponsor</SponsorCategoryTitle>
@@ -358,42 +313,26 @@ const SponsorsPage = () => {
       
       <Section style={{ backgroundColor: 'rgba(16, 163, 127, 0.03)' }}>
         <Container>
-          <SectionHeading>Sponsorship Packages</SectionHeading>
-          <p>Partner with THAT Summit to connect with a focused audience of AI researchers, entrepreneurs, and policy makers.</p>
+          <SectionHeading>Interested in Sponsoring?</SectionHeading>
+          <p style={{ 
+            textAlign: 'center', 
+            maxWidth: '700px', 
+            margin: '0 auto 2rem',
+            fontSize: '1.125rem',
+            lineHeight: '1.6'
+          }}>
+            Partner with THAT Summit to connect with a focused audience of AI researchers, entrepreneurs, and policy makers. 
+            We offer various sponsorship options tailored to your specific goals and budget.
+          </p>
           
-          <PackageGrid>
-            {packages.map((pkg, index) => (
-              <PackageCard key={index}>
-                <PackageHeader>
-                  <PackageTitle>{pkg.title}</PackageTitle>
-                  <PackagePrice>{pkg.price}</PackagePrice>
-                </PackageHeader>
-                
-                <PackageContent>
-                  <PackageFeatures>
-                    {pkg.features.map((feature, i) => (
-                      <li key={i}>{feature}</li>
-                    ))}
-                  </PackageFeatures>
-                  
-                  <Button as={Link} to="/media" primary>
-                    Contact Us
-                  </Button>
-                </PackageContent>
-              </PackageCard>
-            ))}
-          </PackageGrid>
-          
-          <ContactBox>
-            <h3>Custom Packages Available</h3>
-            <p>Looking for something different? We offer custom sponsorship packages tailored to your specific goals and budget.</p>
-            <Button as="a" href="mailto:sponsorship@thinkingaboutthinking.org" primary>
-              Discuss Custom Options
+          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+            <Button as="a" href="mailto:sponsorship@thinkingaboutthinking.org" primary style={{ padding: '0.9rem 2rem', fontSize: '1.1rem' }}>
+              Contact Us About Sponsorship
             </Button>
-          </ContactBox>
+          </div>
         </Container>
       </Section>
-    </PageLayout>
+    </SharedLayout>
   );
 };
 

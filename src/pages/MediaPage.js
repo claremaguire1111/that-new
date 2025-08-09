@@ -99,7 +99,8 @@ const BenefitCard = styled.div`
   text-align: center;
   padding: 2rem;
   border-radius: 12px;
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.3)' : '#F9F9F9'};
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
+  border: ${props => props.theme.isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE'};
   
   .icon {
     font-size: 2.5rem;

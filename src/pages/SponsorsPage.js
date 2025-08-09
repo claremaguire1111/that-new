@@ -14,10 +14,10 @@ const SponsorCategory = styled.div`
   margin-bottom: 5rem;
   padding: 2rem;
   border-radius: 16px;
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.2)' : '#F9F9F9'};
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
   
   ${props => props.theme.isDark && css`
-    background: rgba(32, 33, 35, 0.2);
+    background: rgba(60, 62, 68, 0.3);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -64,7 +64,7 @@ const SponsorGrid = styled.div`
 
 const SponsorLogo = styled.div`
   height: 120px;
-  background-color: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.4)' : '#FFFFFF'};
+  background-color: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#FFFFFF'};
   border-radius: ${props => props.theme.radii.md};
   display: flex;
   align-items: center;

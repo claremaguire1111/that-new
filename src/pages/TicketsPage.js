@@ -1,18 +1,47 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { 
-  PageTemplate, 
-  Section, 
-  Container,
-  Button as TemplateButton,
-  glassEffect
-} from '../components/PageTemplate';
+import { SharedLayout, Container, glassEffect } from '../components/SharedLayout';
 
-// Use the imported glassEffect from PageTemplate
+// Styling for the page
+const Section = styled.section`
+  padding: 6rem 0;
+  position: relative;
+`;
 
-// Use the imported Button as TemplateButton
-const Button = TemplateButton;
+// Define Button component
+const Button = styled.button`
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: ${props => props.primary 
+    ? props.theme.isDark ? 'rgba(255, 255, 255, 0.9)' : '#202123'
+    : props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#F1F1F1'
+  };
+  color: ${props => props.primary
+    ? props.theme.isDark ? '#000000' : '#FFFFFF'
+    : props.theme.colors.text
+  };
+  border: 1px solid ${props => props.primary
+    ? 'transparent'
+    : props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : '#E5E5E5'
+  };
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, ${props => props.theme.isDark ? 0.2 : 0.1});
+    background-color: ${props => props.primary
+      ? props.theme.isDark ? '#FFFFFF' : '#333333'
+      : props.theme.isDark ? 'rgba(255, 255, 255, 0.15)' : '#E5E5E5'
+    };
+  }
+`;
 
 const ButtonGroup = styled.div`
   display: flex;
@@ -214,15 +243,29 @@ const InfoItem = styled.div`
 
 const TicketsPage = () => {
   return (
-    <PageTemplate
-      title="Ticket Options"
-      subtitle="Choose the perfect pass for your THAT experience"
-      activePath="/tickets"
-    >
+    <SharedLayout activePath="/tickets">
       
       {/* Tickets Section */}
       <Section>
         <Container>
+          <h1 style={{ 
+            fontSize: '3.75rem', 
+            fontWeight: '700', 
+            marginBottom: '1rem', 
+            letterSpacing: '-0.03em',
+            textAlign: 'center'
+          }}>
+            Ticket Options
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            marginBottom: '3rem',
+            textAlign: 'center',
+            maxWidth: '800px',
+            margin: '0 auto 3rem'
+          }}>
+            Choose the perfect pass for your THAT experience
+          </p>
           <TicketsGrid>
             {/* Student Ticket */}
             <TicketCard>
@@ -412,7 +455,7 @@ const TicketsPage = () => {
         </Container>
       </Section>
       
-    </PageTemplate>
+    </SharedLayout>
   );
 };
 

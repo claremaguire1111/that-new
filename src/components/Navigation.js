@@ -428,7 +428,7 @@ const Navigation = ({ activePath }) => {
                 <DropdownItem to="/speakers" className={activePath === '/speakers' ? 'active' : ''} onClick={handleMobileLinkClick}>Speakers</DropdownItem>
                 <DropdownItem to="/agenda" className={activePath === '/agenda' ? 'active' : ''} onClick={handleMobileLinkClick}>Agenda</DropdownItem>
                 <DropdownItem to="/sponsors" className={activePath === '/sponsors' ? 'active' : ''} onClick={handleMobileLinkClick}>Sponsors & Partners</DropdownItem>
-                <DropdownItem to="/media" className={activePath === '/media' ? 'active' : ''} onClick={handleMobileLinkClick}>Media & Community</DropdownItem>
+                <DropdownItem to="/media" className={activePath === '/media' ? 'active' : ''} onClick={handleMobileLinkClick}>Media & Community Partners</DropdownItem>
               </DropdownMenu>
             </NavItem>
             
@@ -438,8 +438,8 @@ const Navigation = ({ activePath }) => {
               onMouseLeave={closeDropdown}
             >
               <NavLink 
-                to="/blog" 
-                className={`dropdown-toggle ${activePath === '/blog' || activePath === '/jobs' ? 'active' : ''}`}
+                to="/journal" 
+                className={`dropdown-toggle ${activePath === '/journal' || activePath === '/jobs' ? 'active' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   toggleDropdown('resources');
@@ -449,8 +449,30 @@ const Navigation = ({ activePath }) => {
                 Resources
               </NavLink>
               <DropdownMenu className={activeDropdown === 'resources' ? 'show' : ''}>
-                <DropdownItem to="/blog" className={activePath === '/blog' ? 'active' : ''} onClick={handleMobileLinkClick}>Blog</DropdownItem>
+                <DropdownItem to="/journal" className={activePath === '/journal' ? 'active' : ''} onClick={handleMobileLinkClick}>THAT Journal</DropdownItem>
                 <DropdownItem to="/jobs" className={activePath === '/jobs' ? 'active' : ''} onClick={handleMobileLinkClick}>Jobs Board</DropdownItem>
+              </DropdownMenu>
+            </NavItem>
+            
+            {/* Community Dropdown */}
+            <NavItem 
+              className="has-dropdown"
+              onMouseLeave={closeDropdown}
+            >
+              <NavLink 
+                to="/community" 
+                className={`dropdown-toggle ${activePath === '/community' || activePath === '/newsletter' ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleDropdown('community');
+                }}
+                onMouseEnter={() => window.innerWidth > 900 && toggleDropdown('community')}
+              >
+                Community
+              </NavLink>
+              <DropdownMenu className={activeDropdown === 'community' ? 'show' : ''}>
+                <DropdownItem href="https://lu.ma/home" target="_blank" rel="noopener noreferrer" onClick={handleMobileLinkClick}>Event Calendar</DropdownItem>
+                <DropdownItem to="/newsletter" className={activePath === '/newsletter' ? 'active' : ''} onClick={handleMobileLinkClick}>Newsletter</DropdownItem>
               </DropdownMenu>
             </NavItem>
             
@@ -477,6 +499,8 @@ const Navigation = ({ activePath }) => {
               </NavLink>
               <DropdownMenu className={activeDropdown === 'about' ? 'show' : ''}>
                 <DropdownItem to="/about/team" className={activePath === '/about/team' ? 'active' : ''} onClick={handleMobileLinkClick}>Team</DropdownItem>
+                <DropdownItem to="/about/partners" className={activePath === '/about/partners' ? 'active' : ''} onClick={handleMobileLinkClick}>Partners</DropdownItem>
+                <DropdownItem to="/about/contact" className={activePath === '/about/contact' ? 'active' : ''} onClick={handleMobileLinkClick}>Contact Us</DropdownItem>
               </DropdownMenu>
             </NavItem>
             

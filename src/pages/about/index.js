@@ -1,9 +1,14 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import { SharedLayout, Container, glassEffect } from '../../components/SharedLayout';
 import { Link } from 'react-router-dom';
 
 // Styling
+const Section = styled.section`
+  padding: 6rem 0;
+  position: relative;
+`;
+
 const AboutSection = styled.div`
   margin-bottom: 4rem;
 `;
@@ -51,13 +56,7 @@ const MissionStatement = styled.div`
   margin: 3rem 0;
   text-align: center;
   
-  ${props => props.theme.isDark ? css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    border: 1px solid ${props => props.theme.colors.glassBorder};
-    box-shadow: ${props => props.theme.colors.glassShadow};
-  ` : css`
+  ${props => props.theme.isDark ? glassEffect : css`
     background-color: #F9F9F9;
     border: 1px solid #EEEEEE;
   `}
@@ -103,13 +102,7 @@ const ValueCard = styled.div`
   border-radius: 16px;
   text-align: center;
   
-  ${props => props.theme.isDark ? css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    border: 1px solid ${props => props.theme.colors.glassBorder};
-    box-shadow: ${props => props.theme.colors.glassShadow};
-  ` : css`
+  ${props => props.theme.isDark ? glassEffect : css`
     background-color: #FFFFFF;
     border: 1px solid #EEEEEE;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -177,13 +170,24 @@ const ButtonContainer = styled.div`
 
 const AboutPage = () => {
   return (
-    <PageLayout 
-      title="About THAT Summit" 
-      subtitle="Our mission, team, and the story behind Thinking About Thinking" 
-      activePath="/about"
-    >
+    <SharedLayout activePath="/about">
       <Section>
         <Container>
+          <h1 style={{ 
+            fontSize: '3.75rem', 
+            fontWeight: '700', 
+            marginBottom: '1rem', 
+            letterSpacing: '-0.03em' 
+          }}>
+            About THAT Summit
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            marginBottom: '3rem', 
+            maxWidth: '800px' 
+          }}>
+            Our mission, team, and the story behind Thinking About Thinking
+          </p>
           <AboutSection>
             <AboutGrid>
               <div>
@@ -199,9 +203,53 @@ const AboutPage = () => {
                 </p>
               </div>
               
-              <AboutImage>
-                <img src="/images/breakout_rooms/Screenshot 2025-08-03 at 23.27.24.png" alt="THAT Summit venue" />
-              </AboutImage>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%'
+              }}>
+                <div style={{
+                  backgroundColor: '#F9F9F9',
+                  borderRadius: '50%',
+                  padding: '2rem',
+                  width: '280px',
+                  height: '280px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 2rem',
+                  boxShadow: '0 15px 30px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <img 
+                    src="/images/misc/thatpng.jpg" 
+                    alt="THAT Logo" 
+                    style={{
+                      width: '220px',
+                      height: '220px',
+                      objectFit: 'contain',
+                      filter: 'contrast(1.1)',
+                      transform: 'scale(1.2)'
+                    }} 
+                  />
+                </div>
+                <h3 style={{
+                  fontWeight: '600',
+                  marginBottom: '0.5rem',
+                  fontSize: '1.5rem',
+                  textAlign: 'center'
+                }}>
+                  Thinking About Thinking
+                </h3>
+                <p style={{
+                  fontSize: '1rem',
+                  opacity: '0.8',
+                  textAlign: 'center'
+                }}>
+                  Est. 2018 • 501(c)3 Nonprofit
+                </p>
+              </div>
             </AboutGrid>
           </AboutSection>
           
@@ -217,7 +265,6 @@ const AboutPage = () => {
             
             <ValuesGrid>
               <ValueCard>
-                <div className="icon">🔍</div>
                 <h3>Scientific Rigor</h3>
                 <p>
                   We believe in evidence-based approaches and rigorous scientific methods. Our content and discussions are grounded in solid research and data.
@@ -225,7 +272,6 @@ const AboutPage = () => {
               </ValueCard>
               
               <ValueCard>
-                <div className="icon">🌍</div>
                 <h3>Responsible Innovation</h3>
                 <p>
                   We promote AI development that considers ethical implications, societal impact, and long-term consequences for humanity.
@@ -233,7 +279,6 @@ const AboutPage = () => {
               </ValueCard>
               
               <ValueCard>
-                <div className="icon">🤝</div>
                 <h3>Inclusive Collaboration</h3>
                 <p>
                   We bring together diverse perspectives from academia, industry, and policy to address complex challenges through collective intelligence.
@@ -261,9 +306,51 @@ const AboutPage = () => {
               </Button>
             </ButtonContainer>
           </AboutSection>
+          
+          <AboutSection>
+            <SectionHeading>Summit Structure</SectionHeading>
+            <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', marginTop: '2rem' }}>AE Global Summit on Open Problems for AI (Oct 28-30th, London)</h3>
+            
+            <p style={{ marginBottom: '2rem' }}>
+              The THAT Summit is structured over three days, each with a distinct focus that together provides a comprehensive view of the AI landscape:
+            </p>
+            
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Day 1: AI Research Breakthroughs</h4>
+              <p>
+                The first day showcases cutting-edge research and technological breakthroughs in the field of AI. Leading researchers and scientists present their latest findings, methodologies, and innovations.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Day 2: AI Safety, Enterprise, and Society</h4>
+              <p>
+                The second day addresses how AI can be safely and effectively implemented in enterprise settings. While Days 1 and 3 focus on research breakthroughs and startups, Day 2 explores how the 97% of people who use AI in enterprise contexts can leverage these technologies.
+              </p>
+              <p>
+                Despite widespread news about AI's potential for enterprise, adoption has not yet generated the widespread value it promises. This stems from a lack of understanding of its capabilities and how to capitalize on them in real-world business settings while mitigating risks.
+              </p>
+              <p>
+                Day 2 discussions focus on how businesses can identify promising AI products, properly assess associated risks, and develop tech transformation strategies to substantially increase productivity and open new areas for development.
+              </p>
+              
+              <div style={{ marginLeft: '1.5rem', marginTop: '1rem', marginBottom: '1rem' }}>
+                <p><strong>Session 1: AI Security</strong> - Featuring insights from the UK's world-leading AI security institutions on managing AI risks in enterprise settings.</p>
+                <p><strong>Session 2: AI Enterprise Opportunities</strong> - Exploring current AI systems and products for enterprise deployment, addressing pain points, and preparing the workforce for adaptation.</p>
+                <p><strong>Session 3: AI & Human Flourishing</strong> - Examining how AI can shape society for the better, sharing success stories, and identifying potential pitfalls to avoid.</p>
+              </div>
+            </div>
+            
+            <div style={{ marginBottom: '2rem' }}>
+              <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Day 3: AI Entrepreneurship & Application</h4>
+              <p>
+                The final day profiles world-changing new startups leveraging AI research to create innovative solutions. It showcases practical applications of AI technologies and the entrepreneurial ecosystem driving AI innovation forward.
+              </p>
+            </div>
+          </AboutSection>
         </Container>
       </Section>
-    </PageLayout>
+    </SharedLayout>
   );
 };
 

@@ -8,17 +8,20 @@ import SpeakersPage from './pages/speakers';
 import AgendaPage from './pages/agenda';
 import SponsorsPage from './pages/sponsors';
 import MediaPage from './pages/media';
-import BlogPage from './pages/blog';
+import JournalPage from './pages/journal';
+import NewsletterPage from './pages/newsletter';
 import JobsPage from './pages/jobs';
 import AboutPage from './pages/about';
 import TeamPage from './pages/about/team';
+import PartnersPage from './pages/about/partners';
+import ContactPage from './pages/about/contact';
 
 // Dark theme
 const darkTheme = {
   colors: {
     primary: '#202123',
     secondary: '#444654',
-    accent: '#10A37F',
+    accent: '#444654',
     background: '#0D0D13',
     backgroundGradient: 'linear-gradient(180deg, #0D0D13 0%, #16161D 100%)',
     cardBackground: 'rgba(32, 33, 35, 0.5)',
@@ -69,10 +72,13 @@ root.render(
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/sponsors" element={<SponsorsPage />} />
           <Route path="/media" element={<MediaPage />} />
-          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/journal" element={<JournalPage />} />
+          <Route path="/newsletter" element={<NewsletterPage />} />
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/about/team" element={<TeamPage />} />
+          <Route path="/about/partners" element={<PartnersPage />} />
+          <Route path="/about/contact" element={<ContactPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

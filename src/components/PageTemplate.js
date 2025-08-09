@@ -8,10 +8,10 @@ const darkTheme = {
   colors: {
     primary: '#202123',
     secondary: '#444654',
-    accent: '#10A37F',
+    accent: '#444654',
     background: '#0D0D13',
     backgroundGradient: 'linear-gradient(180deg, #0D0D13 0%, #16161D 100%)',
-    cardBackground: 'rgba(32, 33, 35, 0.5)',
+    cardBackground: 'rgba(60, 62, 68, 0.3)',
     text: '#FFFFFF',
     textSecondary: '#AAAAAA',
     border: 'rgba(255, 255, 255, 0.1)',
@@ -19,7 +19,7 @@ const darkTheme = {
     buttonText: '#000000',
     buttonSecondary: 'rgba(255, 255, 255, 0.1)',
     navBackground: 'rgba(13, 13, 19, 0.8)',
-    glassEffect: 'rgba(32, 33, 35, 0.4)',
+    glassEffect: 'rgba(60, 62, 68, 0.3)',
     glassGradient: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))',
     glassBorder: 'rgba(255, 255, 255, 0.05)',
     glassShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
@@ -747,7 +747,7 @@ const FormContainer = styled.div`
   margin: 0 auto;
   padding: 2.5rem;
   border-radius: 16px;
-  background: ${props => props.theme.isDark ? 'rgba(32, 33, 35, 0.4)' : '#F9F9F9'};
+  background: ${props => props.theme.isDark ? 'rgba(60, 62, 68, 0.3)' : '#F9F9F9'};
   border: ${props => props.theme.isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid #EEEEEE'};
   box-shadow: ${props => props.theme.isDark ? '0 15px 40px rgba(0, 0, 0, 0.4)' : '0 15px 40px rgba(0, 0, 0, 0.05)'};
   backdrop-filter: blur(16px);
@@ -775,7 +775,7 @@ const FormInput = styled.input`
   
   &:focus {
     border-color: ${props => props.theme.colors.accent};
-    box-shadow: 0 0 0 2px ${props => props.theme.isDark ? 'rgba(16, 163, 127, 0.2)' : 'rgba(16, 163, 127, 0.1)'};
+    box-shadow: 0 0 0 2px ${props => props.theme.isDark ? 'rgba(68, 70, 84, 0.2)' : 'rgba(68, 70, 84, 0.1)'};
   }
 `;
 
@@ -884,9 +884,10 @@ const PageTemplate = ({
             <Copyright>© 2025 THAT. All rights reserved.</Copyright>
             
             <SocialLinks>
-              <SocialLink href="https://youtube.com" target="_blank" rel="noopener noreferrer">Youtube</SocialLink>
-              <SocialLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
-              <SocialLink href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
+              <SocialLink href="https://www.youtube.com/@ThoughtChannel" target="_blank" rel="noopener noreferrer">YouTube</SocialLink>
+              <SocialLink href="https://www.linkedin.com/company/thinking-about-thinking-inc/posts/?feedView=all" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
+              <SocialLink href="https://x.com/thought_channel" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
+              <SocialLink href="https://www.instagram.com/thoughts_channel" target="_blank" rel="noopener noreferrer">Instagram</SocialLink>
             </SocialLinks>
           </FooterBottom>
         </Container>

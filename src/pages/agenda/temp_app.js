@@ -7,7 +7,7 @@ const darkTheme = {
   colors: {
     primary: '#202123',
     secondary: '#444654',
-    accent: '#444654',
+    accent: '#10A37F',
     background: '#0D0D13',
     backgroundGradient: 'linear-gradient(180deg, #0D0D13 0%, #16161D 100%)',
     cardBackground: 'rgba(32, 33, 35, 0.5)',
@@ -51,7 +51,7 @@ const lightTheme = {
   colors: {
     primary: '#202123',
     secondary: '#444654',
-    accent: '#444654',
+    accent: '#10A37F',
     background: '#FFFFFF',
     backgroundGradient: 'linear-gradient(180deg, #FFFFFF 0%, #F9F9F9 100%)',
     cardBackground: '#FFFFFF',
@@ -391,220 +391,6 @@ const Section = styled.section`
   
   @media (max-width: ${props => props.theme.breakpoints.sm}) {
     padding: 3rem 0;
-  }
-`;
-
-const SectionHeading = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: ${props => props.theme.colors.text};
-  
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-`;
-
-const SectionSubheading = styled.h3`
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: ${props => props.theme.colors.text};
-  
-  @media (max-width: 768px) {
-    font-size: 1.5rem;
-  }
-`;
-
-const SectionText = styled.p`
-  font-size: 1.125rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  max-width: 800px;
-  color: ${props => props.theme.colors.textSecondary};
-`;
-
-// Date Banner
-const DateBanner = styled.div`
-  background: linear-gradient(90deg, #202123 0%, #444654 100%);
-  padding: 1.5rem 0;
-  overflow: hidden;
-  white-space: nowrap;
-`;
-
-const MarqueeText = styled.div`
-  display: inline-block;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: white;
-  letter-spacing: 0.05em;
-  animation: marquee 30s linear infinite;
-  
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-`;
-
-// Video Section
-const VideoContainer = styled.div`
-  margin: 2rem 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-`;
-
-const VideoHeading = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  line-height: 1.4;
-`;
-
-const VideoPlaceholder = styled.div`
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
-  background-color: ${props => props.theme.colors.secondary};
-  position: relative;
-  border-radius: 8px;
-  
-  &::after {
-    content: '▶';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    color: white;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-  }
-  
-  &:hover::after {
-    opacity: 1;
-  }
-`;
-
-// Testimonials
-const TestimonialsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const TestimonialCard = styled.div`
-  padding: 2rem;
-  border-radius: 12px;
-  background: ${props => props.theme.colors.cardBackground};
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-  ${glassEffect}
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, ${props => props.theme.colors.accent} 0%, #1A7F64 100%);
-  }
-`;
-
-const QuoteIcon = styled.div`
-  font-size: 4rem;
-  line-height: 1;
-  margin-bottom: 1rem;
-  color: ${props => props.theme.colors.accent};
-  opacity: 0.3;
-  font-family: 'Georgia', serif;
-`;
-
-const TestimonialText = styled.p`
-  font-size: 1.125rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-style: italic;
-`;
-
-const TestimonialAuthor = styled.p`
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: ${props => props.theme.colors.accent};
-`;
-
-// Features
-const OverviewFeaturesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const OverviewFeatureCard = styled.div`
-  padding: 2rem;
-  border-radius: 12px;
-  background: ${props => props.theme.colors.cardBackground};
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  ${glassEffect}
-  
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const OverviewFeatureTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: ${props => props.theme.colors.text};
-`;
-
-const OverviewFeatureDescription = styled.p`
-  font-size: 1rem;
-  line-height: 1.6;
-  color: ${props => props.theme.colors.textSecondary};
-`;
-
-// CTA
-const CTABox = styled.div`
-  padding: 3rem;
-  border-radius: 16px;
-  background: ${props => props.theme.colors.cardBackground};
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  ${glassEffect}
-  
-  @media (max-width: 768px) {
-    padding: 2rem;
-  }
-`;
-
-const CTAButtonGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
   }
 `;
 
@@ -1291,7 +1077,7 @@ const FeatureGrid = styled.div`
   }
 `;
 
-const ExistingFeatureCard = styled.div`
+const FeatureCard = styled.div`
   text-align: center;
   padding: 2.5rem 2rem;
   border-radius: ${props => props.theme.radii.md};
@@ -2001,167 +1787,31 @@ const day1Speakers = [
       <HeroSection id="home">
         <Container>
           <HeroContent>
-            <SmallHeading style={{
-              marginBottom: '0.5rem',
-              color: '#FFFFFF',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase'
-            }}>
-              About | Summit | Community | Resources
-            </SmallHeading>
-            <Badge>Thinking About Thinking</Badge>
+            <Badge>October 28-30, 2025</Badge>
             <SmallHeading style={{ 
               marginBottom: '0.75rem', 
               color: '#FFFFFF', 
               fontSize: '1.2rem',
-              fontWeight: '700',
+              fontWeight: '500',
               letterSpacing: '0.02em',
               textTransform: 'uppercase'
             }}>
-              THAT CONFERENCE 2025 TICKETS
+              Algorithmic Innovation and Entrepreneurship
             </SmallHeading>
-            <MainHeading data-text="OCTOBER 28–30, 2025, LONDON">OCTOBER 28–30, 2025, LONDON</MainHeading>
-            <SubHeading>3 days. 3,000 people. 1 mission: shaping the responsible future of AI.</SubHeading>
+            <MainHeading data-text="Global Summit on Open Problems for AI">Global Summit on<br />Open Problems for AI</MainHeading>
+            <SubHeading>How can Britain leverage AI research breakthroughs safely to drive productivity and growth?</SubHeading>
             <ButtonGroup>
               <Button as="a" href="/tickets" primary>
-                GET TICKETS NOW
+                Buy Tickets
+              </Button>
+              <Button as="a" href="#register">
+                Sign Up
               </Button>
             </ButtonGroup>
           </HeroContent>
         </Container>
       </HeroSection>
       
-      {/* Overview Section */}
-      <Section>
-        <Container>
-          <SectionHeading>Why our community comes together</SectionHeading>
-          <SectionText>
-            This isn't just another AI conference — it's where the most ambitious minds in science, technology, and culture convene to rethink the future of intelligence. When 3,000+ researchers, founders, policymakers, and artists gather at the Thinking About Thinking Conference, ideas accelerate, partnerships form, and transformative projects are born.
-          </SectionText>
-          <SectionText>
-            Our community blends the intellectual rigor of a research symposium with the creativity of a cultural festival. Here, deep technical discussions meet ethical debates, interdisciplinary collaborations spark new ventures, and the conversations extend far beyond the stage.
-          </SectionText>
-          <SectionText>
-            Whether you're debating AI alignment over coffee, prototyping a new algorithm in a hands-on lab, or joining an evening salon on AI and the arts, you'll find yourself among people who challenge and champion you. This is the space where the future gets built — thoughtfully.
-          </SectionText>
-        </Container>
-      </Section>
-      
-      {/* Date Banner */}
-      <DateBanner>
-        <MarqueeText>SAVE THE DATE | 28–30 OCTOBER 2025, LONDON | THINKING ABOUT THINKING | SAVE THE DATE | 28–30 OCTOBER 2025, LONDON</MarqueeText>
-      </DateBanner>
-      
-      {/* Video Section */}
-      <Section>
-        <Container>
-          <VideoContainer>
-            <VideoHeading>Panel: The Next Frontiers: AI's role in science, creativity, and society – THAT Conference 2024</VideoHeading>
-            <VideoPlaceholder />
-          </VideoContainer>
-        </Container>
-      </Section>
-      
-      {/* Testimonials Section */}
-      <Section>
-        <Container>
-          <TestimonialsGrid>
-            <TestimonialCard>
-              <QuoteIcon>"</QuoteIcon>
-              <TestimonialText>It's the only place I've been where cutting-edge AI research and philosophy collide in a way that feels urgent and exhilarating.</TestimonialText>
-              <TestimonialAuthor>THAT 2024 Attendee</TestimonialAuthor>
-            </TestimonialCard>
-            
-            <TestimonialCard>
-              <QuoteIcon>"</QuoteIcon>
-              <TestimonialText>The atmosphere is electric — rigorous debate, shared curiosity, and a real sense of purpose. You leave with ideas you can't stop thinking about.</TestimonialText>
-              <TestimonialAuthor>THAT 2024 Attendee</TestimonialAuthor>
-            </TestimonialCard>
-            
-            <TestimonialCard>
-              <QuoteIcon>"</QuoteIcon>
-              <TestimonialText>Thinking About Thinking is unlike any AI event I've attended. It's where deep technical expertise meets a genuine desire to build a better future.</TestimonialText>
-              <TestimonialAuthor>THAT 2024 Attendee</TestimonialAuthor>
-            </TestimonialCard>
-          </TestimonialsGrid>
-        </Container>
-      </Section>
-      
-      {/* Experience Section */}
-      <Section>
-        <Container>
-          <SectionHeading>The Thinking About Thinking experience:<br />More than just another conference</SectionHeading>
-          
-          <OverviewFeaturesGrid>
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Spot the next wave</OverviewFeatureTitle>
-              <OverviewFeatureDescription>Engage with the researchers, engineers, and entrepreneurs driving breakthroughs in AI, neuroscience, and computational science.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-            
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Access global perspectives</OverviewFeatureTitle>
-              <OverviewFeatureDescription>Meet policymakers, ethicists, and innovators from every continent — building an international network of trust and shared purpose.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-            
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Sharpen your thinking</OverviewFeatureTitle>
-              <OverviewFeatureDescription>From hands-on technical workshops to cross-disciplinary panels, gain practical insights you can apply immediately.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-            
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Strengthen your network</OverviewFeatureTitle>
-              <OverviewFeatureDescription>Connect with collaborators, mentors, and future partners who share your vision for ethical and impactful AI.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-          </OverviewFeaturesGrid>
-        </Container>
-      </Section>
-      
-      {/* Community Section */}
-      <Section>
-        <Container>
-          <SectionHeading>The power of the community</SectionHeading>
-          
-          <OverviewFeaturesGrid>
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Solve complex problems together</OverviewFeatureTitle>
-              <OverviewFeatureDescription>Collaborate on open problems in AI safety, interpretability, and societal impact — in real time.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-            
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Join the next wave of protofounders</OverviewFeatureTitle>
-              <OverviewFeatureDescription>Be part of the projects, startups, and research collaborations that will define the next decade.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-            
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Belong to something bigger</OverviewFeatureTitle>
-              <OverviewFeatureDescription>Become part of our year-round network of scientists, founders, and cultural leaders shaping the conversation on intelligence.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-            
-            <OverviewFeatureCard>
-              <OverviewFeatureTitle>Build resilience collectively</OverviewFeatureTitle>
-              <OverviewFeatureDescription>In a fast-moving field, find the peers who will challenge, support, and inspire you.</OverviewFeatureDescription>
-            </OverviewFeatureCard>
-          </OverviewFeaturesGrid>
-        </Container>
-      </Section>
-      
-      {/* CTA Section */}
-      <Section>
-        <Container>
-          <CTABox>
-            <SectionHeading>SECURE YOUR PLACE</SectionHeading>
-            <SectionSubheading>Will you join the conversation shaping the future of AI?</SectionSubheading>
-            <SectionText>Our curation ensures a balance of world-leading researchers, bold founders, visionary investors, and emerging talent — making every interaction valuable.</SectionText>
-            <SectionText>Last year, over 1,500 people attended, with 45% saying it was the most important event of their year. This year, we're doubling in size.</SectionText>
-            <CTAButtonGroup>
-              <Button as="a" href="/tickets" primary>Reserve your seat</Button>
-            </CTAButtonGroup>
-            <SectionText style={{ fontStyle: 'italic', marginTop: '2rem' }}>In the age of AI, your network is your greatest asset. At Thinking About Thinking, we're building the network that will define the future.</SectionText>
-          </CTABox>
-        </Container>
-      </Section>
       
       {/* Schedule Section */}
       <ScheduleSection id="schedule">
@@ -2326,11 +1976,11 @@ const day1Speakers = [
           
           <FeatureGrid>
             {features.map((feature, index) => (
-              <ExistingFeatureCard key={index}>
+              <FeatureCard key={index}>
                 <FeatureIcon>{feature.icon}</FeatureIcon>
                 <FeatureTitle>{feature.title}</FeatureTitle>
                 <FeatureDescription>{feature.description}</FeatureDescription>
-              </ExistingFeatureCard>
+              </FeatureCard>
             ))}
           </FeatureGrid>
           

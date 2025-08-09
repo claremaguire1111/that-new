@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled, { ThemeProvider, createGlobalStyle, css, keyframes } from 'styled-components';
+import React, { useState } from 'react';
+import styled, { ThemeProvider, createGlobalStyle, css } from 'styled-components';
 import Navigation from './Navigation';
 
 // ElevenLabs-inspired dark theme
@@ -8,10 +8,10 @@ const darkTheme = {
   colors: {
     primary: '#202123',
     secondary: '#444654',
-    accent: '#10A37F',
+    accent: '#444654',
     background: '#0D0D13',
     backgroundGradient: 'linear-gradient(180deg, #0D0D13 0%, #16161D 100%)',
-    cardBackground: 'rgba(32, 33, 35, 0.5)',
+    cardBackground: 'rgba(60, 62, 68, 0.3)',
     text: '#FFFFFF',
     textSecondary: '#AAAAAA',
     border: 'rgba(255, 255, 255, 0.1)',
@@ -19,7 +19,7 @@ const darkTheme = {
     buttonText: '#000000',
     buttonSecondary: 'rgba(255, 255, 255, 0.1)',
     navBackground: 'rgba(13, 13, 19, 0.8)',
-    glassEffect: 'rgba(32, 33, 35, 0.4)',
+    glassEffect: 'rgba(60, 62, 68, 0.3)',
     glassGradient: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))',
     glassBorder: 'rgba(255, 255, 255, 0.05)',
     glassShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
@@ -44,14 +44,14 @@ const lightTheme = {
   colors: {
     primary: '#333333',
     secondary: '#666666',
-    accent: '#10A37F',
+    accent: '#444654',
     background: '#FFFFFF',
     backgroundGradient: 'linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%)',
     cardBackground: '#FFFFFF',
     text: '#333333',
     textSecondary: '#666666',
     border: '#EEEEEE',
-    buttonPrimary: '#10A37F',
+    buttonPrimary: '#444654',
     buttonText: '#FFFFFF',
     buttonSecondary: '#F5F5F5',
     navBackground: 'rgba(255, 255, 255, 0.9)',
@@ -294,7 +294,7 @@ const generateStars = (count) => {
 
 // Create the shared layout component
 const SharedLayout = ({ children, activePath }) => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -343,6 +343,7 @@ const SharedLayout = ({ children, activePath }) => {
                 <SocialLink href="https://x.com/thought_channel" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
                 <SocialLink href="https://www.instagram.com/thoughts_channel" target="_blank" rel="noopener noreferrer">Instagram</SocialLink>
                 <SocialLink href="https://www.linkedin.com/company/thinking-about-thinking-inc/posts/?feedView=all" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
+                <SocialLink href="https://www.youtube.com/@ThoughtChannel" target="_blank" rel="noopener noreferrer">YouTube</SocialLink>
               </SocialLinks>
             </FooterBottom>
           </Container>

@@ -1,8 +1,12 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import { SharedLayout, Container, glassEffect } from '../../components/SharedLayout';
 
 // Styling
+const Section = styled.section`
+  padding: 6rem 0;
+  position: relative;
+`;
 const TeamGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -95,13 +99,7 @@ const AdvisoryBoard = styled.div`
   border-radius: 16px;
   margin-bottom: 4rem;
   
-  ${props => props.theme.isDark ? css`
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background-image: ${props => props.theme.colors.glassGradient};
-    border: 1px solid ${props => props.theme.colors.glassBorder};
-    box-shadow: ${props => props.theme.colors.glassShadow};
-  ` : css`
+  ${props => props.theme.isDark ? glassEffect : css`
     background-color: #F9F9F9;
     border: 1px solid #EEEEEE;
   `}
@@ -110,81 +108,50 @@ const AdvisoryBoard = styled.div`
 // Team members data
 const executiveTeam = [
   {
-    name: "Dr. Jane Smith",
-    title: "Executive Director",
-    photo: "/images/speakers/DrIrinaJurenka.jpg", // Using speaker images as placeholders
-    bio: "Jane has over 15 years of experience in AI research and leads the strategic direction of THAT Summit."
+    name: "Dr. Ruairidh McLennan Battleday",
+    title: "President & Research Scientist",
+    company: "Thinking About Thinking",
+    affiliation: "Harvard & MIT",
+    photo: "/images/speakers/DrRuairidhMcLennanBattleday.jpg",
+    bio: "Dr. Battleday leads Thinking About Thinking with a focus on advancing our understanding of artificial and human intelligence. His research spans computational neuroscience, machine learning, and cognitive science."
   },
   {
-    name: "Michael Johnson",
-    title: "Program Director",
-    photo: "/images/speakers/DrJonathanRichardSchwarz.jpg",
-    bio: "Michael oversees the summit program and speaker selection, ensuring diverse perspectives and cutting-edge content."
-  },
-  {
-    name: "Sarah Williams",
-    title: "Partnerships Manager",
-    photo: "/images/speakers/DrLucindaScharff.jpg",
-    bio: "Sarah builds relationships with sponsors and partners to make THAT Summit possible."
-  }
-];
-
-const operationsTeam = [
-  {
-    name: "Dr. David Chen",
-    title: "AI Research Advisor",
-    photo: "/images/speakers/DrSamuelBell.jpg",
-    bio: "David provides technical expertise and helps identify emerging trends and research breakthroughs."
-  },
-  {
-    name: "Emily Rodriguez",
-    title: "Community Engagement",
-    photo: "/images/speakers/LiLianAng.jpg",
-    bio: "Emily leads our efforts to build and nurture the THAT community throughout the year."
-  },
-  {
-    name: "James Wilson",
-    title: "Operations Manager",
-    photo: "/images/speakers/ErwannLeLannou.jpg",
-    bio: "James ensures that all aspects of the summit run smoothly from registration to venue logistics."
-  }
-];
-
-const advisoryBoard = [
-  {
-    name: "Prof. Lisa Wong",
-    title: "Professor of AI Ethics",
-    photo: "/images/speakers/RehanaAlSoltane.jpg",
-    bio: "Lisa advises on ethical considerations and responsible AI development practices."
-  },
-  {
-    name: "Dr. Robert Miller",
-    title: "Chief Scientist",
-    photo: "/images/speakers/ProfJakobFoerster.jpg",
-    bio: "Robert brings technical expertise from his work at the intersection of academia and industry."
-  },
-  {
-    name: "Amanda Brown",
-    title: "Policy Director",
-    photo: "/images/speakers/DrRaiaHadsell.jpg",
-    bio: "Amanda helps navigate the complex regulatory landscape of AI policy and governance."
+    name: "Dr. James Whittington",
+    title: "Vice-President & Research Scientist",
+    company: "Thinking About Thinking",
+    affiliation: "Stanford & Oxford",
+    photo: "/images/speakers/DrJamesWhittington.jpg",
+    bio: "Dr. Whittington brings expertise in computational neuroscience and AI systems, with particular focus on neural network models of memory and learning. His work bridges theoretical neuroscience and practical AI applications."
   }
 ];
 
 const TeamPage = () => {
   return (
-    <PageLayout 
-      title="Our Team" 
-      subtitle="Meet the people behind THAT Summit" 
-      activePath="/about/team"
-      smallHeading="About THAT"
-    >
+    <SharedLayout activePath="/about/team">
       <Section>
         <Container>
+          <h1 style={{ 
+            fontSize: '3.75rem', 
+            fontWeight: '700', 
+            marginBottom: '1rem', 
+            letterSpacing: '-0.03em',
+            textAlign: 'center'
+          }}>
+            Our Team
+          </h1>
+          <p style={{ 
+            fontSize: '1.25rem', 
+            marginBottom: '3rem', 
+            maxWidth: '800px',
+            textAlign: 'center',
+            margin: '0 auto 3rem'
+          }}>
+            Meet the people behind THAT Summit
+          </p>
           <TeamSection>
-            <SectionHeading>Executive Team</SectionHeading>
+            <SectionHeading>Leadership Team</SectionHeading>
             
-            <TeamGrid>
+            <TeamGrid style={{ maxWidth: '900px', margin: '0 auto' }}>
               {executiveTeam.map((member, index) => (
                 <TeamMember key={index}>
                   <div className="photo">
@@ -192,54 +159,26 @@ const TeamPage = () => {
                   </div>
                   <h3>{member.name}</h3>
                   <div className="title">{member.title}</div>
+                  <div className="title" style={{ fontWeight: '500', marginBottom: '0.5rem' }}>
+                    {member.company}
+                  </div>
+                  <div className="title" style={{ fontStyle: 'italic', marginBottom: '1rem' }}>
+                    {member.affiliation}
+                  </div>
                   <p className="bio">{member.bio}</p>
                 </TeamMember>
               ))}
             </TeamGrid>
           </TeamSection>
-          
-          <TeamSection>
-            <SectionHeading>Operations Team</SectionHeading>
-            
-            <TeamGrid>
-              {operationsTeam.map((member, index) => (
-                <TeamMember key={index}>
-                  <div className="photo">
-                    <img src={member.photo} alt={member.name} />
-                  </div>
-                  <h3>{member.name}</h3>
-                  <div className="title">{member.title}</div>
-                  <p className="bio">{member.bio}</p>
-                </TeamMember>
-              ))}
-            </TeamGrid>
-          </TeamSection>
-          
-          <AdvisoryBoard>
-            <SectionHeading>Advisory Board</SectionHeading>
-            
-            <TeamGrid>
-              {advisoryBoard.map((member, index) => (
-                <TeamMember key={index}>
-                  <div className="photo">
-                    <img src={member.photo} alt={member.name} />
-                  </div>
-                  <h3>{member.name}</h3>
-                  <div className="title">{member.title}</div>
-                  <p className="bio">{member.bio}</p>
-                </TeamMember>
-              ))}
-            </TeamGrid>
-          </AdvisoryBoard>
           
           <div style={{ textAlign: 'center' }}>
             <p style={{ maxWidth: '800px', margin: '0 auto 2rem auto' }}>
-              Our team is supported by a dedicated group of volunteers and temporary staff who help make THAT Summit a success each year. We're grateful for their contributions and commitment to our mission.
+              Thinking About Thinking is an independent research organization and 501(c)3 nonprofit dedicated to advancing our understanding of AI. We organize THAT Summit to bring together leading minds in AI research and application from academia and industry.
             </p>
           </div>
         </Container>
       </Section>
-    </PageLayout>
+    </SharedLayout>
   );
 };
 

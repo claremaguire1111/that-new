@@ -305,9 +305,10 @@ const PageLayout = ({
             <Copyright>© 2025 THAT. All rights reserved.</Copyright>
             
             <SocialLinks>
-              <SocialLink href="https://youtube.com" target="_blank" rel="noopener noreferrer">Youtube</SocialLink>
-              <SocialLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
-              <SocialLink href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
+              <SocialLink href="https://www.youtube.com/@ThoughtChannel" target="_blank" rel="noopener noreferrer">YouTube</SocialLink>
+              <SocialLink href="https://www.linkedin.com/company/thinking-about-thinking-inc/posts/?feedView=all" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
+              <SocialLink href="https://x.com/thought_channel" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
+              <SocialLink href="https://www.instagram.com/thoughts_channel" target="_blank" rel="noopener noreferrer">Instagram</SocialLink>
             </SocialLinks>
           </FooterBottom>
         </Container>
