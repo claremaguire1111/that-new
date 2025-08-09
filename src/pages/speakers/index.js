@@ -1,87 +1,104 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { PageLayout, Section, Container } from '../../components/PageLayout';
+import styled, { css, keyframes, createGlobalStyle } from 'styled-components';
 import { Link } from 'react-router-dom';
 
-// Glass effect styling from App.js
-const glassEffect = css`
-  background: ${props => props.theme.colors.glassEffect};
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background-image: ${props => props.theme.colors.glassGradient};
-  border: 1px solid ${props => props.theme.colors.glassBorder};
-  box-shadow: ${props => props.theme.colors.glassShadow};
-  position: relative;
-  overflow: hidden;
+// Import a minimal set of styles that match the landing page
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
-// Styling
+const glassEffect = css`
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+`;
+
+// Styling to match App.js
+const Section = styled.section`
+  padding: 6rem 0;
+  position: relative;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+`;
+
 const SpeakersHero = styled.div`
   text-align: center;
   max-width: 900px;
   margin: 0 auto 4rem;
+  color: #FFFFFF;
 `;
 
 const HeroDescription = styled.div`
   font-size: 1.25rem;
   line-height: 1.8;
   margin-bottom: 2rem;
-  color: ${props => props.theme.colors.textSecondary};
+  color: rgba(255, 255, 255, 0.8);
+`;
+
+const ScheduleDay = styled.div`
+  margin-bottom: 4rem;
+  animation: ${fadeIn} 0.6s ease-out;
+  animation-delay: ${props => props.delay || '0s'};
   
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    font-size: 1.125rem;
+  &:last-child {
+    margin-bottom: 0;
   }
 `;
 
 const SpeakersGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  grid-gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1.5rem;
   
-  @media (max-width: ${props => props.theme.breakpoints.lg}) {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
   }
   
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  @media (max-width: ${props => props.theme.breakpoints.sm}) {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(1, 1fr);
   }
 `;
 
 const SpeakerCard = styled.div`
-  background-color: ${props => props.theme.colors.cardBackground};
-  border-radius: ${props => props.theme.radii.md};
+  background-color: rgba(32, 33, 35, 0.5);
+  border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
   height: 100%;
-  border: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#EEEEEE'};
-  
-  ${props => props.theme.isDark && css`
-    ${glassEffect}
-  `}
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  ${glassEffect}
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px ${props => props.theme.isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.05)'};
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     
-    ${props => `
-      & > div:first-child {
-        filter: ${props.theme.isDark ? 'none' : 'grayscale(70%)'};
-      }
-    `}
+    & > div:first-child {
+      filter: none;
+    }
   }
 `;
 
 const SpeakerImage = styled.div`
   height: 200px;
-  background-color: ${props => props.theme.isDark ? '#16161D' : '#F5F5F5'};
+  background-color: #16161D;
   background-image: ${props => props.src ? `url(${props.src})` : 'none'};
   background-size: cover;
   background-position: center;
-  filter: ${props => props.theme.isDark ? 'none' : 'grayscale(100%)'};
+  filter: none;
   transition: filter 0.3s ease;
 `;
 
@@ -93,13 +110,13 @@ const SpeakerName = styled.h3`
   font-size: 1.125rem;
   margin-bottom: 0.5rem;
   letter-spacing: -0.01em;
-  color: ${props => props.theme.colors.text};
+  color: #FFFFFF;
   font-weight: 600;
 `;
 
 const SpeakerTitle = styled.p`
   font-size: 0.875rem;
-  color: ${props => props.theme.colors.textSecondary};
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 0.25rem;
   line-height: 1.4;
 `;
@@ -107,43 +124,175 @@ const SpeakerTitle = styled.p`
 const SpeakerCompany = styled.p`
   font-size: 0.875rem;
   font-weight: 500;
-  color: ${props => props.theme.colors.text};
+  color: #FFFFFF;
   line-height: 1.4;
-`;
-
-const SectionHeading = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  position: relative;
-  padding-bottom: 1rem;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 80px;
-    height: 2px;
-    background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.2)' : '#DDDDDD'};
-  }
-  
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    font-size: 1.75rem;
-  }
 `;
 
 const DayTitle = styled.h3`
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: ${props => props.theme.colors.text};
+  color: #FFFFFF;
 `;
 
 const DaySubtitle = styled.p`
   font-size: 1.125rem;
   margin-bottom: 2rem;
-  color: ${props => props.theme.colors.primary};
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+`;
+
+// Stars background components
+const StarsContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+`;
+
+const Star = styled.div`
+  position: absolute;
+  background-color: #ffffff;
+  width: ${props => props.size || '2px'};
+  height: ${props => props.size || '2px'};
+  border-radius: 50%;
+  top: ${props => props.top};
+  left: ${props => props.left};
+  opacity: ${props => props.opacity || 0.5};
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 70%);
+    opacity: 0.3;
+  }
+`;
+
+// Generate stars for background
+const generateStars = (count) => {
+  const stars = [];
+  
+  for (let i = 0; i < count; i++) {
+    const size = Math.random() * 2 + 1 + 'px';
+    stars.push(
+      <Star 
+        key={`star-${i}`}
+        size={size}
+        top={`${Math.random() * 100}%`}
+        left={`${Math.random() * 100}%`}
+        opacity={Math.random() * 0.5 + 0.2}
+      />
+    );
+  }
+  
+  return stars;
+};
+
+// Global styles for the page
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #0D0D13;
+    color: #FFFFFF;
+    line-height: 1.5;
+    overflow-x: hidden;
+    background: linear-gradient(180deg, #0D0D13 0%, #16161D 100%);
+    min-height: 100vh;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
+
+// Main navigation for header
+const Nav = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: rgba(13, 13, 19, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem 0;
+`;
+
+const PageContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Main = styled.main`
+  flex: 1;
+  padding-top: 70px; /* Account for fixed header */
+`;
+
+// Badge for event date
+const Badge = styled.div`
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+`;
+
+const MainHeading = styled.h1`
+  font-size: 3.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #FFFFFF 0%, #AAAAAA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(8px);
+    opacity: 0.6;
+  }
+`;
+
+const SubHeading = styled.h2`
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
 `;
 
 // Speaker data
@@ -346,79 +495,96 @@ const day3Speakers = [
 
 const SpeakersPage = () => {
   return (
-    <PageLayout 
-      title="Speakers" 
-      subtitle="Meet the brilliant minds shaping the future of AI" 
-      activePath="/speakers"
-    >
-      <Section>
+    <PageContainer>
+      <GlobalStyle />
+      
+      {/* Stars Background */}
+      <StarsContainer>
+        {generateStars(200)}
+      </StarsContainer>
+      
+      {/* Navigation - simplified version just for styling purposes */}
+      <Nav>
         <Container>
-          <SpeakersHero>
-            <HeroDescription>
-              From pioneering researchers to visionary protofounders, we bring the most influential minds in AI to the stage.
-              <br /><br />
-              In 2025, we're raising the bar — with a lineup that could define the decade.
-              <br /><br />
-              Meet the thinkers, builders, and leaders shaping the future of artificial intelligence.
-            </HeroDescription>
-          </SpeakersHero>
-
-          <div>
-            <DayTitle>Day 1: Oct 28th</DayTitle>
-            <DaySubtitle>New Algorithmic Breakthroughs and AI Infrastructure</DaySubtitle>
-            <SpeakersGrid>
-              {day1Speakers.map((speaker, index) => (
-                <SpeakerCard key={index}>
-                  <SpeakerImage src={speaker.image} />
-                  <SpeakerInfo>
-                    <SpeakerName>{speaker.name}</SpeakerName>
-                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                  </SpeakerInfo>
-                </SpeakerCard>
-              ))}
-            </SpeakersGrid>
-          </div>
-          
-          <div style={{ marginTop: '4rem' }}>
-            <DayTitle>Day 2: Oct 29th</DayTitle>
-            <DaySubtitle>AI Safety, and AI in Enterprise & Society</DaySubtitle>
-            <SpeakersGrid>
-              {day2Speakers.map((speaker, index) => (
-                <SpeakerCard key={index}>
-                  <SpeakerImage src={speaker.image} />
-                  <SpeakerInfo>
-                    <SpeakerName>{speaker.name}</SpeakerName>
-                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                  </SpeakerInfo>
-                </SpeakerCard>
-              ))}
-            </SpeakersGrid>
-          </div>
-          
-          <div style={{ marginTop: '4rem' }}>
-            <DayTitle>Day 3: Oct 30th</DayTitle>
-            <DaySubtitle>AI Entrepreneurship & Application</DaySubtitle>
-            <SpeakersGrid>
-              {day3Speakers.map((speaker, index) => (
-                <SpeakerCard key={index}>
-                  <SpeakerImage src={speaker.image} />
-                  <SpeakerInfo>
-                    <SpeakerName>{speaker.name}</SpeakerName>
-                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                  </SpeakerInfo>
-                </SpeakerCard>
-              ))}
-            </SpeakersGrid>
-          </div>
+          <Link to="/" style={{ color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}>THAT Summit</Link>
         </Container>
-      </Section>
-    </PageLayout>
+      </Nav>
+      
+      <Main>
+        <Section>
+          <Container>
+            {/* Hero */}
+            <SpeakersHero>
+              <Badge>October 28-30, 2025</Badge>
+              <MainHeading data-text="Speakers">Speakers</MainHeading>
+              <SubHeading>Meet the brilliant minds shaping the future of AI</SubHeading>
+              
+              <HeroDescription>
+                From pioneering researchers to visionary protofounders, we bring the most influential minds in AI to the stage.
+                <br /><br />
+                In 2025, we're raising the bar — with a lineup that could define the decade.
+                <br /><br />
+                Meet the thinkers, builders, and leaders shaping the future of artificial intelligence.
+              </HeroDescription>
+            </SpeakersHero>
+
+            <ScheduleDay delay="0.1s">
+              <DayTitle>Day 1: Oct 28th</DayTitle>
+              <DaySubtitle>New Algorithmic Breakthroughs and AI Infrastructure</DaySubtitle>
+              <SpeakersGrid>
+                {day1Speakers.map((speaker, index) => (
+                  <SpeakerCard key={index}>
+                    <SpeakerImage src={speaker.image} />
+                    <SpeakerInfo>
+                      <SpeakerName>{speaker.name}</SpeakerName>
+                      <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                    </SpeakerInfo>
+                  </SpeakerCard>
+                ))}
+              </SpeakersGrid>
+            </ScheduleDay>
+            
+            <ScheduleDay delay="0.2s">
+              <DayTitle>Day 2: Oct 29th</DayTitle>
+              <DaySubtitle>AI Safety, and AI in Enterprise & Society</DaySubtitle>
+              <SpeakersGrid>
+                {day2Speakers.map((speaker, index) => (
+                  <SpeakerCard key={index}>
+                    <SpeakerImage src={speaker.image} />
+                    <SpeakerInfo>
+                      <SpeakerName>{speaker.name}</SpeakerName>
+                      <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                    </SpeakerInfo>
+                  </SpeakerCard>
+                ))}
+              </SpeakersGrid>
+            </ScheduleDay>
+            
+            <ScheduleDay delay="0.3s">
+              <DayTitle>Day 3: Oct 30th</DayTitle>
+              <DaySubtitle>AI Entrepreneurship & Application</DaySubtitle>
+              <SpeakersGrid>
+                {day3Speakers.map((speaker, index) => (
+                  <SpeakerCard key={index}>
+                    <SpeakerImage src={speaker.image} />
+                    <SpeakerInfo>
+                      <SpeakerName>{speaker.name}</SpeakerName>
+                      <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                    </SpeakerInfo>
+                  </SpeakerCard>
+                ))}
+              </SpeakersGrid>
+            </ScheduleDay>
+          </Container>
+        </Section>
+      </Main>
+    </PageContainer>
   );
 };
 
