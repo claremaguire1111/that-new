@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import './fonts.css';
 import App from './App';
 import TicketsPage from './pages/TicketsPage';
 import SpeakersPage from './pages/speakers';

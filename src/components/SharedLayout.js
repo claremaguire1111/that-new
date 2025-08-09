@@ -119,7 +119,7 @@ const GlobalStyle = createGlobalStyle`
   }
   
   h1, h2, h3, h4, h5, h6, .heading {
-    font-family: ${props => props.theme.fonts.heading};
+    font-family: 'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
   }
   
   a {

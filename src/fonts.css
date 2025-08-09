@@ -94,3 +94,12 @@
   font-style: italic;
   font-display: swap;
 }
+
+/* Add classes for easier styling */
+.nyse-font {
+  font-family: 'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, .heading {
+  font-family: 'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
+}

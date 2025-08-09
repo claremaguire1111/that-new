@@ -1029,6 +1029,7 @@ const SmallHeading = styled.div`
 `;
 
 const MainHeading = styled.h1`
+  font-family: 'Nyse', 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
   font-size: 3.75rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
