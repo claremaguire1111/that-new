@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import styled, { css, keyframes, createGlobalStyle, ThemeProvider } from 'styled-components';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import styled, { css, keyframes } from 'styled-components';
+import { SharedLayout, Container, glassEffect } from '../../components/SharedLayout';
 
 // Import a minimal set of styles that match the landing page
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
-`;
-
-const glassEffect = css`
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 `;
 
 // Styling to match App.js
@@ -22,27 +14,18 @@ const Section = styled.section`
   position: relative;
 `;
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
-  z-index: 1;
-`;
-
 const SpeakersHero = styled.div`
   text-align: center;
   max-width: 900px;
   margin: 0 auto 4rem;
-  color: #FFFFFF;
+  color: ${props => props.theme.colors.text};
 `;
 
 const HeroDescription = styled.div`
   font-size: 1.25rem;
   line-height: 1.8;
   margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${props => props.theme.colors.textSecondary};
 `;
 
 const ScheduleDay = styled.div`
@@ -74,31 +57,31 @@ const SpeakersGrid = styled.div`
 `;
 
 const SpeakerCard = styled.div`
-  background-color: rgba(32, 33, 35, 0.5);
-  border-radius: 12px;
+  background-color: ${props => props.theme.colors.cardBackground};
+  border-radius: ${props => props.theme.radii.md};
   overflow: hidden;
   transition: all 0.3s ease;
   height: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  ${glassEffect}
+  border: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#EEEEEE'};
+  ${props => props.theme.isDark && glassEffect}
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px ${props => props.theme.isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.05)'};
     
     & > div:first-child {
-      filter: none;
+      filter: ${props => props.theme.isDark ? 'none' : 'grayscale(70%)'};
     }
   }
 `;
 
 const SpeakerImage = styled.div`
   height: 200px;
-  background-color: #16161D;
+  background-color: ${props => props.theme.isDark ? '#16161D' : '#F5F5F5'};
   background-image: ${props => props.src ? `url(${props.src})` : 'none'};
   background-size: cover;
   background-position: center;
-  filter: none;
+  filter: ${props => props.theme.isDark ? 'none' : 'grayscale(100%)'};
   transition: filter 0.3s ease;
 `;
 
@@ -110,13 +93,13 @@ const SpeakerName = styled.h3`
   font-size: 1.125rem;
   margin-bottom: 0.5rem;
   letter-spacing: -0.01em;
-  color: #FFFFFF;
+  color: ${props => props.theme.colors.text};
   font-weight: 600;
 `;
 
 const SpeakerTitle = styled.p`
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${props => props.theme.colors.textSecondary};
   margin-bottom: 0.25rem;
   line-height: 1.4;
 `;
@@ -124,7 +107,7 @@ const SpeakerTitle = styled.p`
 const SpeakerCompany = styled.p`
   font-size: 0.875rem;
   font-weight: 500;
-  color: #FFFFFF;
+  color: ${props => props.theme.colors.text};
   line-height: 1.4;
 `;
 
@@ -132,273 +115,20 @@ const DayTitle = styled.h3`
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #FFFFFF;
+  color: ${props => props.theme.colors.text};
 `;
 
 const DaySubtitle = styled.p`
   font-size: 1.125rem;
   margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.7)' : props.theme.colors.primary};
   font-weight: 500;
-`;
-
-// Stars background components
-const StarsContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-`;
-
-const Star = styled.div`
-  position: absolute;
-  background-color: #ffffff;
-  width: ${props => props.size || '2px'};
-  height: ${props => props.size || '2px'};
-  border-radius: 50%;
-  top: ${props => props.top};
-  left: ${props => props.left};
-  opacity: ${props => props.opacity || 0.5};
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%;
-    height: 200%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 70%);
-    opacity: 0.3;
-  }
-`;
-
-// Generate stars for background
-const generateStars = (count) => {
-  const stars = [];
-  
-  for (let i = 0; i < count; i++) {
-    const size = Math.random() * 2 + 1 + 'px';
-    stars.push(
-      <Star 
-        key={`star-${i}`}
-        size={size}
-        top={`${Math.random() * 100}%`}
-        left={`${Math.random() * 100}%`}
-        opacity={Math.random() * 0.5 + 0.2}
-      />
-    );
-  }
-  
-  return stars;
-};
-
-// Theme definitions
-const darkTheme = {
-  isDark: true,
-  colors: {
-    primary: '#202123',
-    secondary: '#444654',
-    accent: '#10A37F',
-    background: '#0D0D13',
-    backgroundGradient: 'linear-gradient(180deg, #0D0D13 0%, #16161D 100%)',
-    cardBackground: 'rgba(32, 33, 35, 0.5)',
-    text: '#FFFFFF',
-    textSecondary: '#AAAAAA',
-    border: 'rgba(255, 255, 255, 0.1)',
-    buttonPrimary: '#FFFFFF',
-    buttonText: '#000000',
-    buttonSecondary: 'rgba(255, 255, 255, 0.1)',
-    navBackground: 'rgba(13, 13, 19, 0.8)',
-    glassEffect: 'rgba(32, 33, 35, 0.4)',
-    glassGradient: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))',
-    glassBorder: 'rgba(255, 255, 255, 0.05)',
-    glassShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-  },
-  radii: {
-    sm: '4px',
-    md: '8px',
-    lg: '16px',
-    round: '50%',
-  },
-  breakpoints: {
-    sm: '576px',
-    md: '768px',
-    lg: '992px',
-    xl: '1200px',
-  }
-};
-
-const lightTheme = {
-  isDark: false,
-  colors: {
-    primary: '#333333',
-    secondary: '#666666',
-    accent: '#10A37F',
-    background: '#FFFFFF',
-    backgroundGradient: 'linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%)',
-    cardBackground: '#FFFFFF',
-    text: '#333333',
-    textSecondary: '#666666',
-    border: '#EEEEEE',
-    buttonPrimary: '#10A37F',
-    buttonText: '#FFFFFF',
-    buttonSecondary: '#F5F5F5',
-    navBackground: 'rgba(255, 255, 255, 0.9)',
-    glassEffect: 'rgba(255, 255, 255, 0.7)',
-    glassGradient: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6))',
-    glassBorder: '#EEEEEE',
-    glassShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  },
-  radii: {
-    sm: '4px',
-    md: '8px',
-    lg: '16px',
-    round: '50%',
-  },
-  breakpoints: {
-    sm: '576px',
-    md: '768px',
-    lg: '992px',
-    xl: '1200px',
-  }
-};
-
-// Global styles for the page
-const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.text};
-    line-height: 1.5;
-    overflow-x: hidden;
-    background: ${props => props.theme.colors.backgroundGradient};
-    min-height: 100vh;
-  }
-  
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
-
-// Header Components
-const Header = styled.header`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  padding: 1rem 0;
-  transition: all 0.3s ease;
-  background-color: ${props => props.scrolled ? props.theme.colors.navBackground : 'transparent'};
-  backdrop-filter: ${props => props.scrolled ? 'blur(10px)' : 'none'};
-  -webkit-backdrop-filter: ${props => props.scrolled ? 'blur(10px)' : 'none'};
-  box-shadow: ${props => props.scrolled ? '0 4px 20px rgba(0, 0, 0, 0.1)' : 'none'};
-  
-  ${props => props.scrolled && props.theme.isDark && css`
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.03) 0%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.02) 100%
-      );
-      z-index: -1;
-    }
-  `}
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-`;
-
-const Logo = styled(Link)`
-  font-weight: 700;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  z-index: 1001;
-  position: relative;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  
-  @media (max-width: 900px) {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px;
-    height: 100vh;
-    background-color: ${props => props.theme.colors.navBackground};
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    flex-direction: column;
-    padding: 6rem 2rem 2rem;
-    align-items: flex-start;
-    gap: 1rem;
-    transform: translateX(${props => props.isOpen ? '0' : '100%'});
-    transition: transform 0.3s ease;
-    z-index: 1000;
-    overflow-y: auto;
-    
-    ${props => props.theme.isDark && css`
-      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
-    `}
-  }
-`;
-
-const MobileMenuButton = styled.button`
-  display: none;
-  
-  @media (max-width: 900px) {
-    display: block;
-    background: none;
-    border: none;
-    color: ${props => props.theme.colors.text};
-    font-size: 1.5rem;
-    cursor: pointer;
-    z-index: 1001;
-  }
-`;
-
-const PageContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Main = styled.main`
-  flex: 1;
-  padding-top: 70px; /* Account for fixed header */
 `;
 
 // Badge for event date
 const Badge = styled.div`
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
+  color: ${props => props.theme.colors.text};
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
@@ -414,22 +144,34 @@ const MainHeading = styled.h1`
   margin-bottom: 1.5rem;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  background: linear-gradient(135deg, #FFFFFF 0%, #AAAAAA 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: ${props => props.theme.colors.text};
   position: relative;
   
-  &::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  ${props => props.theme.isDark && css`
+    background: linear-gradient(135deg, #FFFFFF 0%, #AAAAAA 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: blur(8px);
-    opacity: 0.6;
+    
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: -1;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: blur(8px);
+      opacity: 0.6;
+    }
+  `}
+  
+  @media (max-width: 900px) {
+    font-size: 2.5rem;
+  }
+  
+  @media (max-width: 600px) {
+    font-size: 2rem;
   }
 `;
 
@@ -440,7 +182,7 @@ const SubHeading = styled.h2`
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${props => props.theme.colors.textSecondary};
   line-height: 1.6;
 `;
 
@@ -642,272 +384,82 @@ const day3Speakers = [
   }
 ];
 
-// Theme Toggle Button
-const ThemeToggleContainer = styled.div`
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 1000;
-`;
-
-const ThemeToggleButton = styled.button`
-  width: 48px;
-  height: 48px;
-  border-radius: ${props => props.theme.radii.round};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1000;
-  background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
-  color: ${props => props.theme.colors.text};
-  border: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  
-  &:hover {
-    transform: translateY(-2px);
-    background-color: ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)'};
-  }
-`;
-
-// Footer Components
-const Footer = styled.footer`
-  background-color: ${props => props.theme.isDark ? 'rgba(13, 13, 19, 0.5)' : '#F1F1F1'};
-  color: ${props => props.theme.colors.text};
-  padding: 3rem 0;
-  position: relative;
-  
-  ${props => props.theme.isDark && css`
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-  `}
-`;
-
-const FooterText = styled.p`
-  margin-bottom: 1.5rem;
-  max-width: 400px;
-  letter-spacing: -0.01em;
-  color: ${props => props.theme.colors.textSecondary};
-  font-size: 0.9375rem;
-`;
-
-const FooterBottom = styled.div`
-  border-top: 1px solid ${props => props.theme.isDark ? 'rgba(255, 255, 255, 0.05)' : '#E5E5E5'};
-  margin-top: 2rem;
-  padding-top: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 1.5rem;
-`;
-
-const SocialLink = styled.a`
-  font-size: 0.9375rem;
-  transition: all 0.3s ease;
-  color: ${props => props.theme.colors.textSecondary};
-  
-  &:hover {
-    color: ${props => props.theme.colors.text};
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-`;
-
-const Copyright = styled.p`
-  font-size: 0.875rem;
-  letter-spacing: -0.01em;
-  color: ${props => props.theme.colors.textSecondary};
-`;
-
 const SpeakersPage = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-  
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-  
   return (
-    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-      <PageContainer>
-        <GlobalStyle />
-        
-        {/* Stars Background - only show in dark mode */}
-        {isDarkMode && (
-          <StarsContainer>
-            {generateStars(200)}
-          </StarsContainer>
-        )}
-        
-        {/* Theme Toggle Button */}
-        <ThemeToggleContainer>
-          <ThemeToggleButton onClick={toggleTheme}>
-            {isDarkMode ? '☀️' : '🌙'}
-          </ThemeToggleButton>
-        </ThemeToggleContainer>
-        
-        {/* Header */}
-        <Header scrolled={scrolled}>
-          <Container>
-            <Nav>
-              <Logo to="/">
-                <img 
-                  src="/images/misc/thatpng.jpg" 
-                  alt="THAT Logo" 
-                  style={{
-                    height: "30px",
-                    filter: "none"
-                  }}
-                />
-              </Logo>
-              
-              <MobileMenuButton onClick={toggleMenu}>
-                {isMenuOpen ? '✕' : '☰'}
-              </MobileMenuButton>
-              
-              <NavLinks isOpen={isMenuOpen}>
-                <Link to="/" style={{ fontWeight: '500' }}>Home</Link>
-                <Link to="/speakers" style={{ fontWeight: '500' }}>Speakers</Link>
-                <Link to="/tickets" style={{ fontWeight: '500' }}>Tickets</Link>
-                <Link to="/agenda" style={{ fontWeight: '500' }}>Agenda</Link>
-                <Link to="/about" style={{ fontWeight: '500' }}>About</Link>
-              </NavLinks>
-            </Nav>
-          </Container>
-        </Header>
-        
-        <Main>
-          <Section>
-            <Container>
-              {/* Hero */}
-            <SpeakersHero>
-              <Badge>October 28-30, 2025</Badge>
-              <MainHeading data-text="Speakers">Speakers</MainHeading>
-              <SubHeading>Meet the brilliant minds shaping the future of AI</SubHeading>
-              
-              <HeroDescription>
-                From pioneering researchers to visionary protofounders, we bring the most influential minds in AI to the stage.
-                <br /><br />
-                In 2025, we're raising the bar — with a lineup that could define the decade.
-                <br /><br />
-                Meet the thinkers, builders, and leaders shaping the future of artificial intelligence.
-              </HeroDescription>
-            </SpeakersHero>
+    <SharedLayout activePath="/speakers">
+      <Section>
+        <Container>
+          {/* Hero */}
+          <SpeakersHero>
+            <Badge>October 28-30, 2025</Badge>
+            <MainHeading data-text="Speakers">Speakers</MainHeading>
+            <SubHeading>Meet the brilliant minds shaping the future of AI</SubHeading>
+            
+            <HeroDescription>
+              From pioneering researchers to visionary protofounders, we bring the most influential minds in AI to the stage.
+              <br /><br />
+              In 2025, we're raising the bar — with a lineup that could define the decade.
+              <br /><br />
+              Meet the thinkers, builders, and leaders shaping the future of artificial intelligence.
+            </HeroDescription>
+          </SpeakersHero>
 
-            <ScheduleDay delay="0.1s">
-              <DayTitle>Day 1: Oct 28th</DayTitle>
-              <DaySubtitle>New Algorithmic Breakthroughs and AI Infrastructure</DaySubtitle>
-              <SpeakersGrid>
-                {day1Speakers.map((speaker, index) => (
-                  <SpeakerCard key={index}>
-                    <SpeakerImage src={speaker.image} />
-                    <SpeakerInfo>
-                      <SpeakerName>{speaker.name}</SpeakerName>
-                      <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                    </SpeakerInfo>
-                  </SpeakerCard>
-                ))}
-              </SpeakersGrid>
-            </ScheduleDay>
-            
-            <ScheduleDay delay="0.2s">
-              <DayTitle>Day 2: Oct 29th</DayTitle>
-              <DaySubtitle>AI Safety, and AI in Enterprise & Society</DaySubtitle>
-              <SpeakersGrid>
-                {day2Speakers.map((speaker, index) => (
-                  <SpeakerCard key={index}>
-                    <SpeakerImage src={speaker.image} />
-                    <SpeakerInfo>
-                      <SpeakerName>{speaker.name}</SpeakerName>
-                      <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                    </SpeakerInfo>
-                  </SpeakerCard>
-                ))}
-              </SpeakersGrid>
-            </ScheduleDay>
-            
-            <ScheduleDay delay="0.3s">
-              <DayTitle>Day 3: Oct 30th</DayTitle>
-              <DaySubtitle>AI Entrepreneurship & Application</DaySubtitle>
-              <SpeakersGrid>
-                {day3Speakers.map((speaker, index) => (
-                  <SpeakerCard key={index}>
-                    <SpeakerImage src={speaker.image} />
-                    <SpeakerInfo>
-                      <SpeakerName>{speaker.name}</SpeakerName>
-                      <SpeakerTitle>{speaker.title}</SpeakerTitle>
-                      <SpeakerCompany>{speaker.company}</SpeakerCompany>
-                      {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
-                    </SpeakerInfo>
-                  </SpeakerCard>
-                ))}
-              </SpeakersGrid>
-            </ScheduleDay>
-          </Container>
-        </Section>
-        
-        {/* Footer */}
-        <Footer>
-          <Container>
-            <FooterText>
-              Brought to you by Thinking About Thinking, Inc.<br />
-              A 501(c)3 Nonprofit Company in the State of New Jersey.<br /><br />
-              28 Spring Street, Unit 156, Princeton, NJ, USA, 08540
-            </FooterText>
-            
-            <FooterBottom>
-              <Copyright>© 2025 THAT. All rights reserved.</Copyright>
-              
-              <SocialLinks>
-                <SocialLink href="https://youtube.com" target="_blank" rel="noopener noreferrer">Youtube</SocialLink>
-                <SocialLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</SocialLink>
-                <SocialLink href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</SocialLink>
-              </SocialLinks>
-            </FooterBottom>
-          </Container>
-        </Footer>
-      </Main>
-    </PageContainer>
-    </ThemeProvider>
+          <ScheduleDay delay="0.1s">
+            <DayTitle>Day 1: Oct 28th</DayTitle>
+            <DaySubtitle>New Algorithmic Breakthroughs and AI Infrastructure</DaySubtitle>
+            <SpeakersGrid>
+              {day1Speakers.map((speaker, index) => (
+                <SpeakerCard key={index}>
+                  <SpeakerImage src={speaker.image} />
+                  <SpeakerInfo>
+                    <SpeakerName>{speaker.name}</SpeakerName>
+                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                  </SpeakerInfo>
+                </SpeakerCard>
+              ))}
+            </SpeakersGrid>
+          </ScheduleDay>
+          
+          <ScheduleDay delay="0.2s">
+            <DayTitle>Day 2: Oct 29th</DayTitle>
+            <DaySubtitle>AI Safety, and AI in Enterprise & Society</DaySubtitle>
+            <SpeakersGrid>
+              {day2Speakers.map((speaker, index) => (
+                <SpeakerCard key={index}>
+                  <SpeakerImage src={speaker.image} />
+                  <SpeakerInfo>
+                    <SpeakerName>{speaker.name}</SpeakerName>
+                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                  </SpeakerInfo>
+                </SpeakerCard>
+              ))}
+            </SpeakersGrid>
+          </ScheduleDay>
+          
+          <ScheduleDay delay="0.3s">
+            <DayTitle>Day 3: Oct 30th</DayTitle>
+            <DaySubtitle>AI Entrepreneurship & Application</DaySubtitle>
+            <SpeakersGrid>
+              {day3Speakers.map((speaker, index) => (
+                <SpeakerCard key={index}>
+                  <SpeakerImage src={speaker.image} />
+                  <SpeakerInfo>
+                    <SpeakerName>{speaker.name}</SpeakerName>
+                    <SpeakerTitle>{speaker.title}</SpeakerTitle>
+                    <SpeakerCompany>{speaker.company}</SpeakerCompany>
+                    {speaker.company2 && <SpeakerCompany>{speaker.company2}</SpeakerCompany>}
+                  </SpeakerInfo>
+                </SpeakerCard>
+              ))}
+            </SpeakersGrid>
+          </ScheduleDay>
+        </Container>
+      </Section>
+    </SharedLayout>
   );
 };
 
